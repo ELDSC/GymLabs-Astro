@@ -1,0 +1,120 @@
+---
+const image =
+  "https://i1.sndcdn.com/artworks-B7Gqj8qRxKr7VPDf-SMFQ2A-t500x500.jpg";
+---
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-text">
+      <span class="badge">Suplementación y Estilo</span>
+
+      <h1>
+        Potencia tu <br />
+        <span>Rendimiento</span> con <br />
+        GymLabs.
+      </h1>
+
+      <p>
+        Lleva tu entrenamiento al límite con nuestra selección premium de
+        suplementos de alta pureza y ropa técnica diseñada para el confort y la
+        durabilidad.
+      </p>
+
+      <div class="buttons">
+        <a href="#" class="btn-primary">Explorar Tienda</a>
+        <a href="#" class="btn-secondary">Ver Novedades</a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img src={image} alt="Hero Gym" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+    background: radial-gradient(circle at top right, #0f172a, #020617);
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    width: 100%;
+    gap: 60px;
+  }
+
+  .hero-text {
+    max-width: 550px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--bg-surface-2);
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+  }
+
+  .hero-text h1 span {
+    color: var(--color-primary);
+  }
+
+  .hero-text p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .btn-primary {
+    background: var(--color-primary);
+    padding: 14px 22px;
+    border-radius: 30px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-dark);
+  }
+
+  .btn-secondary {
+    background: var(--bg-surface-2);
+    padding: 14px 22px;
+    border-radius: 30px;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .hero-image {
+    position: relative;
+  }
+
+  .hero-image img {
+    width: 500px;
+    border-radius: 20px;
+    z-index: 2;
+    position: relative;
+    margin-top: 40px;
+  }
+</style>
