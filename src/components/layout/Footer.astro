@@ -1,0 +1,146 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col brand">
+      <h3 class="logo">Gym<span>Labs</span></h3>
+      <p class="description">Premium Nutrition & Performance Apparel.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="/tienda">Tienda</a></li>
+        <li><a href="/ofertas">Ofertas</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/privacidad">Privacidad</a></li>
+        <li><a href="/terminos">Términos</a></li>
+        <li><a href="/envios">Envios</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Síguenos</h4>
+      <div class="social-links">
+        <a href="https://instagram.com/sarango_josue" target="_blank"
+          >Instagram</a
+        >
+        <a href="https://www.github.com/ELDSC" target="_blank">YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© {year} GymLabs. Your Ultimate Fitness Hub.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    padding: 80px 40px 40px;
+    font-family: var(--font-primary);
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 20px;
+    color: var(--text-primary);
+  }
+
+  .logo span {
+    color: var(--color-primary);
+  }
+
+  .description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 12px;
+  }
+
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary);
+    transform: translateX(5px);
+    display: inline-block;
+  }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .social-links a {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 80px auto 0;
+    padding-top: 30px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .footer-bottom p {
+    color: var(--text-disabled, #475569);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 50px 30px;
+    }
+    .brand {
+      grid-column: span 2;
+    }
+  }
+</style>
