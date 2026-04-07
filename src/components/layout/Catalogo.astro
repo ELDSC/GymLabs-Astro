@@ -1,0 +1,49 @@
+---
+import ProductCard from "../ui/ProductCard.astro";
+import { featuredProducts } from "../data/products";
+---
+
+<section class="catalogo" id="tienda" aria-labelledby="catalogo-title">
+  <div class="catalogo__grid">
+    {
+      featuredProducts.map((product) => (
+        <ProductCard
+          name={product.name}
+          image={product.image}
+          price={product.price}
+          oldPrice={product.oldPrice}
+          badge={product.badge}
+          featured={product.featured}
+        />
+      ))
+    }
+  </div>
+
+  <style>
+    .catalogo {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--bg-surface);
+    }
+
+    .catalogo__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .catalogo__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .catalogo__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</section>
