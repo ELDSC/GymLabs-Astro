@@ -1,0 +1,65 @@
+---
+interface Props {
+  text: string;
+  href: string;
+  variant: "primary" | "secondary";
+  icon?: string;
+}
+
+const { text, href, variant, icon } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    "base-button",
+    { "btn-primary": variant === "primary" },
+    { "btn-secondary": variant === "secondary" },
+  ]}
+>
+  {icon && <img src={icon} alt="" class="button-icon" />}
+
+  <span>{text}</span>
+</a>
+
+<style>
+  .base-button {
+    /* Agrupamos todo lo común aquí */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 30px;
+    color: var(--text-primary, #ffffff);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .button-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .btn-primary {
+    background: var(--color-primary, #10b981);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-dark, #059669);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+
+  .btn-secondary {
+    background: var(--bg-surface-2, #1e293b);
+  }
+
+  .btn-secondary:hover {
+    background: #334155;
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 const image =
   "https://i1.sndcdn.com/artworks-B7Gqj8qRxKr7VPDf-SMFQ2A-t500x500.jpg";
+import Button from "../ui/Button.astro";
 ---
 
 <section class="hero">
@@ -21,8 +22,8 @@ const image =
       </p>
 
       <div class="buttons">
-        <a href="#" class="btn-primary">Explorar Tienda</a>
-        <a href="#" class="btn-secondary">Ver Novedades</a>
+        <Button text="Explorar Tienda" href="/tienda" variant="primary" />
+        <Button text="Ver Novedades" href="#ofertas" variant="secondary" />
       </div>
     </div>
 
@@ -79,33 +80,6 @@ const image =
     margin-bottom: 30px;
   }
 
-  .buttons {
-    display: flex;
-    gap: 15px;
-  }
-
-  .btn-primary {
-    background: var(--color-primary);
-    padding: 14px 22px;
-    border-radius: 30px;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-  }
-
-  .btn-primary:hover {
-    background: var(--color-primary-dark);
-  }
-
-  .btn-secondary {
-    background: var(--bg-surface-2);
-    padding: 14px 22px;
-    border-radius: 30px;
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-
   .hero-image {
     position: relative;
   }
@@ -116,5 +90,9 @@ const image =
     z-index: 2;
     position: relative;
     margin-top: 40px;
+  }
+  .buttons {
+    display: flex;
+    gap: 15px;
   }
 </style>
