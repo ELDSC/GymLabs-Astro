@@ -1,5 +1,5 @@
-export interface Product {
-  id:        number;
+export interface Product { //Aqui definimos lo que es un "Producto"
+  id:        number;       //Tanto como su id, nombre, etc
   name:      string;
   image:     string;
   price:     number;
@@ -8,7 +8,7 @@ export interface Product {
   featured?: boolean;   
 }
 
-export const featuredProducts: Product[] = [
+export const featuredProducts: Product[] = [ //Aqui usamos como una db local
   {
     id:       1,
     name:     'Gold Stand Whey Protein',

@@ -1,41 +1,36 @@
 ---
-import ProductCard from "../ui/ProductCard.astro"; //Este es el molde
-import { featuredProducts } from "../data/products"; //Esta son los datos
+import ProductCard from "../ui/ProductCard.astro";
+import { supabase } from "../../lib/supabase";
+
+const { data: products, error } = await supabase.from("products").select(`
+    name, 
+    price, 
+    oldPrice:old_price, 
+    badge, 
+    featured:is_featured, 
+    image:image_url
+  `);
+
+if (error) console.error("Error:", error.message);
 ---
 
 <section class="catalogo" id="tienda" aria-labelledby="catalogo-title">
   <div class="catalogo__grid">
-    {
-      //usa las props del componente ProductCard
-      featuredProducts.map(
-        (
-          product, //el map recorre mi lista de productos le pasa los datos al componente ProductCard//
-        ) => (
-          <ProductCard
-            name={product.name}
-            image={product.image}
-            price={product.price}
-            oldPrice={product.oldPrice}
-            badge={product.badge}
-            featured={product.featured}
-          />
-        ),
-      )
-    }
+    {products?.map((product) => <ProductCard {...product} />)}
   </div>
 
   <style>
     .catalogo {
       background-color: var(--bg-surface);
-      padding: 2em;
-      height: 100%;
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .catalogo__grid {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2em;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
     }
 
     @media (max-width: 900px) {
