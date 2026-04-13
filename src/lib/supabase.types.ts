@@ -126,6 +126,45 @@ export type Database = {
           },
         ]
       }
+      testimonials: {
+        Row: {
+          author_name: string
+          author_role: string | null
+          avatar_url: string | null
+          comment: string
+          created_at: string
+          id: string
+          is_published: boolean
+          rating: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          author_name: string
+          author_role?: string | null
+          avatar_url?: string | null
+          comment: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          rating: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          author_role?: string | null
+          avatar_url?: string | null
+          comment?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -267,4 +306,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-
