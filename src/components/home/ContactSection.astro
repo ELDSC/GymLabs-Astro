@@ -1,0 +1,145 @@
+<section class="section" id="contacto" aria-labelledby="contacto-title">
+  <div class="section__inner">
+    <div class="contact-card">
+      <div class="contact-card__heading">
+        <h2 id="contacto-title">Tienes alguna duda?</h2>
+        <p>
+          Resuelve consultas sobre pedidos, productos o recomendaciones con un
+          formulario claro y listo para extender luego.
+        </p>
+      </div>
+
+      <form class="contact-form">
+        <div class="contact-form__row">
+          <label>
+            Nombre
+            <input type="text" name="name" placeholder="Tu nombre" />
+          </label>
+
+          <label>
+            Correo
+            <input type="email" name="email" placeholder="correo@ejemplo.com" />
+          </label>
+        </div>
+
+        <label>
+          Asunto
+          <input type="text" name="subject" placeholder="Quiero asesoramiento sobre..." />
+        </label>
+
+        <label>
+          Tu mensaje
+          <textarea
+            name="message"
+            rows="5"
+            placeholder="Escribe tu consulta con el mayor detalle posible."
+          ></textarea>
+        </label>
+
+        <button type="button">Enviar contacto</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding: 0 1.5rem;
+  }
+
+  .section__inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .contact-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(1.4rem, 4vw, 2.25rem);
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.74));
+  }
+
+  .contact-card__heading h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+  }
+
+  .contact-card__heading p {
+    margin: 0.7rem 0 0;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.6rem;
+  }
+
+  .contact-form__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .contact-form label {
+    display: grid;
+    gap: 0.55rem;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+    background: rgba(2, 6, 23, 0.58);
+    color: var(--text-primary);
+    font: inherit;
+    padding: 0.95rem 1rem;
+    box-sizing: border-box;
+  }
+
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .contact-form button {
+    width: fit-content;
+    border: none;
+    border-radius: 999px;
+    padding: 0.95rem 1.4rem;
+    background: var(--color-primary);
+    color: #03120d;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .contact-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.24);
+  }
+
+  @media (max-width: 600px) {
+    .section {
+      padding-inline: 1rem;
+    }
+
+    .contact-form__row {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-form button {
+      width: 100%;
+    }
+  }
+</style>
