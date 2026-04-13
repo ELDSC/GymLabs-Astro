@@ -1,31 +1,128 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import BaseLayout from "../components/layout/BaseLayout.astro";
+import Hero from "../components/home/Hero.astro";
+import CategoriesSection from "../components/home/CategoriesSection.astro";
+import FeaturedOffersSection from "../components/home/FeaturedOffersSection.astro";
+import TestimonialsSection from "../components/home/TestimonialsSection.astro";
+import ContactSection from "../components/home/ContactSection.astro";
+import { supabase } from "../lib/supabase";
+
+const placeholderImageUrl = "/images/general-img-square.png";
+const heroImageUrl =
+  "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80";
+
+const categoryMeta: Record<string, { iconLabel: string }> = {
+  proteinas: {
+    iconLabel: "PR",
+  },
+  creatina: {
+    iconLabel: "CR",
+  },
+  "ropa-deportiva": {
+    iconLabel: "RD",
+  },
+  accesorios: {
+    iconLabel: "AC",
+  },
+};
+
+const [categoriesResult, productsResult, testimonialsResult] = await Promise.all([
+  supabase
+    .from("categories")
+    .select("id, name, slug, description, sort_order")
+    .eq("is_active", true)
+    .order("sort_order"),
+  supabase
+    .from("products")
+    .select(
+      `
+        id,
+        name,
+        slug,
+        price,
+        compare_at_price,
+        image_storage_key,
+        categories(name)
+      `,
+    )
+    .eq("is_active", true)
+    .eq("is_top_seller", true)
+    .limit(3),
+  supabase
+    .from("testimonials")
+    .select("id, author_name, author_role, comment, rating, avatar_url, sort_order")
+    .eq("is_published", true)
+    .order("sort_order")
+    .limit(3),
+]);
+
+if (categoriesResult.error) {
+  throw new Error(`Error fetching categories: ${categoriesResult.error.message}`);
+}
+
+if (productsResult.error) {
+  throw new Error(`Error fetching featured products: ${productsResult.error.message}`);
+}
+
+if (testimonialsResult.error) {
+  throw new Error(`Error fetching testimonials: ${testimonialsResult.error.message}`);
+}
+
+const categories = (categoriesResult.data ?? []).map((category) => {
+  const meta = categoryMeta[category.slug] ?? { iconLabel: "GL" };
+
+  return {
+    id: category.id,
+    title: category.name,
+    description: category.description ?? "",
+    iconLabel: meta.iconLabel,
+  };
+});
+
+const featuredProducts = (productsResult.data ?? []).map((product, index) => {
+  const categoryRelation = product.categories as { name: string } | { name: string }[] | null;
+  const categoryName = Array.isArray(categoryRelation)
+    ? categoryRelation[0]?.name
+    : categoryRelation?.name;
+
+  return {
+    id: product.id,
+    name: product.name,
+    category: categoryName ?? "",
+    imageUrl: product.image_storage_key ?? placeholderImageUrl,
+    price: Number(product.price),
+    compareAtPrice: product.compare_at_price ? Number(product.compare_at_price) : null,
+    badge: index === 0 ? "TOP VENTAS" : undefined,
+  };
+});
+
+const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
+  id: testimonial.id,
+  authorName: testimonial.author_name,
+  authorRole: testimonial.author_role ?? "",
+  comment: testimonial.comment,
+  rating: testimonial.rating,
+  avatarUrl: testimonial.avatar_url ?? placeholderImageUrl,
+}));
 ---
 
-<Layout>
-  <main></main>
-</Layout>
+<BaseLayout
+  title="Home"
+>
+  <main class="home">
+    <Hero heroImageUrl={heroImageUrl} />
+    <CategoriesSection categories={categories} />
+    <FeaturedOffersSection products={featuredProducts} />
+    <TestimonialsSection testimonials={testimonials} />
+    <ContactSection />
+  </main>
+</BaseLayout>
 
 <style>
-  main {
-    flex: 1;
+  .home {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 4rem 2rem;
-    font-family: "Inter", sans-serif;
-  }
-
-  h1 {
-    font-size: 3rem;
-    color: #111;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    color: #666;
-    font-size: 1.2rem;
+    gap: clamp(3rem, 7vw, 5rem);
+    padding-bottom: 5rem;
   }
 </style>
