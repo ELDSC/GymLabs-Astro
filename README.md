@@ -59,11 +59,35 @@ En Astro, la etiqueta `<slot />` es ultrapoderosa. Nos permite inyectar el conte
 
 Todos los comandos se corren desde la raíz del proyecto usando bash/powershell:
 
-| Comando                   | Acción                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Instala todas las dependencias                   |
-| `npm run dev`             | Inicia el servidor local en `localhost:4321`     |
-| `npm run build`           | Compila la versión de producción a `./dist/`     |
+| Comando         | Acción                                       |
+|:----------------|:---------------------------------------------|
+| `npm install`   | Instala todas las dependencias               |
+| `npm run dev`   | Inicia el servidor local en `localhost:4321` |
+| `npm run build` | Compila la versión de producción a `./dist/` |
+
+## 🔐 Variables de Entorno para Supabase
+
+El proyecto soporta dos targets de Supabase: `local` y `cloud`.
+
+```env
+SUPABASE_TARGET="local"
+
+SUPABASE_LOCAL_URL="http://127.0.0.1:64321"
+SUPABASE_LOCAL_PUBLISHABLE_KEY="sb_publishable_..."
+
+SUPABASE_CLOUD_URL="https://PROJECT-REF.supabase.co"
+SUPABASE_CLOUD_PUBLISHABLE_KEY="sb_publishable_..."
+
+SUPABASE_HOME_VIDEO_BUCKET="videos"
+SUPABASE_HOME_VIDEO_PATH="main_video.mp4"
+```
+
+Uso:
+- `SUPABASE_TARGET="local"` usa el stack local de Supabase
+- `SUPABASE_TARGET="cloud"` usa el proyecto remoto en Supabase Cloud
+- El video de home se resuelve desde `bucket + path`, no con una URL hardcodeada, para que funcione en ambos entornos
+
+No uses claves `service_role` en este proyecto.
 
 ## 📝 Próximos Pasos (Roadmap)
 - [ ] Implementar `Navbar.astro` con soporte responsivo y glassmorphism.
