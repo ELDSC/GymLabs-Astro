@@ -1,0 +1,154 @@
+---
+interface TestimonialItem {
+  id: string;
+  authorName: string;
+  authorRole: string;
+  comment: string;
+  rating: number;
+  avatarUrl: string;
+}
+
+interface Props {
+  testimonials: TestimonialItem[];
+}
+
+const { testimonials } = Astro.props;
+---
+
+<section class="section" id="opiniones" aria-labelledby="opiniones-title">
+  <div class="section__inner">
+    <div class="section__heading">
+      <h2 id="opiniones-title">Lo que dicen nuestros clientes</h2>
+      <p>
+        Opiniones generales sobre la experiencia en GymLabs, listas para ser
+        administradas desde Supabase.
+      </p>
+    </div>
+
+    <div class="testimonials-grid">
+      {testimonials.map((testimonial) => (
+        <article class="testimonial-card">
+          <div class="testimonial-card__header">
+            <img src={testimonial.avatarUrl} alt={testimonial.authorName} loading="lazy" />
+
+            <div>
+              <h3>{testimonial.authorName}</h3>
+              <p>{testimonial.authorRole}</p>
+            </div>
+          </div>
+
+          <div class="testimonial-card__rating" aria-label={`Calificacion ${testimonial.rating} de 5`}>
+            {Array.from({ length: 5 }, (_, index) => (
+              <span class:list={["star", { "star--active": index < testimonial.rating }]}>
+                ★
+              </span>
+            ))}
+          </div>
+
+          <p class="testimonial-card__comment">{testimonial.comment}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding: 0 1.5rem;
+  }
+
+  .section__inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .section__heading {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+
+  .section__heading h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1.1;
+  }
+
+  .section__heading p {
+    margin: 0.7rem auto 0;
+    max-width: 60ch;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .testimonial-card {
+    padding: 1.4rem;
+    border-radius: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.72));
+  }
+
+  .testimonial-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .testimonial-card__header img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+  }
+
+  .testimonial-card__header h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .testimonial-card__header p {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .testimonial-card__rating {
+    display: flex;
+    gap: 0.2rem;
+    margin-top: 1rem;
+  }
+
+  .star {
+    color: rgba(148, 163, 184, 0.3);
+    font-size: 1rem;
+  }
+
+  .star--active {
+    color: var(--color-primary);
+  }
+
+  .testimonial-card__comment {
+    margin: 1rem 0 0;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  @media (max-width: 980px) {
+    .testimonials-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .section {
+      padding-inline: 1rem;
+    }
+  }
+</style>
