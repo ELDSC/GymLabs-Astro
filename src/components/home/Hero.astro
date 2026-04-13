@@ -1,98 +1,172 @@
 ---
-const image =
-  "https://i1.sndcdn.com/artworks-B7Gqj8qRxKr7VPDf-SMFQ2A-t500x500.jpg";
 import Button from "../ui/Button.astro";
+
+interface Props {
+  heroImageUrl: string;
+}
+
+const { heroImageUrl } = Astro.props;
 ---
 
-<section class="hero">
-  <div class="container">
-    <div class="hero-text">
-      <span class="badge">Suplementación y Estilo</span>
+<section class="hero" id="inicio">
+  <div class="hero__container">
+    <div class="hero__content">
+      <span class="hero__eyebrow">Suplementacion y Estilo</span>
 
       <h1>
-        Potencia tu <br />
-        <span>Rendimiento</span> con <br />
-        GymLabs.
+        Potencia tu
+        <span>rendimiento</span>
+        con GymLabs.
       </h1>
 
       <p>
-        Lleva tu entrenamiento al límite con nuestra selección premium de
-        suplementos de alta pureza y ropa técnica diseñada para el confort y la
-        durabilidad.
+        Descubre productos seleccionados para mejorar tu fuerza, recuperacion y
+        constancia con una experiencia de compra clara y moderna.
       </p>
 
-      <div class="buttons">
-        <Button text="Explorar Tienda" href="/tienda" variant="primary" />
-        <Button text="Ver Novedades" href="#ofertas" variant="secondary" />
+      <div class="hero__actions">
+        <Button text="Explorar tienda" href="#ofertas" variant="primary" />
+        <Button text="Ver novedades" href="#categorias" variant="secondary" />
       </div>
+
     </div>
 
-    <div class="hero-image">
-      <img src={image} alt="Hero Gym" />
+    <div class="hero__visual">
+      <div class="hero__image-shell">
+        <img
+          src={heroImageUrl}
+          alt="Atleta entrenando con iluminacion dramatica"
+          loading="eager"
+        />
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .hero {
-    display: flex;
+    padding: 2rem 1.5rem 0;
+  }
+
+  .hero__container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
-    justify-content: center;
-    padding: 0 5%;
-    background: radial-gradient(circle at top right, #0f172a, #020617);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 32px;
+    background:
+      radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 38%),
+      linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.55);
+    overflow: hidden;
   }
 
-  .container {
-    display: flex;
+  .hero__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    max-width: 1200px;
-    width: 100%;
-    gap: 60px;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
   }
 
-  .hero-text {
-    max-width: 550px;
+  .hero h1 {
+    margin: 1.2rem 0 0.9rem;
+    font-size: clamp(2.7rem, 6vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    max-width: 10ch;
   }
 
-  .badge {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: var(--bg-surface-2);
-    font-size: 0.8rem;
-    margin-bottom: 20px;
-  }
-
-  .hero-text h1 {
-    font-size: 3.5rem;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    color: var(--text-primary);
-  }
-
-  .hero-text h1 span {
+  .hero h1 span {
+    display: block;
     color: var(--color-primary);
   }
 
-  .hero-text p {
-    color: var(--text-muted);
-    margin-bottom: 30px;
+  .hero p {
+    margin: 0;
+    max-width: 52ch;
+    color: var(--text-secondary);
+    font-size: 1.02rem;
+    line-height: 1.8;
   }
 
-  .hero-image {
-    position: relative;
-  }
-
-  .hero-image img {
-    width: 500px;
-    border-radius: 20px;
-    z-index: 2;
-    position: relative;
-    margin-top: 40px;
-  }
-  .buttons {
+  .hero__actions {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.75rem;
+  }
+
+  .hero__visual {
+    position: relative;
+    min-height: 100%;
+  }
+
+  .hero__visual::before {
+    content: "";
+    position: absolute;
+    inset: auto 8% -12% auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.22);
+    filter: blur(50px);
+  }
+
+  .hero__image-shell {
+    position: relative;
+    padding: 0.85rem;
+    border-radius: 28px;
+    background:
+      linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.82));
+    border: 1px solid rgba(148, 163, 184, 0.14);
+  }
+
+  .hero__image-shell img {
+    display: block;
+    width: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+
+  @media (max-width: 900px) {
+    .hero__container {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__image-shell img {
+      min-height: 320px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding-inline: 1rem;
+    }
+
+    .hero__container {
+      padding: 1.2rem;
+      border-radius: 24px;
+    }
+
+    .hero__stats {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
   }
 </style>
