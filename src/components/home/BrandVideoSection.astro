@@ -1,0 +1,137 @@
+---
+interface Props {
+  videoUrl: string;
+}
+
+const { videoUrl } = Astro.props;
+---
+
+<section class="brand-video" aria-labelledby="brand-video-title">
+  <div class="brand-video__inner">
+    <div class="brand-video__heading">
+      <span class="brand-video__eyebrow">GYMLABS EN MOVIMIENTO</span>
+      <h2 id="brand-video-title">Mira la energia real de la marca.</h2>
+    </div>
+
+    <div class="brand-video__frame">
+      <div class="brand-video__glow" aria-hidden="true"></div>
+      <video
+        class="brand-video__player"
+        src={videoUrl}
+        controls
+        playsinline
+        muted
+        preload="metadata"
+      >
+        Tu navegador no soporta la reproduccion de video HTML5.
+      </video>
+    </div>
+  </div>
+</section>
+
+<style>
+  .brand-video {
+    padding: 0 1.5rem;
+  }
+
+  .brand-video__inner {
+    position: relative;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border-radius: 30px;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    background:
+      linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98)),
+      radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 30%);
+    box-shadow: 0 26px 70px rgba(2, 6, 23, 0.42);
+    overflow: hidden;
+  }
+
+  .brand-video__inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+    pointer-events: none;
+  }
+
+  .brand-video__heading {
+    position: relative;
+    z-index: 1;
+    max-width: 44rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .brand-video__eyebrow {
+    display: inline-flex;
+    padding: 0.42rem 0.78rem;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.24);
+    color: #7fffd4;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+  }
+
+  .brand-video__heading h2 {
+    margin: 0.95rem 0 0.6rem;
+    font-size: clamp(1.9rem, 4vw, 3.1rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+
+  .brand-video__heading p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 60ch;
+  }
+
+  .brand-video__frame {
+    position: relative;
+    isolation: isolate;
+    border-radius: 26px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    background: rgba(2, 6, 23, 0.8);
+  }
+
+  .brand-video__glow {
+    position: absolute;
+    inset: auto -8% -18% auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.2);
+    filter: blur(54px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .brand-video__player {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #020617;
+  }
+
+  @media (max-width: 600px) {
+    .brand-video {
+      padding-inline: 1rem;
+    }
+
+    .brand-video__inner {
+      padding: 1rem;
+      border-radius: 24px;
+    }
+
+    .brand-video__frame {
+      border-radius: 20px;
+    }
+  }
+</style>

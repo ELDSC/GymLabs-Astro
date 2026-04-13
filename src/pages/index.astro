@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../components/layout/BaseLayout.astro";
 import Hero from "../components/home/Hero.astro";
+import BrandVideoSection from "../components/home/BrandVideoSection.astro";
 import CategoriesSection from "../components/home/CategoriesSection.astro";
 import FeaturedOffersSection from "../components/home/FeaturedOffersSection.astro";
 import TestimonialsSection from "../components/home/TestimonialsSection.astro";
@@ -10,6 +11,15 @@ import { supabase } from "../lib/supabase";
 const placeholderImageUrl = "/images/general-img-square.png";
 const heroImageUrl =
   "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80";
+const homeVideoBucket = import.meta.env.SUPABASE_HOME_VIDEO_BUCKET;
+const homeVideoPath = import.meta.env.SUPABASE_HOME_VIDEO_PATH;
+
+if (!homeVideoBucket || !homeVideoPath) {
+  throw new Error("SUPABASE_HOME_VIDEO_BUCKET and SUPABASE_HOME_VIDEO_PATH must be configured.");
+}
+
+const { data: brandVideoData } = supabase.storage.from(homeVideoBucket).getPublicUrl(homeVideoPath);
+const brandVideoUrl = brandVideoData.publicUrl;
 
 const categoryMeta: Record<string, { iconLabel: string }> = {
   proteinas: {
@@ -111,6 +121,7 @@ const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
 >
   <main class="home">
     <Hero heroImageUrl={heroImageUrl} />
+    <BrandVideoSection videoUrl={brandVideoUrl} />
     <CategoriesSection categories={categories} />
     <FeaturedOffersSection products={featuredProducts} />
     <TestimonialsSection testimonials={testimonials} />
