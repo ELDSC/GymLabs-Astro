@@ -12,45 +12,36 @@ const year = new Date().getFullYear();
     <div class="footer-col">
       <h4>Navegación</h4>
       <ul>
-        <li><a href="#tienda">Tienda</a></li>
-        <li><a href="#ofertas">Ofertas</a></li>
-        <li><a href="#categorias">Categorias</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="/ofertas">Ofertas</a></li>
+        <li><a href="/opiniones">Opiniones</a></li>
       </ul>
     </div>
 
     <div class="footer-col">
-      <h4>Legal</h4>
-      <ul>
-        <li><a href="/privacidad">Privacidad</a></li>
-        <li><a href="/terminos">Términos</a></li>
-        <li><a href="/envios">Envios</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Síguenos</h4>
+      <h4>Canales</h4>
       <div class="social-links">
-        <a href="https://instagram.com/sarango_josue" target="_blank"
-          >Instagram</a
-        >
-        <a href="https://www.github.com/ELDSC" target="_blank">YouTube</a>
+        <a href="https://instagram.com" target="_blank">Instagram</a>
+        <a href="https://youtube.com" target="_blank">YouTube</a>
+        <a href="mailto:hola@gymlabs.pe">hola@gymlabs.pe</a>
       </div>
     </div>
   </div>
 
   <div class="footer-bottom">
-    <p>© {year} GymLabs. Your Ultimate Fitness Hub.</p>
+    <p>© {year} GymLabs. Home optimizada para rendimiento y conversion.</p>
   </div>
 </footer>
 
 <style>
   .footer {
-    background-color: var(--bg-surface);
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 1));
     color: var(--text-primary);
-    padding: 80px 40px 40px;
+    padding: 4.5rem 1.5rem 2rem;
     font-family: var(--font-primary);
     margin-top: auto;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
   }
 
   .footer-grid {
@@ -124,9 +115,9 @@ const year = new Date().getFullYear();
 
   .footer-bottom {
     max-width: 1200px;
-    margin: 80px auto 0;
-    padding-top: 30px;
-    border-top: 1px solid var(--border-color);
+    margin: 3rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
   }
 
   .footer-bottom p {
