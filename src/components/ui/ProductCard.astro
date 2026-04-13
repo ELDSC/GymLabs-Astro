@@ -1,31 +1,37 @@
 ---
 interface Props {
-name: string;
-image: string;
-price: number;
-oldPrice: number;
-badge?: string;
-featured?: boolean;
+  name: string;
+  imageUrl: string;
+  price: number;
+  compareAtPrice?: number | null;
+  category: string;
+  badge?: string;
 }
 
-const { name, image, price, oldPrice, badge } = Astro.props;
+const { name, imageUrl, price, compareAtPrice = null, category, badge } = Astro.props;
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat("es-PE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 ---
 
 <article class="card">
   {badge && <span class="badge">{badge}</span>}
 
   <div class="image-container">
-    <img src={image} alt={name} loading="lazy" />
+    <img src={imageUrl} alt={name} loading="lazy" />
   </div>
 
   <div class="content">
+    <p class="category">{category}</p>
     <h3>{name}</h3>
     <div class="pricing">
-      {oldPrice && <span class="old-price">{oldPrice}€</span>}
-      <span class="price">{price}€</span>
+      {compareAtPrice && <span class="old-price">S/ {formatPrice(compareAtPrice)}</span>}
+      <span class="price">S/ {formatPrice(price)}</span>
     </div>
 
-    <button class="btn-buy">Añadir al Carrito</button>
+    <button class="btn-buy" type="button">Anadir al carrito</button>
   </div>
 </article>
 
@@ -85,6 +91,20 @@ const { name, image, price, oldPrice, badge } = Astro.props;
     transform: scale(1.05);
   }
 
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .category {
+    margin: 0 0 0.45rem;
+    color: var(--text-muted, #94a3b8);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   h3 {
     margin: 0 0 0.5rem;
     font-size: 1.15rem;
@@ -113,9 +133,10 @@ const { name, image, price, oldPrice, badge } = Astro.props;
 
   .btn-buy {
     width: 100%;
-    background-color: transparent;
+    margin-top: auto;
+    background-color: rgba(16, 185, 129, 0.18);
     color: var(--text-primary);
-    border: 1px solid var(--color-primary, #10b981);
+    border: 1px solid rgba(16, 185, 129, 0.28);
     padding: 12px;
     border-radius: 8px;
     font-weight: 600;
