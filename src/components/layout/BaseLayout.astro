@@ -55,6 +55,16 @@ description = "GymLabs - Premium Nutrition & Performance Apparel",
   }
 
   html,
+  html {
+    scroll-behavior: smooth;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -62,9 +72,17 @@ description = "GymLabs - Premium Nutrition & Performance Apparel",
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-base);
+    background:
+      radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 24%),
+      var(--bg-base);
     color: var(--text-primary);
     font-family: var(--font-primary);
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100vh;
   }
 
   main {

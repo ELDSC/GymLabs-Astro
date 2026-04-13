@@ -1,21 +1,13 @@
----
-
----
-
 <nav class="navbar" aria-label="Navegación principal">
   <div class="nav-container">
     <a href="/" class="logo">Gym<span>Labs</span></a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
-      <li><a href="#tienda">Tienda</a></li>
-      <li><a href="#ofertas">Ofertas</a></li>
+      <li><a href="/tienda">Tienda</a></li>
+      <li><a href="/ofertas">Ofertas</a></li>
       <li><a href="/about-us">Sobre Nosotros</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="/contacto">Contacto</a></li>
     </ul>
-    <div class="nav-actions">
-      <div class="dark-theme"><button>🌙</button></div>
-      <div class="login"><button>👤Login</button></div>
-    </div>
   </div>
 </nav>
 
@@ -25,7 +17,8 @@
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(12px);
-    background-color: var(--bg-surface);
+    background-color: rgba(2, 6, 23, 0.78);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     font-family: var(--font-primary);
     color: var(--text-primary);
   }
@@ -36,26 +29,37 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
   }
 
   .logo {
-    color: var(--color-primary);
-    font-weight: 700;
-    font-size: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.04em;
     text-decoration: none;
+  }
+
+  .logo span {
+    color: var(--color-primary);
   }
 
   .nav-links {
     display: flex;
     list-style: none;
-    gap: 20px;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .nav-links a {
     text-decoration: none;
     color: var(--text-primary);
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 600;
     transition: all 0.3s ease;
   }
 
@@ -63,41 +67,15 @@
     color: var(--color-primary);
   }
 
-  .nav-actions {
-    display: flex;
-    gap: 20px;
+  @media (max-width: 980px) {
+    .nav-container {
+      flex-direction: column;
+    }
   }
 
-  .nav-actions a {
-    text-decoration: none;
-    color: var(--text-primary);
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .nav-actions a:hover {
-    color: var(--color-primary);
-  }
-
-  .nav-actions button {
-    background: var(--bg-surface);
-    border: none;
-  }
-
-  .nav-actions button:hover {
-    background: var(--bg-surface-2);
-    transition: all 0.3s ease;
-  }
-
-  .dark-theme button {
-    color: var(--text-primary);
-    border-radius: 20%;
-    padding: 10px;
-  }
-
-  .login button {
-    color: var(--text-primary);
-    border-radius: 20%;
-    padding: 10px;
+  @media (max-width: 600px) {
+    .navbar {
+      position: static;
+    }
   }
 </style>
