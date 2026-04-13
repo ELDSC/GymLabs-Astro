@@ -1,54 +1,54 @@
 ---
-import ProductCard from "../ui/ProductCard.astro";
-import { supabase } from "../../lib/supabase";
+interface Props {
+  title: string;
+  description: string;
+  iconLabel: string;
+}
 
-const { data: products, error } = await supabase.from("products").select(`
-    name, 
-    price, 
-    oldPrice:old_price, 
-    badge, 
-    featured:is_featured, 
-    image:image_url
-  `);
-
-if (error) console.error("Error:", error.message);
+const { title, description, iconLabel } = Astro.props;
 ---
 
-<section class="catalogo" id="tienda" aria-labelledby="catalogo-title">
-  <div class="catalogo__grid">
-    {products?.map((product) => <ProductCard {...product} />)}
-  </div>
+<article class="category-card">
+  <div class="category-card__icon" aria-hidden="true">{iconLabel}</div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</article>
 
-  <style>
-    .catalogo {
-      background-color: var(--bg-surface);
-      padding: 4rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+<style>
+  .category-card {
+    padding: 1.4rem 1.2rem;
+    border-radius: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.72));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    text-align: center;
+  }
 
-    .catalogo__grid {
-      display: grid;
-<<<<<<< HEAD:src/components/layout/CategoryCard.astro
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-=======
-      align-items: center;
-      justify-content: center;
-      gap: 2em;
->>>>>>> d38d533d87aa5df7d52ea47cb58cca60f3c00ead:src/components/home/CategoryCard.astro
-    }
+  .category-card__icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at top, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.08));
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
 
-    @media (max-width: 900px) {
-      .catalogo__grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+  .category-card h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
 
-    @media (max-width: 560px) {
-      .catalogo__grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</section>
+  .category-card p {
+    margin: 0.7rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+</style>
