@@ -1,5 +1,22 @@
 ---
+import { getSupabasePublicUrl } from "../../lib/supabase";
+
 const year = new Date().getFullYear();
+
+const sponsors = [
+  {
+    name: "Equinox",
+    logo: getSupabasePublicUrl("logos", "bodytech_logo.png"),
+  },
+  {
+    name: "Greens",
+    logo: getSupabasePublicUrl("logos", "greens_logo.png"),
+  },
+  {
+    name: "SmartFit",
+    logo: getSupabasePublicUrl("logos", "smartfit_logo.png"),
+  },
+];
 ---
 
 <footer class="footer">
@@ -7,6 +24,21 @@ const year = new Date().getFullYear();
     <div class="footer-col brand">
       <h3 class="logo">Gym<span>Labs</span></h3>
       <p class="description">Premium Nutrition & Performance Apparel.</p>
+
+      <div class="footer-sponsors">
+        <p class="sponsors-label">Marcas aliadas</p>
+        <div class="sponsors-logos">
+          {
+            sponsors.map((sponsor) => (
+              <img
+                src={sponsor.logo}
+                alt={`Logo de ${sponsor.name}`}
+                class="sponsor-logo"
+              />
+            ))
+          }
+        </div>
+      </div>
     </div>
 
     <div class="footer-col">
@@ -35,20 +67,60 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background:
-      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 1));
+    background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.96),
+      rgba(2, 6, 23, 1)
+    );
     color: var(--text-primary);
     padding: 4.5rem 1.5rem 2rem;
     font-family: var(--font-primary);
     margin-top: auto;
     border-top: 1px solid rgba(148, 163, 184, 0.1);
   }
+  .footer-sponsors {
+    margin-top: 2rem;
+  }
+
+  .sponsors-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted, #94a3b8);
+    margin-bottom: 1rem;
+  }
+
+  .sponsors-logos {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6rem;
+    flex-wrap: wrap;
+  }
+
+  .sponsor-logo {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.45;
+    transition:
+      opacity 0.3s ease,
+      filter 0.3s ease;
+  }
+
+  .sponsor-logo:hover {
+    opacity: 1;
+    filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(80deg);
+  }
 
   .footer-grid {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 3fr 2fr 2fr;
     gap: 40px;
   }
 
@@ -132,6 +204,9 @@ const year = new Date().getFullYear();
     }
     .brand {
       grid-column: span 2;
+    }
+    .sponsors-logos {
+      gap: 2rem;
     }
   }
 </style>
