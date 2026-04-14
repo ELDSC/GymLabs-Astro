@@ -78,6 +78,7 @@ SUPABASE_LOCAL_PUBLISHABLE_KEY="sb_publishable_..."
 SUPABASE_CLOUD_URL="https://PROJECT-REF.supabase.co"
 SUPABASE_CLOUD_PUBLISHABLE_KEY="sb_publishable_..."
 
+SUPABASE_PRODUCT_IMAGE_BUCKET="images"
 SUPABASE_HOME_VIDEO_BUCKET="videos"
 SUPABASE_HOME_VIDEO_PATH="main_video.mp4"
 ```
@@ -85,6 +86,7 @@ SUPABASE_HOME_VIDEO_PATH="main_video.mp4"
 Uso:
 - `SUPABASE_TARGET="local"` usa el stack local de Supabase
 - `SUPABASE_TARGET="cloud"` usa el proyecto remoto en Supabase Cloud
+- `SUPABASE_PRODUCT_IMAGE_BUCKET` define el bucket donde viven las imágenes de productos; `image_storage_key` debe guardar el nombre o ruta del archivo dentro de ese bucket
 - El video de home se resuelve desde `bucket + path`, no con una URL hardcodeada, para que funcione en ambos entornos
 
 No uses claves `service_role` en este proyecto.
