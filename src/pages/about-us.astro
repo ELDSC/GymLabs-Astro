@@ -1,5 +1,4 @@
 ---
-import BaseLayout from "../components/layout/BaseLayout.astro";
 
 import AboutHero from "../components/about-us/AboutHero.astro";
 import CompanyStory from "../components/about-us/CompanyStory.astro";
@@ -7,9 +6,10 @@ import MissionVision from "../components/about-us/MissionVision.astro";
 import WhyChooseUs from "../components/about-us/WhyChooseUs.astro";
 import TeamPanel from "../components/about-us/TeamPanel.astro";
 import CTASection from "../components/about-us/CTASection.astro";
+import MainLayout from "../layouts/MainLayout.astro";
 ---
 
-<BaseLayout title="About Us">
+<MainLayout title="About Us">
 
   <AboutHero />
     
@@ -23,4 +23,4 @@ import CTASection from "../components/about-us/CTASection.astro";
 
   <CTASection />
 
-</BaseLayout>
+</MainLayout>

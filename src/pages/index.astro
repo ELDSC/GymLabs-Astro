@@ -1,5 +1,4 @@
 ---
-import BaseLayout from "../components/layout/BaseLayout.astro";
 import Hero from "../components/home/Hero.astro";
 import BrandVideoSection from "../components/home/BrandVideoSection.astro";
 import CategoriesSection from "../components/home/CategoriesSection.astro";
@@ -7,6 +6,7 @@ import FeaturedOffersSection from "../components/home/FeaturedOffersSection.astr
 import TestimonialsSection from "../components/home/TestimonialsSection.astro";
 import ContactSection from "../components/home/ContactSection.astro";
 import { supabase } from "../lib/supabase";
+import MainLayout from "../layouts/MainLayout.astro";
 
 const placeholderImageUrl = "/images/general-img-square.png";
 const heroImageUrl =
@@ -116,7 +116,7 @@ const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
 }));
 ---
 
-<BaseLayout
+<MainLayout
   title="Home"
 >
   <main class="home">
@@ -127,7 +127,7 @@ const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
     <TestimonialsSection testimonials={testimonials} />
     <ContactSection />
   </main>
-</BaseLayout>
+</MainLayout>
 
 <style>
   .home {
