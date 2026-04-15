@@ -1,18 +1,33 @@
 ---
 import CategoryCard from "./CategoryCard.astro";
+import { getSupabasePublicUrl } from "../../lib/supabase";
 
-interface CategoryItem {
-  id: string;
-  title: string;
-  description: string;
-  iconLabel: string;
-}
-
-interface Props {
-  categories: CategoryItem[];
-}
-
-const { categories } = Astro.props;
+const categories = [
+  {
+    id: "1",
+    title: "Proteína",
+    description: "Suplementos para ganar masa muscular",
+    iconUrl: getSupabasePublicUrl("icons", "proteina_icon.png"),
+  },
+  {
+    id: "2",
+    title: "Creatina",
+    description: "Mejora tu rendimiento",
+    iconUrl: getSupabasePublicUrl("icons", "creatina_icon.png"),
+  },
+  {
+    id: "3",
+    title: "Accesorios",
+    description: "Todo para tu entrenamiento",
+    iconUrl: getSupabasePublicUrl("icons", "gym_accesorie.png"),
+  },
+  {
+    id: "4",
+    title: "Ropa deportiva",
+    description: "Entrena con estilo",
+    iconUrl: getSupabasePublicUrl("icons", "ropa_deportiva.png"),
+  },
+];
 ---
 
 <section class="section" id="categorias" aria-labelledby="categorias-title">
@@ -26,13 +41,15 @@ const { categories } = Astro.props;
     </div>
 
     <div class="categories-grid">
-      {categories.map((category) => (
-        <CategoryCard
-          title={category.title}
-          description={category.description}
-          iconLabel={category.iconLabel}
-        />
-      ))}
+      {
+        categories.map((category) => (
+          <CategoryCard
+            title={category.title}
+            description={category.description}
+            iconUrl={category.iconUrl}
+          />
+        ))
+      }
     </div>
   </div>
 </section>
