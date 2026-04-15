@@ -1,5 +1,6 @@
 ---
 import { getSupabasePublicUrl } from "../../lib/supabase";
+import icon from "../../assets/icon.jpeg";
 
 const year = new Date().getFullYear();
 
@@ -25,7 +26,10 @@ const sponsors = [
 <footer class="footer">
   <div class="footer-grid">
     <div class="footer-col brand">
-      <h3 class="logo">Gym<span>Labs</span></h3>
+      <h3 class="logo">
+        <img src={icon.src} alt="Icon" width="20px" height="20px" />
+        Gym<span>Labs</span>
+      </h3>
       <p class="description">Premium Nutrition & Performance Apparel.</p>
 
       <div class="footer-sponsors">
@@ -97,6 +101,7 @@ const sponsors = [
     margin-top: auto;
     border-top: 1px solid rgba(148, 163, 184, 0.1);
   }
+
   .footer-sponsors {
     margin-top: 2rem;
   }
@@ -161,10 +166,16 @@ const sponsors = [
     font-weight: 800;
     margin: 0 0 20px;
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
   }
 
   .logo span {
     color: var(--color-primary);
+  }
+
+  .logo img {
+    margin-right: 10px;
   }
 
   .description {
@@ -234,9 +245,11 @@ const sponsors = [
       grid-template-columns: 1fr 1fr;
       gap: 50px 30px;
     }
+
     .brand {
       grid-column: span 2;
     }
+
     .sponsors-logos {
       gap: 2rem;
     }
