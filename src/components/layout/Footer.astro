@@ -7,14 +7,17 @@ const sponsors = [
   {
     name: "Equinox",
     logo: getSupabasePublicUrl("logos", "bodytech_logo.png"),
+    url: "https://landing-btperu.bodytech.co/",
   },
   {
     name: "Greens",
     logo: getSupabasePublicUrl("logos", "greens_logo.png"),
+    url: "https://greensfitnessstudio.in/",
   },
   {
     name: "SmartFit",
     logo: getSupabasePublicUrl("logos", "smartfit_logo.png"),
+    url: "https://www.smartfit.com.pe/",
   },
 ];
 ---
@@ -29,13 +32,29 @@ const sponsors = [
         <p class="sponsors-label">Marcas aliadas</p>
         <div class="sponsors-logos">
           {
-            sponsors.map((sponsor) => (
-              <img
-                src={sponsor.logo}
-                alt={`Logo de ${sponsor.name}`}
-                class="sponsor-logo"
-              />
-            ))
+            sponsors.map((sponsor) =>
+              sponsor.url ? (
+                <a
+                  href={sponsor.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visitar ${sponsor.name}`}
+                  class="sponsor-link"
+                >
+                  <img
+                    src={sponsor.logo}
+                    alt={`Logo de ${sponsor.name}`}
+                    class="sponsor-logo"
+                  />
+                </a>
+              ) : (
+                <img
+                  src={sponsor.logo}
+                  alt={`Logo de ${sponsor.name}`}
+                  class="sponsor-logo"
+                />
+              ),
+            )
           }
         </div>
       </div>
@@ -111,6 +130,19 @@ const sponsors = [
       filter 0.3s ease;
   }
 
+  .sponsor-link {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sponsor-link:hover,
+  .sponsor-link:focus {
+    color: inherit;
+    transform: none;
+    display: inline-flex;
+  }
+
+  .sponsor-link:hover .sponsor-logo,
   .sponsor-logo:hover {
     opacity: 1;
     filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(80deg);
