@@ -1,212 +1,224 @@
 ---
-import { getSupabasePublicUrl } from "../../lib/supabase";
+import {getSupabasePublicUrl} from "../../lib/supabase";
+import icon from "../../assets/icon.jpeg";
 
 const year = new Date().getFullYear();
 
 const sponsors = [
-  {
-    name: "Equinox",
-    logo: getSupabasePublicUrl("logos", "bodytech_logo.png"),
-  },
-  {
-    name: "Greens",
-    logo: getSupabasePublicUrl("logos", "greens_logo.png"),
-  },
-  {
-    name: "SmartFit",
-    logo: getSupabasePublicUrl("logos", "smartfit_logo.png"),
-  },
+    {
+        name: "Equinox",
+        logo: getSupabasePublicUrl("logos", "bodytech_logo.png"),
+    },
+    {
+        name: "Greens",
+        logo: getSupabasePublicUrl("logos", "greens_logo.png"),
+    },
+    {
+        name: "SmartFit",
+        logo: getSupabasePublicUrl("logos", "smartfit_logo.png"),
+    },
 ];
 ---
 
 <footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-col brand">
-      <h3 class="logo">Gym<span>Labs</span></h3>
-      <p class="description">Premium Nutrition & Performance Apparel.</p>
+    <div class="footer-grid">
+        <div class="footer-col brand">
+            <h3 class="logo">
+                <img src={icon.src} alt="Icon" width="20px" height="20px"/>
+                Gym<span>Labs</span>
+            </h3>
+            <p class="description">Premium Nutrition & Performance Apparel.</p>
 
-      <div class="footer-sponsors">
-        <p class="sponsors-label">Marcas aliadas</p>
-        <div class="sponsors-logos">
-          {
-            sponsors.map((sponsor) => (
-              <img
-                src={sponsor.logo}
-                alt={`Logo de ${sponsor.name}`}
-                class="sponsor-logo"
-              />
-            ))
-          }
+            <div class="footer-sponsors">
+                <p class="sponsors-label">Marcas aliadas</p>
+                <div class="sponsors-logos">
+                    {
+                        sponsors.map((sponsor) => (
+                                <img
+                                        src={sponsor.logo}
+                                        alt={`Logo de ${sponsor.name}`}
+                                        class="sponsor-logo"
+                                />
+                        ))
+                    }
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div class="footer-col">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="/categorias">Categorias</a></li>
+                <li><a href="/ofertas">Ofertas</a></li>
+                <li><a href="/opiniones">Opiniones</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Canales</h4>
+            <div class="social-links">
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://youtube.com" target="_blank">YouTube</a>
+                <a href="mailto:hola@gymlabs.pe">hola@gymlabs.pe</a>
+            </div>
+        </div>
     </div>
 
-    <div class="footer-col">
-      <h4>Navegación</h4>
-      <ul>
-        <li><a href="/categorias">Categorias</a></li>
-        <li><a href="/ofertas">Ofertas</a></li>
-        <li><a href="/opiniones">Opiniones</a></li>
-      </ul>
+    <div class="footer-bottom">
+        <p>© {year} GymLabs. Home optimizada para rendimiento y conversion.</p>
     </div>
-
-    <div class="footer-col">
-      <h4>Canales</h4>
-      <div class="social-links">
-        <a href="https://instagram.com" target="_blank">Instagram</a>
-        <a href="https://youtube.com" target="_blank">YouTube</a>
-        <a href="mailto:hola@gymlabs.pe">hola@gymlabs.pe</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© {year} GymLabs. Home optimizada para rendimiento y conversion.</p>
-  </div>
 </footer>
 
 <style>
-  .footer {
-    background: linear-gradient(
-      180deg,
-      rgba(15, 23, 42, 0.96),
-      rgba(2, 6, 23, 1)
-    );
-    color: var(--text-primary);
-    padding: 4.5rem 1.5rem 2rem;
-    font-family: var(--font-primary);
-    margin-top: auto;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
-  }
-  .footer-sponsors {
-    margin-top: 2rem;
-  }
-
-  .sponsors-label {
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted, #94a3b8);
-    margin-bottom: 1rem;
-  }
-
-  .sponsors-logos {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6rem;
-    flex-wrap: wrap;
-  }
-
-  .sponsor-logo {
-    height: 28px;
-    width: auto;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.45;
-    transition:
-      opacity 0.3s ease,
-      filter 0.3s ease;
-  }
-
-  .sponsor-logo:hover {
-    opacity: 1;
-    filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(80deg);
-  }
-
-  .footer-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 3fr 2fr 2fr;
-    gap: 40px;
-  }
-
-  .logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0 0 20px;
-    color: var(--text-primary);
-  }
-
-  .logo span {
-    color: var(--color-primary);
-  }
-
-  .description {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    max-width: 280px;
-  }
-
-  h4 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  li {
-    margin-bottom: 12px;
-  }
-
-  a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-  }
-
-  a:hover {
-    color: var(--color-primary);
-    transform: translateX(5px);
-    display: inline-block;
-  }
-
-  .social-links {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .social-links a {
-    color: var(--color-primary);
-    font-weight: 600;
-  }
-
-  .footer-bottom {
-    max-width: 1200px;
-    margin: 3rem auto 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
-  }
-
-  .footer-bottom p {
-    color: var(--text-disabled, #475569);
-    font-size: 0.85rem;
-  }
-
-  @media (max-width: 768px) {
-    .footer-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 50px 30px;
+    .footer {
+        background: linear-gradient(
+                180deg,
+                rgba(15, 23, 42, 0.96),
+                rgba(2, 6, 23, 1)
+        );
+        color: var(--text-primary);
+        padding: 4.5rem 1.5rem 2rem;
+        font-family: var(--font-primary);
+        margin-top: auto;
+        border-top: 1px solid rgba(148, 163, 184, 0.1);
     }
-    .brand {
-      grid-column: span 2;
+
+    .footer-sponsors {
+        margin-top: 2rem;
     }
+
+    .sponsors-label {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted, #94a3b8);
+        margin-bottom: 1rem;
+    }
+
     .sponsors-logos {
-      gap: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6rem;
+        flex-wrap: wrap;
     }
-  }
+
+    .sponsor-logo {
+        height: 28px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        opacity: 0.45;
+        transition: opacity 0.3s ease,
+        filter 0.3s ease;
+    }
+
+    .sponsor-logo:hover {
+        opacity: 1;
+        filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(80deg);
+    }
+
+    .footer-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 3fr 2fr 2fr;
+        gap: 40px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 20px;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+    }
+
+    .logo span {
+        color: var(--color-primary);
+    }
+
+    .logo img {
+        margin-right: 10px;
+    }
+
+    .description {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        max-width: 280px;
+    }
+
+    h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        margin-bottom: 12px;
+    }
+
+    a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    a:hover {
+        color: var(--color-primary);
+        transform: translateX(5px);
+        display: inline-block;
+    }
+
+    .social-links {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .social-links a {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 3rem auto 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .footer-bottom p {
+        color: var(--text-disabled, #475569);
+        font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 50px 30px;
+        }
+
+        .brand {
+            grid-column: span 2;
+        }
+
+        .sponsors-logos {
+            gap: 2rem;
+        }
+    }
 </style>
