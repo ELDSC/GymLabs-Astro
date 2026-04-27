@@ -2,15 +2,15 @@
 import Button from "../ui/Button.astro";
 
 interface Props {
-    heroImageUrl: string;
+heroImageUrl: string;
 }
 
 const {heroImageUrl} = Astro.props;
 ---
 
-<section class="hero" id="inicio" style={`background-image: url('${heroImageUrl}');`}>
-    <div class="hero__overlay"/>
-    <div class="hero__container" >
+<section class="hero" id="inicio" style=`background-image: url('${heroImageUrl}');`>
+    <div class="hero__overlay" />
+    <div class="hero__container">
         <div class="hero__content">
             <span class="hero__eyebrow">Suplementacion y Estilo</span>
 
@@ -26,8 +26,8 @@ const {heroImageUrl} = Astro.props;
             </p>
 
             <div class="hero__actions">
-                <Button text="Explorar tienda" href="#ofertas" variant="primary"/>
-                <Button text="Ver novedades" href="#categorias" variant="secondary"/>
+                <Button text="Explorar tienda" href="#ofertas" variant="primary" />
+                <Button text="Ver novedades" href="#categorias" variant="secondary" />
             </div>
 
         </div>
@@ -61,7 +61,7 @@ const {heroImageUrl} = Astro.props;
         z-index: 0;
         pointer-events: none;
         background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 18%),
-        linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+            linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
         opacity: 0.65;
     }
 

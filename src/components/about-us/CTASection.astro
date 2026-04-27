@@ -1,0 +1,151 @@
+
+<section class="cta-section">
+    <div class="cta-container">
+        <div class="cta-content">
+            <h2 class="cta-title">Transforma tu Entrenamiento</h2>
+            <p class="cta-description">
+                En GymLabs creemos que el fitness es más que ejercicio. Es un estilo de vida. 
+                Únete a nuestra comunidad y alcanza tus objetivos con tecnología de punta y entrenadores expertos.
+            </p>
+            
+            <div class="cta-buttons">
+                <button class="btn btn-primary">Comienza Ahora</button>
+                <button class="btn btn-secondary">Más Información</button>
+            </div>
+        </div>
+
+        <div class="cta-image">
+            <div class="image-placeholder">
+                
+                <img src="/gym-cta.jpg" alt="GymLabs CTA" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .cta-section {
+        background: var(--bg-base);
+        padding: 3rem 1rem;
+        margin: 2rem 0;
+    }
+
+    .cta-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .cta-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .cta-title {
+        font-family: var(--font-primary);
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.2;
+    }
+
+    .cta-description {
+        font-family: var(--font-primary);
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.75rem 1.75rem;
+        font-family: var(--font-primary);
+        border: 2px solid transparent;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: var(--bg-base);
+        box-shadow: 0 0 20px var(--color-primary-glow);
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 25px var(--color-primary-glow);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-primary-glow);
+        transform: translateY(-2px);
+    }
+
+    .cta-image {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        border: 2px solid var(--border-color);
+    }
+
+    .image-placeholder {
+        width: 100%;
+        aspect-ratio: 1;
+        background: var(--bg-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .image-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .cta-image:hover img {
+        transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .cta-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .cta-section {
+            padding: 2rem 1rem;
+        }
+    }
+</style>
