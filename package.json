@@ -16,6 +16,6 @@
     "astro": "^6.1.4"
   },
   "devDependencies": {
-    "supabase": "^2.88.1"
+    "supabase": "^2.90.0"
   }
 }
