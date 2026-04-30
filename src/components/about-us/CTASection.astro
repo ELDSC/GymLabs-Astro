@@ -1,22 +1,33 @@
+---
+import Button from "../ui/Button.astro";
+---
 
 <section class="cta-section">
     <div class="cta-container">
         <div class="cta-content">
             <h2 class="cta-title">Transforma tu Entrenamiento</h2>
             <p class="cta-description">
-                En GymLabs creemos que el fitness es más que ejercicio. Es un estilo de vida. 
-                Únete a nuestra comunidad y alcanza tus objetivos con tecnología de punta y entrenadores expertos.
+                En GymLabs creemos que el fitness es más que ejercicio. Es un
+                estilo de vida. Únete a nuestra comunidad y alcanza tus
+                objetivos con tecnología de punta y entrenadores expertos.
             </p>
-            
+
             <div class="cta-buttons">
-                <button class="btn btn-primary">Comienza Ahora</button>
-                <button class="btn btn-secondary">Más Información</button>
+                <Button
+                    text="Comienza Ahora"
+                    href="#ofertas"
+                    variant="primary"
+                />
+                <Button
+                    text="Más Información"
+                    href="#categorias"
+                    variant="secondary"
+                />
             </div>
         </div>
 
         <div class="cta-image">
             <div class="image-placeholder">
-                
                 <img src="/gym-cta.jpg" alt="GymLabs CTA" />
             </div>
         </div>
@@ -31,6 +42,8 @@
     }
 
     .cta-container {
+        border: 1px red solid;
+        padding: 20px;
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
@@ -66,40 +79,6 @@
         flex-wrap: wrap;
     }
 
-    .btn {
-        padding: 0.75rem 1.75rem;
-        font-family: var(--font-primary);
-        border: 2px solid transparent;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: var(--color-primary);
-        color: var(--bg-base);
-        box-shadow: 0 0 20px var(--color-primary-glow);
-    }
-
-    .btn-primary:hover {
-        background: var(--color-primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 25px var(--color-primary-glow);
-    }
-
-    .btn-secondary {
-        background: transparent;
-        color: var(--color-primary);
-        border-color: var(--color-primary);
-    }
-
-    .btn-secondary:hover {
-        background: var(--color-primary-glow);
-        transform: translateY(-2px);
-    }
-
     .cta-image {
         position: relative;
         overflow: hidden;
@@ -129,16 +108,34 @@
     }
 
     /* Responsive */
+    @media (max-width: 1024px) {
+        .cta-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .cta-buttons {
+            flex-direction: column;
+            max-width: 200px;
+            margin: 0 auto;
+            border: 1px red solid;
+        }
+        .cta-image {
+            width: 90%;
+            height: 90%;
+            margin: 0 auto;
+        }
+    }
     @media (max-width: 768px) {
         .cta-container {
             grid-template-columns: 1fr;
             gap: 2rem;
         }
-
         .cta-buttons {
             flex-direction: column;
+            max-width: 200px;
+            margin: 0 auto;
+            border: 1px red solid;
         }
-
         .btn {
             width: 100%;
             text-align: center;
@@ -147,5 +144,11 @@
         .cta-section {
             padding: 2rem 1rem;
         }
+    }
+    @media (max-width: 425px) {
+    }
+    @media (max-width: 375px) {
+    }
+    @media (max-width: 320px) {
     }
 </style>

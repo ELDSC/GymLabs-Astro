@@ -1,0 +1,100 @@
+<section class="team">
+  <div class="container">
+    <h2>Nuestro Equipo</h2>
+
+    <div class="grid">
+      <!-- Card -->
+      <div class="card card-left">
+        <img src="/team1.jpg" alt="Miembro 1" />
+        <div class="content">
+          <h3>Juan Pérez</h3>
+          <p>Entrenador Personal</p>
+        </div>
+      </div>
+
+      <div class="card card-right">
+        <img src="/team2.jpg" alt="Miembro 2" />
+        <div class="content">
+          <h3>Ana Torres</h3>
+          <p>Nutricionista</p>
+        </div>
+      </div>
+
+      <div class="card card-left">
+        <img src="/team3.jpg" alt="Miembro 3" />
+        <div class="content">
+          <h3>Carlos Ruiz</h3>
+          <p>Coach Fitness</p>
+        </div>
+      </div>
+
+      <div class="card card-right">
+        <img src="/team4.jpg" alt="Miembro 4" />
+        <div class="content">
+          <h3>Lucía Gómez</h3>
+          <p>Atención al Cliente</p>
+        </div>
+      </div>
+
+      <div class="card card-left">
+        <img src="/team5.jpg" alt="Miembro 5" />
+        <div class="content">
+          <h3>Diego Ramos</h3>
+          <p>Marketing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team {
+    padding: 80px 20px;
+    text-align: center;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+  }
+
+  .grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .card {
+    background: var(--bg-surface);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+  }
+
+  img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid var(--color-primary);
+  }
+
+  h3 {
+    margin: 10px 0 5px;
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+</style>
