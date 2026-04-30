@@ -1,0 +1,137 @@
+---
+const categorias = [
+  { nombre: "Suplementos", icon: "💊", active: true },
+  { nombre: "Ropa", icon: "👕" },
+  { nombre: "Equipamiento", icon: "🏋️" },
+  { nombre: "Novedades", icon: "✨" },
+  { nombre: "Ofertas", icon: "🏷️" },
+];
+---
+
+<aside class="sidebar">
+  <h2 class="logo">GymLabs</h2>
+
+  <div class="section">
+    <p class="section-title">CATEGORÍAS</p>
+    <span class="subtitle">Refina tu rendimiento</span>
+
+    <ul class="menu">
+      {categorias.map((cat) => (
+        <li class={`item ${cat.active ? "active" : ""}`}>
+          <span class="icon">{cat.icon}</span>
+          {cat.nombre}
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="section">
+    <p class="section-title">RANGO DE PRECIO</p>
+
+    <input type="range" min="0" max="200" class="range" />
+
+    <div class="range-values">
+      <span>$0</span>
+      <span>$200+</span>
+    </div>
+  </div>
+
+  <button class="btn-clear">LIMPIAR FILTROS</button>
+
+  <div class="extra">
+    <p>💬 SOPORTE</p>
+    <p>📦 SEGUIMIENTO</p>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+
+    background: linear-gradient(180deg, var(--bg-base), var(--bg-surface));
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .logo {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: 0.3s;
+  }
+
+  .item:hover {
+    background: var(--bg-surface-2);
+  }
+
+  .item.active {
+    background: linear-gradient(90deg, var(--color-primary-glow), transparent);
+    border-left: 3px solid var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .range {
+    width: 100%;
+    margin-top: 10px;
+    accent-color: var(--color-primary);
+  }
+
+  .range-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .btn-clear {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 999px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .btn-clear:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .extra {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+</style>

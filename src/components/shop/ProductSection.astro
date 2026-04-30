@@ -1,5 +1,6 @@
 ---
 import ProductCard from "../ui/ProductCard.astro";
+import SibarCategory from "./SibarCategory.astro";
 
 interface ProductItem {
   id: string;
@@ -19,24 +20,46 @@ interface Props {
 const { title = "Ofertas destacadas", products } = Astro.props;
 ---
 
-<section class="section" id="products-section" aria-labelledby="products-title">
-  <div class="section__inner">
-    <div class="section__heading">
-      <h2 id="products-title">{title}</h2>
-    </div>
+<!-- TÍTULO -->
+<div class="section__inner">
+  <div class="section__heading">
+    <h2 id="products-title">{title}</h2>
+  </div>
+</div>
 
+<!-- LAYOUT PRINCIPAL -->
+<div class="container">
+  <!-- SIDEBAR -->
+  <SibarCategory />
+
+  <!-- PRODUCTOS -->
+  <section
+    class="section"
+    id="products-section"
+    aria-labelledby="products-title"
+  >
     <div class="products-grid">
       {products.map((product) => <ProductCard {...product} />)}
     </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <style>
-  .section {
-    padding-block: clamp(3rem, 5vw, 4rem);
-    margin-inline: auto;
+  /* CONTENEDOR GENERAL */
+  .container {
+    display: flex;
+    gap: 2rem;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
 
+  /* SECCIÓN DE PRODUCTOS */
+  .section {
+    flex: 1; /* 🔥 evita que se rompa el layout */
+    padding-block: clamp(3rem, 5vw, 4rem);
+  }
+
+  /* ENCABEZADO */
   .section__inner {
     max-width: 1200px;
     margin-inline: auto;
@@ -54,13 +77,20 @@ const { title = "Ofertas destacadas", products } = Astro.props;
     letter-spacing: -0.03em;
   }
 
+  /* GRID DE PRODUCTOS */
   .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
   }
 
-  /* Responsive */
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+    }
+  }
+
   @media (max-width: 768px) {
     .products-grid {
       grid-template-columns: repeat(2, 1fr);
@@ -71,7 +101,6 @@ const { title = "Ofertas destacadas", products } = Astro.props;
   @media (max-width: 480px) {
     .products-grid {
       grid-template-columns: 1fr;
-      gap: 0.75rem;
     }
   }
 </style>
