@@ -42,7 +42,6 @@ import Button from "../ui/Button.astro";
     }
 
     .cta-container {
-        border: 1px red solid;
         padding: 20px;
         max-width: 1200px;
         margin: 0 auto;
@@ -50,12 +49,14 @@ import Button from "../ui/Button.astro";
         grid-template-columns: 1fr 1fr;
         gap: 3rem;
         align-items: center;
+        transition: all 0.4s ease;
     }
 
     .cta-content {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
+        transition: all 0.4s ease;
     }
 
     .cta-title {
@@ -64,6 +65,7 @@ import Button from "../ui/Button.astro";
         font-weight: 700;
         color: var(--text-primary);
         line-height: 1.2;
+        transition: font-size 0.4s ease;
     }
 
     .cta-description {
@@ -71,12 +73,14 @@ import Button from "../ui/Button.astro";
         font-size: 1.1rem;
         color: var(--text-secondary);
         line-height: 1.6;
+        transition: font-size 0.4s ease;
     }
 
     .cta-buttons {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
+        transition: all 0.4s ease;
     }
 
     .cta-image {
@@ -84,6 +88,7 @@ import Button from "../ui/Button.astro";
         overflow: hidden;
         border-radius: 1rem;
         border: 2px solid var(--border-color);
+        transition: all 0.4s ease;
     }
 
     .image-placeholder {
@@ -94,6 +99,7 @@ import Button from "../ui/Button.astro";
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        transition: all 0.4s ease;
     }
 
     .image-placeholder img {
@@ -113,42 +119,104 @@ import Button from "../ui/Button.astro";
             grid-template-columns: 1fr;
             gap: 2rem;
         }
+        .cta-image {
+            width: 80%;
+            height: auto;
+            margin: 0 auto;
+        }
         .cta-buttons {
             flex-direction: column;
-            max-width: 200px;
-            margin: 0 auto;
-            border: 1px red solid;
+            width: 100%;
+            height: 100px;
         }
-        .cta-image {
-            width: 90%;
-            height: 90%;
-            margin: 0 auto;
+        .image-placeholder {
+            aspect-ratio: 1.2/1;
         }
     }
     @media (max-width: 768px) {
         .cta-container {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
+            padding: 15px;
+        }
+        .cta-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+        .cta-description {
+            font-size: 0.95rem;
         }
         .cta-buttons {
             flex-direction: column;
-            max-width: 200px;
-            margin: 0 auto;
-            border: 1px red solid;
-        }
-        .btn {
             width: 100%;
-            text-align: center;
+            height: 100px;
         }
-
+        .cta-image {
+            width: 70%;
+            height: auto;
+            margin: 0 auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.3/1;
+        }
         .cta-section {
             padding: 2rem 1rem;
         }
     }
     @media (max-width: 425px) {
+        .cta-container {
+            gap: 1rem;
+            padding: 10px;
+        }
+        .cta-title {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+        .cta-description {
+            font-size: 0.9rem;
+        }
+        .cta-image {
+            width: 60%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.4/1;
+        }
     }
     @media (max-width: 375px) {
+        .cta-container {
+            gap: 0.8rem;
+            padding: 8px;
+        }
+        .cta-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.75rem);
+        }
+        .cta-description {
+            font-size: 0.85rem;
+        }
+        .cta-image {
+            width: 50%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.5/1;
+        }
     }
     @media (max-width: 320px) {
+        .cta-container {
+            gap: 0.6rem;
+            padding: 5px;
+        }
+        .cta-title {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+        }
+        .cta-description {
+            font-size: 0.8rem;
+        }
+        .cta-image {
+            width: 45%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.6/1;
+        }
     }
 </style>
