@@ -1,22 +1,33 @@
+---
+import Button from "../ui/Button.astro";
+---
 
 <section class="cta-section">
     <div class="cta-container">
         <div class="cta-content">
             <h2 class="cta-title">Transforma tu Entrenamiento</h2>
             <p class="cta-description">
-                En GymLabs creemos que el fitness es más que ejercicio. Es un estilo de vida. 
-                Únete a nuestra comunidad y alcanza tus objetivos con tecnología de punta y entrenadores expertos.
+                En GymLabs creemos que el fitness es más que ejercicio. Es un
+                estilo de vida. Únete a nuestra comunidad y alcanza tus
+                objetivos con tecnología de punta y entrenadores expertos.
             </p>
-            
+
             <div class="cta-buttons">
-                <button class="btn btn-primary">Comienza Ahora</button>
-                <button class="btn btn-secondary">Más Información</button>
+                <Button
+                    text="Comienza Ahora"
+                    href="#ofertas"
+                    variant="primary"
+                />
+                <Button
+                    text="Más Información"
+                    href="#categorias"
+                    variant="secondary"
+                />
             </div>
         </div>
 
         <div class="cta-image">
             <div class="image-placeholder">
-                
                 <img src="/gym-cta.jpg" alt="GymLabs CTA" />
             </div>
         </div>
@@ -31,18 +42,21 @@
     }
 
     .cta-container {
+        padding: 20px;
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 3rem;
         align-items: center;
+        transition: all 0.4s ease;
     }
 
     .cta-content {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
+        transition: all 0.4s ease;
     }
 
     .cta-title {
@@ -51,6 +65,7 @@
         font-weight: 700;
         color: var(--text-primary);
         line-height: 1.2;
+        transition: font-size 0.4s ease;
     }
 
     .cta-description {
@@ -58,46 +73,14 @@
         font-size: 1.1rem;
         color: var(--text-secondary);
         line-height: 1.6;
+        transition: font-size 0.4s ease;
     }
 
     .cta-buttons {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
-    }
-
-    .btn {
-        padding: 0.75rem 1.75rem;
-        font-family: var(--font-primary);
-        border: 2px solid transparent;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: var(--color-primary);
-        color: var(--bg-base);
-        box-shadow: 0 0 20px var(--color-primary-glow);
-    }
-
-    .btn-primary:hover {
-        background: var(--color-primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 25px var(--color-primary-glow);
-    }
-
-    .btn-secondary {
-        background: transparent;
-        color: var(--color-primary);
-        border-color: var(--color-primary);
-    }
-
-    .btn-secondary:hover {
-        background: var(--color-primary-glow);
-        transform: translateY(-2px);
+        transition: all 0.4s ease;
     }
 
     .cta-image {
@@ -105,6 +88,7 @@
         overflow: hidden;
         border-radius: 1rem;
         border: 2px solid var(--border-color);
+        transition: all 0.4s ease;
     }
 
     .image-placeholder {
@@ -115,6 +99,7 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        transition: all 0.4s ease;
     }
 
     .image-placeholder img {
@@ -129,23 +114,109 @@
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .cta-container {
             grid-template-columns: 1fr;
             gap: 2rem;
         }
-
+        .cta-image {
+            width: 80%;
+            height: auto;
+            margin: 0 auto;
+        }
         .cta-buttons {
             flex-direction: column;
-        }
-
-        .btn {
             width: 100%;
-            text-align: center;
+            height: 100px;
         }
-
+        .image-placeholder {
+            aspect-ratio: 1.2/1;
+        }
+    }
+    @media (max-width: 768px) {
+        .cta-container {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding: 15px;
+        }
+        .cta-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+        .cta-description {
+            font-size: 0.95rem;
+        }
+        .cta-buttons {
+            flex-direction: column;
+            width: 100%;
+            height: 100px;
+        }
+        .cta-image {
+            width: 70%;
+            height: auto;
+            margin: 0 auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.3/1;
+        }
         .cta-section {
             padding: 2rem 1rem;
+        }
+    }
+    @media (max-width: 425px) {
+        .cta-container {
+            gap: 1rem;
+            padding: 10px;
+        }
+        .cta-title {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+        .cta-description {
+            font-size: 0.9rem;
+        }
+        .cta-image {
+            width: 60%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.4/1;
+        }
+    }
+    @media (max-width: 375px) {
+        .cta-container {
+            gap: 0.8rem;
+            padding: 8px;
+        }
+        .cta-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.75rem);
+        }
+        .cta-description {
+            font-size: 0.85rem;
+        }
+        .cta-image {
+            width: 50%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.5/1;
+        }
+    }
+    @media (max-width: 320px) {
+        .cta-container {
+            gap: 0.6rem;
+            padding: 5px;
+        }
+        .cta-title {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+        }
+        .cta-description {
+            font-size: 0.8rem;
+        }
+        .cta-image {
+            width: 45%;
+            height: auto;
+        }
+        .image-placeholder {
+            aspect-ratio: 1.6/1;
         }
     }
 </style>

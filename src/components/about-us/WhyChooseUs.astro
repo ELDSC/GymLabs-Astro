@@ -1,0 +1,70 @@
+<section class="why">
+  <div class="container">
+    <h2>¿Por qué elegirnos?</h2>
+
+    <div class="grid">
+      <div class="item">
+        <h3>Calidad Premium</h3>
+        <p>Productos certificados con altos estándares internacionales.</p>
+      </div>
+
+      <div class="item">
+        <h3>Resultados Reales</h3>
+        <p>Clientes respaldan nuestra efectividad y rendimiento.</p>
+      </div>
+
+      <div class="item">
+        <h3>Comunidad Fitness</h3>
+        <p>Formamos parte de tu progreso y motivación diaria.</p>
+      </div>
+
+      <div class="item">
+        <h3>Innovación</h3>
+        <p>Siempre actualizados con tendencias y tecnología fitness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    padding: 80px 20px;
+    text-align: center;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+  }
+
+  .grid {
+    display: grid;
+    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .item {
+    padding: 25px;
+    background: var(--bg-surface);
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    transition: 0.3s;
+  }
+
+  .item:hover {
+    transform: scale(1.05);
+  }
+
+  h3 {
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+</style>

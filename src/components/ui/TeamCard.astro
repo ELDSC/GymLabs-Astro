@@ -1,0 +1,139 @@
+---
+const { name, role, description, align = "right" } = Astro.props;
+---
+
+<div class={`card ${align}`}>
+    <div class="content">
+        <h3>{name}</h3> 
+        <span>{role}</span>
+
+        <p class="extra">{description}</p>
+
+        <div class="links">
+            <a href="#">in</a>
+            <a href="#">tw</a>
+            <a href="#">mail</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        position: relative;
+        height: 220px;
+        border-radius: 16px;
+        overflow: hidden;
+        display: grid;
+        align-items: center;
+        padding: 30px;
+        color: white;
+        transition: transform 0.4s ease;
+        width: 100%;
+
+    }
+
+    @media (max-width: 1024px) {
+        .card {
+            height: 200px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .card {
+            height: 180px;
+        }
+    }
+
+    .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url('https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd');
+        background-size: cover;
+        background-repeat: no-repeat;
+        transform: scale(1.2);
+        transition:
+            transform 0.6s ease,
+            filter 0.4s;
+        z-index: 0;
+    }
+
+    .card.right::after {
+        background-position: right center;
+    }
+
+    .card.left::after {
+        background-position: left center;
+    }
+
+    /* overlay */
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        transition: 0.4s;
+    }
+
+    .card.right::before {
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.8), transparent);
+    }
+
+    .card.left::before {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
+    }
+
+    /* contenido */
+    .content {
+        position: relative;
+        z-index: 2;
+        border: 1px red solid;
+
+        max-width: 320px;
+    }
+
+    .extra {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: 0.4s;
+    }
+
+    .links {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: 0.4s;
+    }
+
+    .links a {
+        text-decoration: none;
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+
+    /* hover */
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card:hover::after {
+        transform: scale(1.4);
+        filter: brightness(1.1);
+    }
+
+    .card:hover::before {
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .card:hover .extra,
+    .card:hover .links {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+</style>

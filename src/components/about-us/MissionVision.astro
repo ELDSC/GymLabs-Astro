@@ -1,0 +1,57 @@
+<section class="mission">
+  <div class="container">
+    <div class="card">
+      <h2>Misión</h2>
+      <p>
+        Impulsar el rendimiento físico de nuestros clientes ofreciendo productos
+        de alta calidad, innovación constante y una experiencia que inspire
+        disciplina y bienestar.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Visión</h2>
+      <p>
+        Ser la marca líder en nutrición y equipamiento fitness en Latinoamérica,
+        destacando por nuestra comunidad, confianza y resultados reales.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mission {
+    padding: 80px 20px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .card {
+    background: var(--bg-surface);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px var(--color-primary-glow);
+  }
+
+  h2 {
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+</style>

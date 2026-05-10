@@ -1,0 +1,47 @@
+---
+import TeamCard from "../ui/TeamCard.astro";
+
+const members = [
+    {
+        name: "Alex Morgan",
+        role: "CEO",
+        description: "Visionario con más de 10 años de experiencia.",
+        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+    },
+    {
+        name: "Jordan Lee",
+        role: "CTO",
+        description: "Experto en desarrollo y tecnología.",
+        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+    },
+    {
+        name: "Jordan Lee",
+        role: "CTO",
+        description: "Experto en desarrollo y tecnología.",
+        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+    },
+    {
+        name: "Jordan Lee",
+        role: "CTO",
+        description: "Experto en desarrollo y tecnología.",
+        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+    },
+];
+---
+
+<section class="team">
+    {
+        members.map((member, index) => (
+            <TeamCard {...member} align={index % 2 === 0 ? "right" : "left"} />
+        ))
+    }
+</section>
+
+<style>
+    .team {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 50px;
+    }
+</style>
