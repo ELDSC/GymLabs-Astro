@@ -1,6 +1,10 @@
 ---
 import icon from "../../assets/icon.jpeg";
 const currentPath = Astro.url.pathname;
+const currentSearch = Astro.url.searchParams.get("search") || "";
+const currentCategory = Astro.url.searchParams.get("category") || "";
+const currentMinPrice = Astro.url.searchParams.get("minPrice") || "";
+const currentMaxPrice = Astro.url.searchParams.get("maxPrice") || "";
 ---
 
 <nav class="navbar" aria-label="Navegación principal">
@@ -13,11 +17,18 @@ const currentPath = Astro.url.pathname;
     <div class="opt">
       {
         currentPath === "/shop" && (
-          <input
-            type="text"
-            placeholder="Buscar productos..."
-            class="input-search"
-          />
+          <form action="/shop" method="GET" class="search-form">
+            {currentCategory && <input type="hidden" name="category" value={currentCategory} />}
+            {currentMinPrice && <input type="hidden" name="minPrice" value={currentMinPrice} />}
+            {currentMaxPrice && <input type="hidden" name="maxPrice" value={currentMaxPrice} />}
+            <input
+              type="text"
+              name="search"
+              placeholder="Buscar productos..."
+              class="input-search"
+              value={currentSearch}
+            />
+          </form>
         )
       }
     </div>
@@ -93,6 +104,10 @@ const currentPath = Astro.url.pathname;
     color: var(--color-primary);
   }
 
+  .search-form {
+    display: flex;
+  }
+
   .opt input {
     padding: 6px 10px;
     border-radius: 8px;
@@ -100,7 +115,6 @@ const currentPath = Astro.url.pathname;
     outline: none;
     width: 250px;
   }
-
 
   @media (max-width: 980px) {
     .nav-container {

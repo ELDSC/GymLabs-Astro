@@ -5,28 +5,80 @@ import MainLayout from "../layouts/MainLayout.astro";
 import ProductSection from "../components/shop/ProductSection.astro";
 import { getProductImageUrl, supabase } from "../lib/supabase";
 
-let productsList: any[] = [];
+const search = Astro.url.searchParams.get("search") || "";
+const categorySlug = Astro.url.searchParams.get("category") || "";
+const minPrice = Astro.url.searchParams.get("minPrice") || "";
+const maxPrice = Astro.url.searchParams.get("maxPrice") || "";
 
-const { data, error } = await supabase
-  .from("products")
-  .select(
-    `
-      id,
-      name,
-      slug,
-      price,
-      compare_at_price,
-      image_storage_key,
-      categories(name)
-    `
-  )
+const { data: categoriesData } = await supabase
+  .from("categories")
+  .select("id, name, slug")
   .eq("is_active", true)
-  .order("name");
+  .order("sort_order", { ascending: true });
+
+const categories = (categoriesData ?? []).map((c: { id: string; name: string; slug: string }) => ({
+  id: c.id,
+  name: c.name,
+  slug: c.slug,
+}));
+
+let categoryId: string | null = null;
+let activeCategoryName = "";
+if (categorySlug) {
+  const { data: categoryMatch } = await supabase
+    .from("categories")
+    .select("id, name")
+    .eq("slug", categorySlug)
+    .eq("is_active", true)
+    .single();
+  if (categoryMatch) {
+    categoryId = categoryMatch.id;
+    activeCategoryName = categoryMatch.name;
+  }
+}
+
+let query = supabase
+  .from("products")
+  .select(`
+    id,
+    name,
+    slug,
+    price,
+    compare_at_price,
+    image_storage_key,
+    categories(name)
+  `)
+  .eq("is_active", true);
+
+if (search) {
+  query = query.ilike("name", `%${search}%`);
+}
+if (categoryId) {
+  query = query.eq("category_id", categoryId);
+}
+if (minPrice) {
+  query = query.gte("price", Number(minPrice));
+}
+if (maxPrice) {
+  query = query.lte("price", Number(maxPrice));
+}
+query = query.order("name");
+
+const { data, error } = await query;
+
+let productsList: {
+  id: string;
+  name: string;
+  category: string;
+  imageUrl: string;
+  price: number;
+  compareAtPrice: number | null;
+}[] = [];
 
 if (error) {
   console.error("Error fetching products:", error);
 } else {
-  productsList = (data ?? []).map((product) => {
+  productsList = (data ?? []).map((product: any) => {
     const categoryRelation = product.categories as { name: string } | { name: string }[] | null;
     const categoryName = Array.isArray(categoryRelation)
       ? categoryRelation[0]?.name
@@ -45,11 +97,23 @@ if (error) {
     };
   });
 }
+
+const filters = {
+  search,
+  categorySlug,
+  activeCategoryName,
+  minPrice,
+  maxPrice,
+};
 ---
 
 <MainLayout title="Tienda">
   <main class="shop">
-    <ProductSection title="Todos los Productos" products={productsList} />
+    <ProductSection
+      products={productsList}
+      categories={categories}
+      filters={filters}
+    />
   </main>
 </MainLayout>
 

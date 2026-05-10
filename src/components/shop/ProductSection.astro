@@ -12,95 +12,93 @@ interface ProductItem {
   badge?: string;
 }
 
-interface Props {
-  title?: string;
-  products: ProductItem[];
+interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
 }
 
-const { title = "Ofertas destacadas", products } = Astro.props;
+interface Filters {
+  search: string;
+  categorySlug: string;
+  activeCategoryName: string;
+  minPrice: string;
+  maxPrice: string;
+}
+
+interface Props {
+  products: ProductItem[];
+  categories: CategoryItem[];
+  filters: Filters;
+}
+
+const { products, categories, filters } = Astro.props;
 ---
 
-<!-- TÍTULO -->
-<div class="section__inner">
-  <div class="section__heading">
-    <h2 id="products-title">{title}</h2>
-  </div>
-</div>
-
-<!-- LAYOUT PRINCIPAL -->
 <div class="container">
-  <!-- SIDEBAR -->
-  <SibarCategory />
+  <SibarCategory categories={categories} filters={filters} />
 
-  <!-- PRODUCTOS -->
-  <section
-    class="section"
-    id="products-section"
-    aria-labelledby="products-title"
-  >
-    <div class="products-grid">
-      {products.map((product) => <ProductCard {...product} />)}
-    </div>
+  <section class="section" id="products-section">
+    {products.length === 0 ? (
+      <div class="empty-state">
+        <p>No se encontraron productos con los filtros seleccionados.</p>
+        <a href="/shop" class="btn-clear-filters">Limpiar filtros</a>
+      </div>
+    ) : (
+      <div class="products-grid">
+        {products.map((product) => <ProductCard {...product} />)}
+      </div>
+    )}
   </section>
 </div>
 
 <style>
-  /* CONTENEDOR GENERAL */
   .container {
     display: flex;
     gap: 2rem;
     margin: 0 auto;
     padding: 0 1rem;
   }
-
-  /* SECCIÓN DE PRODUCTOS */
   .section {
-    flex: 1; /* 🔥 evita que se rompa el layout */
-    padding-block: clamp(3rem, 5vw, 4rem);
+    flex: 1;
+    padding-block: 1.5rem;
   }
-
-  /* ENCABEZADO */
-  .section__inner {
-    max-width: 1200px;
-    margin-inline: auto;
-    padding-inline: 1rem;
-  }
-
-  .section__heading {
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .section__heading h2 {
-    font-size: 2.25rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-
-  /* GRID DE PRODUCTOS */
   .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
   }
-
-  /* RESPONSIVE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+  }
+  .empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  .btn-clear-filters {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-clear-filters:hover {
+    background: var(--color-primary);
+    color: var(--bg-base);
+  }
   @media (max-width: 900px) {
-    .container {
-      flex-direction: column;
-    }
+    .container { flex-direction: column; }
   }
-
   @media (max-width: 768px) {
-    .products-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   }
-
   @media (max-width: 480px) {
-    .products-grid {
-      grid-template-columns: 1fr;
-    }
+    .products-grid { grid-template-columns: 1fr; }
   }
 </style>
