@@ -46,6 +46,15 @@ function buildUrl(params: Record<string, string>) {
 ---
 
 <aside class="sidebar">
+  <button
+    class="sidebar-close"
+    id="sidebar-close"
+    type="button"
+    aria-label="Cerrar filtros"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+
   <h2 class="logo">GymLabs</h2>
 
   <div class="section">
@@ -202,5 +211,34 @@ function buildUrl(params: Record<string, string>) {
   .btn-clear:hover {
     background: var(--color-primary);
     color: white;
+  }
+
+  .sidebar-close {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      background: var(--bg-surface-2);
+      color: var(--text-secondary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: background 0.2s;
+    }
+    .sidebar-close:hover {
+      background: var(--border-color);
+      color: var(--text-primary);
+    }
   }
 </style>
