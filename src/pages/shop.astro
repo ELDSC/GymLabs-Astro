@@ -50,8 +50,12 @@ let query = supabase
   `)
   .eq("is_active", true);
 
-if (search) {
-  query = query.ilike("name", `%${search}%`);
+const normalizedSearch = search
+  ? search.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  : "";
+
+if (normalizedSearch) {
+  query = query.ilike("name_search", `%${normalizedSearch}%`);
 }
 if (categoryId) {
   query = query.eq("category_id", categoryId);
