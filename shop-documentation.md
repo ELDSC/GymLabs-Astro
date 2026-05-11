@@ -1,77 +1,81 @@
-# Shop Page Documentation — GymLabs
+# Documentación de la Página de Tienda — GymLabs
 
-## Overview
+## Resumen
 
-The **Shop** page (`/shop`) is the core e-commerce page of GymLabs. It displays all active products from Supabase with full-text search, category filtering, and price range filtering — all implemented via **server-side rendering (SSR)** with URL query parameters.
+La página **Tienda** (`/shop`) es el núcleo e-commerce de GymLabs. Muestra todos los productos activos desde Supabase con búsqueda por texto (insensible a tildes), filtrado por categoría y filtrado por rango de precio — todo implementado mediante **renderizado del lado del servidor (SSR)** con parámetros de query en la URL.
 
 **URL**: `/shop`  
-**Rendering mode**: SSR (`prerender = false`)  
-**Deployment adapter**: `@astrojs/vercel`
+**Modo de renderizado**: SSR (`prerender = false`)  
+**Adaptador de despliegue**: `@astrojs/vercel`
 
 ---
 
-## Architecture
+## Arquitectura
 
-### Request/Response Flow
+### Flujo de Petición/Respuesta
 
 ```
-Browser                     Astro Server                    Supabase
+Navegador                   Servidor Astro                    Supabase
   │                             │                              │
   │  GET /shop?search=whey     │                              │
   │  &category=proteinas       │                              │
   │  &maxPrice=80              │                              │
   │ ─────────────────────────> │                              │
-  │                             │  SELECT categories          │
+  │                             │  SELECT categorías           │
   │                             │  WHERE is_active = true     │
   │                             │ ───────────────────────────>│
   │                             │ <───── categories[] ────────│
   │                             │                              │
-  │                             │  SELECT category by slug    │
+  │                             │  SELECT categoría por slug  │
   │                             │ ───────────────────────────>│
   │                             │ <───── {id, name} ──────────│
   │                             │                              │
-  │                             │  SELECT products            │
+  │                             │  Normaliza "whey" → "whey"  │
+  │                             │  (quita tildes)             │
+  │                             │                              │
+  │                             │  SELECT productos            │
   │                             │  WHERE is_active = true     │
-  │                             │  AND name ILIKE '%whey%'    │
+  │                             │  AND name_search            │
+  │                             │    ILIKE '%whey%'           │
   │                             │  AND category_id = 'abc123' │
   │                             │  AND price <= 80            │
   │                             │ ───────────────────────────>│
   │                             │ <───── products[] ──────────│
   │                             │                              │
-  │ <── Rendered HTML ───────── │                              │
+  │ <── HTML renderizado ────── │                              │
 ```
 
-### Component Tree
+### Árbol de Componentes
 
 ```
 src/pages/shop.astro
   └── MainLayout
-        ├── Navbar (search form on /shop)
+        ├── Navbar (formulario de búsqueda en /shop)
         └── ProductSection
-              ├── SibarCategory (sidebar filters)
-              └── ProductCard[] (product grid)
+              ├── SibarCategory (sidebar de filtros)
+              └── ProductCard[] (cuadrícula de productos)
 ```
 
 ---
 
-## File-by-File Reference
+## Referencia Archivo por Archivo
 
-### 1. `src/pages/shop.astro` — Page Entry Point
+### 1. `src/pages/shop.astro` — Punto de Entrada de la Página
 
-**Role**: Server-side data fetching and filter orchestration.
+**Rol**: Obtención de datos en el servidor y orquestación de filtros.
 
-**Query Parameters Handled**:
+**Parámetros de Query Soportados**:
 
-| Param      | Type   | Description                        | Example       |
-|------------|--------|------------------------------------|---------------|
-| `search`   | string | Full-text search on product name   | `whey`        |
-| `category` | string | Filter by category slug            | `proteinas`   |
-| `minPrice` | number | Minimum price filter               | `20`          |
-| `maxPrice` | number | Maximum price filter               | `80`          |
+| Parámetro  | Tipo   | Descripción                              | Ejemplo     |
+|------------|--------|------------------------------------------|-------------|
+| `search`   | string | Búsqueda insensible a tildes sobre nombre | `caseina`   |
+| `category` | string | Filtro por slug de categoría             | `proteinas` |
+| `minPrice` | number | Precio mínimo                            | `20`        |
+| `maxPrice` | number | Precio máximo                            | `80`        |
 
-**Data Fetching Steps**:
+**Pasos de Obtención de Datos**:
 
-1. **Fetch all active categories** for the sidebar:
+1. **Obtener todas las categorías activas** para el sidebar:
 
 ```ts
 const { data: categoriesData } = await supabase
@@ -81,7 +85,7 @@ const { data: categoriesData } = await supabase
   .order("sort_order", { ascending: true });
 ```
 
-2. **Resolve category slug to ID** (if a category filter is active):
+2. **Resolver slug de categoría a ID** (si hay un filtro de categoría activo):
 
 ```ts
 if (categorySlug) {
@@ -98,37 +102,49 @@ if (categorySlug) {
 }
 ```
 
-3. **Build dynamic product query** chaining Supabase filters:
+3. **Normalizar el término de búsqueda** (quitar tildes) antes de enviarlo a Supabase:
+
+```ts
+const normalizedSearch = search
+  ? search.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  : "";
+```
+
+Esto convierte "caseína" → "caseina", "bcaa" → "bcaa", etc. La normalización usa descomposición Unicode NFD, que separa los caracteres base de sus diacríticos (tildes, diéresis), y luego elimina los diacríticos.
+
+4. **Construir query dinámica de productos** encadenando filtros de Supabase:
 
 ```ts
 let query = supabase.from("products")
   .select(`id, name, slug, price, compare_at_price, image_storage_key, categories(name)`)
   .eq("is_active", true);
 
-if (search)    query = query.ilike("name", `%${search}%`);
-if (categoryId) query = query.eq("category_id", categoryId);
-if (minPrice)   query = query.gte("price", Number(minPrice));
-if (maxPrice)   query = query.lte("price", Number(maxPrice));
+if (normalizedSearch) query = query.ilike("name_search", `%${normalizedSearch}%`);
+if (categoryId)       query = query.eq("category_id", categoryId);
+if (minPrice)          query = query.gte("price", Number(minPrice));
+if (maxPrice)          query = query.lte("price", Number(maxPrice));
 query = query.order("name");
 ```
 
-4. **Transform products**: Maps each Supabase row to a `ProductItem` object, extracting the category name from the joined `categories` relation, and generating the public image URL via `getProductImageUrl()`.
+La búsqueda se hace contra la columna `name_search` (sin tildes), no contra `name` (original con tildes).
 
-**Props passed to `ProductSection`**:
+5. **Transformar productos**: Mapea cada fila de Supabase a un objeto `ProductItem`, extrayendo el nombre de categoría de la relación `categories` y generando la URL pública de imagen mediante `getProductImageUrl()`.
 
-| Prop         | Type               | Description                              |
-|--------------|--------------------|------------------------------------------|
-| `products`   | `ProductItem[]`    | Filtered product list                    |
-| `categories` | `CategoryItem[]`   | All active categories for sidebar        |
-| `filters`    | `Filters`          | Current filter state (search, slug, prices) |
+**Props pasadas a `ProductSection`**:
+
+| Prop         | Tipo             | Descripción                                    |
+|--------------|------------------|------------------------------------------------|
+| `products`   | `ProductItem[]`  | Lista de productos filtrada                    |
+| `categories` | `CategoryItem[]` | Todas las categorías activas para el sidebar   |
+| `filters`    | `Filters`        | Estado actual de filtros (search, slug, precios) |
 
 ---
 
-### 2. `src/components/shop/ProductSection.astro` — Layout Wrapper
+### 2. `src/components/shop/ProductSection.astro` — Contenedor de Layout
 
-**Role**: Arranges the sidebar + product grid in a flex layout. Handles empty state.
+**Rol**: Distribuye el sidebar + cuadrícula de productos en un layout flex. Maneja el estado vacío.
 
-**Props Interface**:
+**Interfaces de Props**:
 
 ```ts
 interface Props {
@@ -162,7 +178,7 @@ interface Filters {
 }
 ```
 
-**Layout Structure**:
+**Estructura del Layout**:
 
 ```
 <div class="container">         ← display: flex
@@ -175,27 +191,27 @@ interface Filters {
 </div>
 ```
 
-**Empty State**: When `products.length === 0`, a centered message with a "Limpiar filtros" link to `/shop` is displayed instead of the grid.
+**Estado Vacío**: Cuando `products.length === 0`, se muestra un mensaje centrado con un enlace "Limpiar filtros" hacia `/shop` en lugar de la cuadrícula.
 
-**CSS Grid Breakpoints**:
+**Breakpoints del CSS Grid**:
 
-| Breakpoint       | Columns | Gap    |
-|------------------|---------|--------|
-| Desktop (>900px) | auto-fill, min 260px | 1.5rem |
-| Tablet (≤768px)  | 2       | 1rem   |
-| Mobile (≤480px)  | 1       | —      |
+| Breakpoint       | Columnas                  | Espacio |
+|------------------|---------------------------|---------|
+| Escritorio (>900px) | auto-fill, min 260px | 1.5rem  |
+| Tablet (≤768px)  | 2                         | 1rem    |
+| Móvil (≤480px)   | 1                         | —       |
 
-**Sidebar/Grid Direction**: On screens ≤900px, the flex container switches to `flex-direction: column`, stacking the sidebar above the grid.
+**Dirección Sidebar/Grid**: En pantallas ≤900px, el contenedor flex cambia a `flex-direction: column`, apilando el sidebar encima de la cuadrícula.
 
 ---
 
-### 3. `src/components/shop/SibarCategory.astro` — Filter Sidebar
+### 3. `src/components/shop/SibarCategory.astro` — Sidebar de Filtros
 
-**Role**: Displays category navigation and price range filter. The only component with client-side JavaScript.
+**Rol**: Muestra la navegación por categorías y el filtro de rango de precio. Es el único componente con JavaScript del lado del cliente.
 
-**Props Interface**: Same `Categories` and `Filters` from above.
+**Interfaces de Props**: Las mismas `Categories` y `Filters` de arriba.
 
-**Emoji Icon Map**:
+**Mapa de Emojis por Categoría**:
 
 ```ts
 const iconMap: Record<string, string> = {
@@ -213,9 +229,9 @@ const iconMap: Record<string, string> = {
 };
 ```
 
-Categories not in the map use the fallback 📦 emoji. The map uses the category `slug` as key.
+Las categorías no incluidas en el mapa usan el emoji 📦 como respaldo. El mapa usa el `slug` de la categoría como clave.
 
-**URL Builder Utility**:
+**Utilidad Constructora de URLs**:
 
 ```ts
 function buildUrl(params: Record<string, string>) {
@@ -228,286 +244,354 @@ function buildUrl(params: Record<string, string>) {
 }
 ```
 
-This function is used server-side to generate `<a href>` links that preserve existing filter parameters while setting/clearing a specific one.
+Esta función se ejecuta en el servidor para generar enlaces `<a href>` que preservan los parámetros de filtro existentes mientras establecen o eliminan uno específico.
 
-**Category Links**: Each category (including "Todos") is an `<a>` tag linking to `/shop?<params>`. The active category gets the `.active` CSS class. Clicking a category triggers a full-page navigation (SSR approach).
+**Enlaces de Categoría**: Cada categoría (incluyendo "Todos") es una etiqueta `<a>` que enlaza a `/shop?<params>`. La categoría activa recibe la clase CSS `.active`. Al hacer clic en una categoría se dispara una navegación de página completa (enfoque SSR).
 
-**Price Range Slider**:
+**Slider de Rango de Precio**:
 - HTML `<input type="range" min="0" max="100">`
-- Default value: current `maxPrice` param, or `100` (no filter)
-- **Client-side `<script>`** handles interactivity:
-  - `input` event: updates the displayed price label in real-time (`S/ {value}`)
-  - `change` event: fires on thumb release → reads all query params from `window.location.search`, sets or deletes `maxPrice`, and navigates to `/shop?<newParams>`
+- Valor por defecto: el `maxPrice` actual de los query params, o `100` (sin filtro)
+- **`<script>` del lado del cliente** maneja la interactividad:
+  - Evento `input`: actualiza la etiqueta de precio en tiempo real (`S/ {valor}`)
+  - Evento `change`: se dispara al soltar el thumb → lee todos los query params actuales de `window.location.search`, establece o elimina `maxPrice`, y navega a `/shop?<nuevosParams>`
 
-**Clear Filters Button**: Simple `<a href="/shop">` — navigates to the base shop URL with no query params.
+**Botón Limpiar Filtros**: Un simple `<a href="/shop">` — navega a la URL base de la tienda sin query params.
 
-**CSS Highlights**:
-- `.sidebar`: `width: 260px`, `position: sticky` (top: 80px, to clear the navbar), `align-self: flex-start`
-- `.item.active`: Green gradient left border (`linear-gradient(90deg, var(--color-primary-glow), transparent)`) with `border-left: 3px solid var(--color-primary)` and `color: var(--color-primary)`
-- `.range`: `accent-color: var(--color-primary)` for the slider thumb color
+**Aspectos CSS Destacados**:
+- `.sidebar`: `width: 260px`, `position: sticky` (top: 80px, para dejar espacio al navbar), `align-self: flex-start`
+- `.item.active`: Borde izquierdo con gradiente verde (`linear-gradient(90deg, var(--color-primary-glow), transparent)`) con `border-left: 3px solid var(--color-primary)` y `color: var(--color-primary)`
+- `.range`: `accent-color: var(--color-primary)` para el color del thumb del slider
 
 ---
 
-### 4. `src/components/ui/ProductCard.astro` — Product Card
+### 4. `src/components/ui/ProductCard.astro` — Tarjeta de Producto
 
-**Role**: Renders a single product in the grid. Presentational only — no interactivity (the "Añadir al carrito" button is a placeholder).
+**Rol**: Renderiza un producto individual en la cuadrícula. Solo presentación — sin interactividad (el botón "Añadir al carrito" es un placeholder).
 
-**Props Interface**:
+**Interfaz de Props**:
 
 ```ts
 interface Props {
-  name: string;           // Product display name
-  imageUrl: string;       // Full Supabase Storage URL (or fallback)
-  price: number;          // Current price
-  compareAtPrice?: number | null;  // Original price for discount display
-  category: string;       // Category name (for label)
-  badge?: string;         // Optional badge text (e.g., "Nuevo", "Oferta")
+  name: string;                    // Nombre mostrado del producto
+  imageUrl: string;                // URL pública de Supabase Storage (o respaldo)
+  price: number;                   // Precio actual
+  compareAtPrice?: number | null;  // Precio original para mostrar descuento
+  category: string;                // Nombre de categoría (etiqueta)
+  badge?: string;                  // Texto opcional de insignia (ej. "Nuevo", "Oferta")
 }
 ```
 
-**Price Formatting**: Uses `Intl.NumberFormat` with `es-PE` locale (Peruvian Soles), always showing 2 decimal places.
+**Formato de Precio**: Usa `Intl.NumberFormat` con locale `es-PE` (Soles peruanos), mostrando siempre 2 decimales.
 
-**Display Fields**:
-- **Badge** (optional): Positioned absolute at the top center, green pill with shadow
-- **Image**: 220px height container, `object-fit: cover`, lazy loaded. Hover triggers `scale(1.05)`
-- **Category label**: Uppercase, muted text, small font
-- **Name**: Product title, white, 600 weight
-- **Compare-at price**: Shown with line-through if `compareAtPrice` is set and non-null
-- **Active price**: Green (`var(--color-primary)`), large (1.4rem), 800 weight
-- **Buy button**: Full-width, translucent green background, turns solid green on hover with glow shadow
+**Campos Mostrados**:
+- **Insignia** (opcional): Posicionada absoluta en el centro superior, píldora verde con sombra
+- **Imagen**: Contenedor de 220px de altura, `object-fit: cover`, lazy loaded. Al hacer hover hace `scale(1.05)`
+- **Etiqueta de categoría**: Mayúsculas, texto muted, fuente pequeña
+- **Nombre**: Título del producto, blanco, peso 600
+- **Precio comparativo**: Mostrado con tachado si `compareAtPrice` tiene valor
+- **Precio activo**: Verde (`var(--color-primary)`), grande (1.4rem), peso 800
+- **Botón comprar**: Ancho completo, fondo verde translúcido, se vuelve verde sólido al hover con sombra glow
 
-**Hover Effect**: The entire card lifts `translateY(-5px)` and the border changes to the primary color.
+**Efecto Hover**: Toda la tarjeta se eleva `translateY(-5px)` y el borde cambia al color primario.
 
 ---
 
-### 5. `src/components/layout/Navbar.astro` — Search Form
+### 5. `src/components/layout/Navbar.astro` — Formulario de Búsqueda
 
-**Role**: Site-wide navigation bar. Conditionally renders a search form only on the `/shop` route.
+**Rol**: Barra de navegación global. Renderiza condicionalmente un formulario de búsqueda solo en la ruta `/shop`.
 
-**Search Form** (visible only when `currentPath === "/shop"`):
+**Formulario de Búsqueda** (visible solo cuando `currentPath === "/shop"`):
 
 ```html
 <form action="/shop" method="GET" class="search-form">
-  <!-- Hidden inputs preserve existing filters -->
+  <!-- Inputs ocultos preservan los filtros existentes -->
   <input type="hidden" name="category" value={currentCategory} />
   <input type="hidden" name="minPrice" value={currentMinPrice} />
   <input type="hidden" name="maxPrice" value={currentMaxPrice} />
-  <!-- Visible search input -->
+  <!-- Input de búsqueda visible -->
   <input type="text" name="search" placeholder="Buscar productos..."
          class="input-search" value={currentSearch} />
 </form>
 ```
 
-**How It Works**:
-- `action="/shop" method="GET"`: Submits to the shop page via GET
-- Hidden `<input>` fields preserve `category`, `minPrice`, `maxPrice` from the current URL
-- The visible text input has `name="search"`, so its value is passed as `?search=...`
-- Pressing Enter while focused on the search input triggers form submission
-- The page reloads with the combined query string
+**Cómo Funciona**:
+- `action="/shop" method="GET"`: Envía a la página de tienda por GET
+- Los `<input>` ocultos preservan `category`, `minPrice`, `maxPrice` de la URL actual
+- El input de texto visible tiene `name="search"`, por lo que su valor se pasa como `?search=...`
+- Presionar Enter con el foco en el input de búsqueda dispara el envío del formulario
+- La página se recarga con el query string combinado
 
 ---
 
-### 6. `src/lib/supabase.ts` — Database Client
+### 6. `src/lib/supabase.ts` — Cliente de Base de Datos
 
-**Role**: Creates and configures the Supabase client. Exports helper functions for product images.
+**Rol**: Crea y configura el cliente de Supabase tipado. Exporta funciones auxiliares para imágenes de productos.
 
-**Environment Variables Required**:
+**Variables de Entorno Requeridas**:
 
-| Variable                            | Description                              |
-|-------------------------------------|------------------------------------------|
-| `SUPABASE_TARGET`                   | `"local"` or `"cloud"`                   |
-| `SUPABASE_CLOUD_URL`                | Cloud Supabase project URL               |
-| `SUPABASE_CLOUD_PUBLISHABLE_KEY`    | Cloud Supabase anon/public key           |
-| `SUPABASE_LOCAL_URL`                | Local Supabase instance URL              |
-| `SUPABASE_LOCAL_PUBLISHABLE_KEY`    | Local Supabase anon/public key           |
-| `SUPABASE_PRODUCT_IMAGE_BUCKET`     | Storage bucket name for product images   |
+| Variable                            | Descripción                                |
+|-------------------------------------|--------------------------------------------|
+| `SUPABASE_TARGET`                   | `"local"` o `"cloud"`                      |
+| `SUPABASE_CLOUD_URL`                | URL del proyecto Supabase en la nube       |
+| `SUPABASE_CLOUD_PUBLISHABLE_KEY`    | Clave anónima/pública de Supabase cloud    |
+| `SUPABASE_LOCAL_URL`                | URL de la instancia local de Supabase      |
+| `SUPABASE_LOCAL_PUBLISHABLE_KEY`    | Clave anónima/pública de Supabase local    |
+| `SUPABASE_PRODUCT_IMAGE_BUCKET`     | Nombre del bucket de Storage para imágenes |
 
-**Exported Functions**:
+**Funciones Exportadas**:
 
-| Function                   | Description                                          |
-|----------------------------|------------------------------------------------------|
-| `supabase`                 | Typed Supabase client instance                       |
-| `getSupabasePublicUrl()`   | Returns public URL for any file in a Supabase bucket |
-| `getProductImageUrl()`     | Shortcut: `getSupabasePublicUrl(productImageBucket, path)` |
-| `getRequiredEnv()`         | Validates an env var exists, throws if missing       |
+| Función                    | Descripción                                                     |
+|----------------------------|-----------------------------------------------------------------|
+| `supabase`                 | Instancia tipada del cliente Supabase                           |
+| `getSupabasePublicUrl()`   | Devuelve la URL pública de cualquier archivo en un bucket       |
+| `getProductImageUrl()`     | Atajo: `getSupabasePublicUrl(productImageBucket, path)`         |
+| `getRequiredEnv()`         | Valida que una variable de entorno exista, lanza error si falta |
 
-**Image Fallback**: In `shop.astro`, if a product has no `image_storage_key`, it falls back to `/images/general-img-square.png`.
-
----
-
-### 7. `src/lib/supabase.types.ts` — Database Type Definitions
-
-Generated TypeScript types for the Supabase schema. The relevant tables for the shop page are:
-
-#### `categories` Table
-
-| Column      | Type          | Description                    |
-|-------------|---------------|--------------------------------|
-| `id`        | `string` (PK) | UUID primary key               |
-| `name`      | `string`      | Display name (e.g., "Proteínas") |
-| `slug`      | `string`      | URL-safe identifier ("proteinas") |
-| `description` | `string?`   | Optional description           |
-| `is_active` | `boolean`     | Whether the category is visible |
-| `sort_order` | `number`     | Display order (ascending)      |
-| `created_at` | `string`     | ISO timestamp                  |
-| `updated_at` | `string`     | ISO timestamp                  |
-
-#### `products` Table
-
-| Column              | Type          | Description                           |
-|---------------------|---------------|---------------------------------------|
-| `id`                | `string` (PK) | UUID primary key                      |
-| `category_id`       | `string` (FK) | Foreign key to `categories.id`        |
-| `name`              | `string`      | Product name                          |
-| `slug`              | `string`      | URL-safe identifier                   |
-| `sku`               | `string`      | Stock keeping unit                    |
-| `description`       | `string?`     | Product description                   |
-| `price`             | `number`      | Current sale price                    |
-| `compare_at_price`  | `number?`     | Original price (for discount display) |
-| `stock`             | `number`      | Inventory count                       |
-| `is_active`         | `boolean`     | Whether the product is visible        |
-| `is_top_seller`     | `boolean`     | Top seller flag                       |
-| `image_storage_key` | `string?`     | Path in Supabase Storage bucket       |
-| `created_at`        | `string`      | ISO timestamp                         |
-| `updated_at`        | `string`      | ISO timestamp                         |
-
-**Foreign Key**: `products.category_id` → `categories.id` (one-to-many: one category has many products)
+**Imagen de Respaldo**: En `shop.astro`, si un producto no tiene `image_storage_key`, se usa `/images/general-img-square.png`.
 
 ---
 
-### 8. `src/layouts/MainLayout.astro` — Page Shell
+### 7. `src/lib/supabase.types.ts` — Definiciones de Tipos de la Base de Datos
 
-**Role**: Wraps every page with Navbar + content slot + Footer.
+Tipos TypeScript generados para el esquema de Supabase. Las tablas relevantes para la página de tienda son:
+
+#### Tabla `categories`
+
+| Columna      | Tipo          | Descripción                          |
+|--------------|---------------|--------------------------------------|
+| `id`         | `string` (PK) | UUID clave primaria                  |
+| `name`       | `string`      | Nombre mostrado (ej. "Proteínas")    |
+| `slug`       | `string`      | Identificador URL-safe ("proteinas") |
+| `description`| `string?`     | Descripción opcional                 |
+| `is_active`  | `boolean`     | Si la categoría es visible           |
+| `sort_order` | `number`      | Orden de visualización (ascendente)  |
+| `created_at` | `string`      | Timestamp ISO                        |
+| `updated_at` | `string`      | Timestamp ISO                        |
+
+#### Tabla `products`
+
+| Columna              | Tipo          | Descripción                                     |
+|----------------------|---------------|-------------------------------------------------|
+| `id`                 | `string` (PK) | UUID clave primaria                             |
+| `category_id`        | `string` (FK) | Clave foránea a `categories.id`                 |
+| `name`               | `string`      | Nombre original del producto (con tildes)       |
+| `name_search`        | `string?`     | Nombre normalizado sin tildes para búsqueda     |
+| `slug`               | `string`      | Identificador URL-safe                          |
+| `sku`                | `string`      | Código de stock                                 |
+| `description`        | `string?`     | Descripción del producto                        |
+| `price`              | `number`      | Precio de venta actual                          |
+| `compare_at_price`   | `number?`     | Precio original (para mostrar descuento)        |
+| `stock`              | `number`      | Cantidad en inventario                          |
+| `is_active`          | `boolean`     | Si el producto es visible                       |
+| `is_top_seller`      | `boolean`     | Bandera de producto más vendido                 |
+| `image_storage_key`  | `string?`     | Ruta en el bucket de Supabase Storage           |
+| `created_at`         | `string`      | Timestamp ISO                                   |
+| `updated_at`         | `string`      | Timestamp ISO                                   |
+
+**Clave Foránea**: `products.category_id` → `categories.id` (uno a muchos: una categoría tiene muchos productos)
+
+---
+
+### 8. `src/layouts/MainLayout.astro` — Envoltorio de Página
+
+**Rol**: Envuelve cada página con Navbar + slot de contenido + Footer.
 
 ```
-BaseLayout (HTML head, metadata)
+BaseLayout (cabecera HTML, metadatos)
   └── MainLayout
         ├── Navbar
-        ├── <slot />  ← shop page content goes here
+        ├── <slot />  ← el contenido de la página de tienda va aquí
         └── Footer
 ```
 
-The `min-height: 100vh` on `.main-layout` and `flex: 1` on `<main>` ensures the footer stays at the bottom even on short pages.
+El `min-height: 100vh` en `.main-layout` y `flex: 1` en `<main>` aseguran que el footer se mantenga abajo incluso en páginas cortas.
 
 ---
 
-## Filtering System — Detailed Mechanics
+### 9. `supabase/migrations/20260511000000_add_name_search_column.sql` — Migración de Búsqueda sin Tildes
 
-### Parameter Interaction
+**Rol**: Crea la infraestructura en base de datos para búsqueda insensible a tildes.
 
-All filters are **cumulative** — they stack and narrow results:
+```sql
+-- Habilitar extensión unaccent (eliminación de tildes)
+CREATE EXTENSION IF NOT EXISTS unaccent;
 
-```
-/shop?category=proteinas&search=whey&maxPrice=80
-       ↑                      ↑             ↑
-       |                      |             └── Max price S/ 80
-       |                      └── Name contains "whey"
-       └── Category = "proteinas"
-```
+-- Agregar columna de búsqueda normalizada
+ALTER TABLE products ADD COLUMN IF NOT EXISTS name_search text;
 
-### Category Filtering
+-- Índice para búsqueda rápida
+CREATE INDEX IF NOT EXISTS idx_products_name_search
+ON products USING btree (name_search);
 
-1. Read `?category={slug}` from the URL
-2. Look up the slug in the `categories` table to get the `id`
-3. Use the resolved `category_id` to filter products
-4. If the slug doesn't match any active category, the filter is silently ignored (no error)
+-- Función trigger: auto-llenar name_search desde name (sin tildes)
+CREATE OR REPLACE FUNCTION update_name_search()
+RETURNS trigger AS $$
+BEGIN
+  NEW.name_search := unaccent(NEW.name);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-### Search Filtering
+-- Trigger: se dispara en INSERT o UPDATE de name
+DROP TRIGGER IF EXISTS trg_products_name_search ON products;
+CREATE TRIGGER trg_products_name_search
+  BEFORE INSERT OR UPDATE OF name ON products
+  FOR EACH ROW
+  EXECUTE FUNCTION update_name_search();
 
-1. Read `?search={term}` from the URL
-2. Use Supabase's `ilike()` for **case-insensitive** partial matching on `products.name`
-3. The `%` wildcards enable substring matching (e.g., "whey" matches "Whey Protein Isolate")
-
-### Price Range Filtering
-
-1. Read `?minPrice={n}` and/or `?maxPrice={n}` from the URL
-2. Use Supabase's `gte()` and `lte()` for range filtering
-3. The sidebar slider sets only `maxPrice` (client-side JS)
-4. `minPrice` can be set manually via URL for future use
-
-### Preserving Filters Across Actions
-
-**Category click** → Preserves `search`, `minPrice`, `maxPrice` — updates `category`:
-```
-/shop?search=whey&maxPrice=50  + click "Proteínas"  →  /shop?search=whey&maxPrice=50&category=proteinas
+-- Rellenar name_search para productos existentes
+UPDATE products SET name_search = unaccent(name);
 ```
 
-**Search submit** → Preserves `category`, `minPrice`, `maxPrice` — updates `search`:
-```
-/shop?category=proteinas&maxPrice=50  + search "iso"  →  /shop?category=proteinas&maxPrice=50&search=iso
-```
-
-**Price slider change** → Reads all current params from `window.location.search`, updates `maxPrice`:
-```
-/shop?category=proteinas&search=whey  + slider to 60  →  /shop?category=proteinas&search=whey&maxPrice=60
-```
-
-**Clear filters** → Navigates to `/shop` with no params at all.
+**Cómo Funciona**:
+1. **Extensión `unaccent`**: Función de PostgreSQL que elimina tildes/diacríticos de un texto
+2. **Columna `name_search`**: Almacena el nombre del producto sin tildes (ej. "Caseína" → "Caseina")
+3. **Trigger automático**: Cada vez que se inserta o actualiza un producto, `name_search` se recalcula automáticamente desde `name` usando `unaccent()`. No requiere intervención manual
+4. **Índice**: Acelera las búsquedas por `name_search`
+5. **UPDATE final**: Rellena la columna para todos los productos que ya existían antes de la migración
 
 ---
 
-## CSS Theme Variables
+## Sistema de Filtrado — Mecánica Detallada
 
-The shop components reference these CSS custom properties (defined in `BaseLayout` or global styles):
+### Interacción de Parámetros
 
-| Variable                | Typical Value    | Usage                       |
-|-------------------------|------------------|-----------------------------|
-| `--bg-base`             | `#020617`        | Dark background             |
-| `--bg-surface`          | `#0f172a`        | Card / sidebar background   |
-| `--bg-surface-2`        | `#1e293b`        | Hover state background      |
-| `--text-primary`        | `#f8fafc`        | Headings, product names     |
-| `--text-secondary`      | `#cbd5e1`        | Sidebar items               |
-| `--text-muted`          | `#94a3b8`        | Labels, subtitles           |
-| `--color-primary`       | `#10b981`        | Green accent (borders, prices, hover) |
-| `--color-primary-glow`  | Emerald glow     | Active state gradient       |
-| `--border-color`        | `#1e293b`        | Card borders                |
-| `--font-primary`        | System font      | Body text                   |
+Todos los filtros son **acumulativos** — se apilan y reducen los resultados:
+
+```
+/shop?category=proteinas&search=caseina&maxPrice=80
+       ↑                      ↑                ↑
+       |                      |                └── Precio máximo S/ 80
+       |                      └── Nombre contiene "caseina" (sin tilde)
+       └── Categoría = "proteinas"
+```
+
+### Búsqueda Insensible a Tildes
+
+El sistema de búsqueda funciona en dos capas:
+
+**Capa 1 — Servidor (Astro)**: Normaliza el término de búsqueda del usuario usando descomposición Unicode NFD:
+```ts
+// "caseína" → "caseina", "bcaa" → "bcaa", "proteína" → "proteina"
+const normalizedSearch = search
+  ? search.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  : "";
+```
+
+**Capa 2 — Base de Datos (PostgreSQL)**: La columna `name_search` se mantiene automáticamente sin tildes mediante el trigger `update_name_search()`. La búsqueda usa `ILIKE` sobre `name_search` para coincidencia insensible a mayúsculas/minúsculas.
+
+**Ejemplos de coincidencias**:
+
+| Búsqueda del usuario | Producto en BD         | ¿Coincide? | Explicación                        |
+|-----------------------|------------------------|:----------:|------------------------------------|
+| `caseina`             | Caseína Premium        | ✅         | `unaccent("Caseína")` = "Caseina"  |
+| `bcaa`                | BCAA 2:1:1             | ✅         | Sin tildes que quitar              |
+| `proteina`            | Proteína Whey          | ✅         | `unaccent("Proteína")` = "Proteina"|
+| `CREATINA`            | Creatina Monohidratada | ✅         | ILIKE ignora mayúsculas            |
+| `accesorios`          | Accesorios Gym         | ✅         | Sin tildes que quitar              |
+| `caSeInA`             | Caseína Premium        | ✅         | ILIKE + unaccent en ambos lados    |
+
+### Filtrado por Categoría
+
+1. Lee `?category={slug}` de la URL
+2. Busca el slug en la tabla `categories` para obtener el `id`
+3. Usa el `category_id` resuelto para filtrar productos
+4. Si el slug no coincide con ninguna categoría activa, el filtro se ignora silenciosamente
+
+### Filtrado por Rango de Precio
+
+1. Lee `?minPrice={n}` y/o `?maxPrice={n}` de la URL
+2. Usa `gte()` y `lte()` de Supabase para filtrado por rango
+3. El slider del sidebar solo establece `maxPrice` (JS del lado del cliente)
+4. `minPrice` puede establecerse manualmente vía URL para uso futuro
+
+### Preservación de Filtros Entre Acciones
+
+**Clic en categoría** → Preserva `search`, `minPrice`, `maxPrice` — actualiza `category`:
+```
+/shop?search=whey&maxPrice=50  + clic en "Proteínas"  →  /shop?search=whey&maxPrice=50&category=proteinas
+```
+
+**Envío de búsqueda** → Preserva `category`, `minPrice`, `maxPrice` — actualiza `search`:
+```
+/shop?category=proteinas&maxPrice=50  + buscar "iso"  →  /shop?category=proteinas&maxPrice=50&search=iso
+```
+
+**Cambio de slider de precio** → Lee todos los params actuales de `window.location.search`, actualiza `maxPrice`:
+```
+/shop?category=proteinas&search=whey  + slider a 60  →  /shop?category=proteinas&search=whey&maxPrice=60
+```
+
+**Limpiar filtros** → Navega a `/shop` sin ningún parámetro.
 
 ---
 
-## Environment & Deployment
+## Variables de Tema CSS
 
-- **Framework**: Astro v6 (SSR mode)
-- **Adapter**: `@astrojs/vercel`
-- **Database**: Supabase (cloud-hosted PostgreSQL)
-- **Storage**: Supabase Storage for product images
-- **Runtime**: Node.js serverless functions on Vercel
-- **Build output**: `.vercel/output/` → serverless function + static assets
+Los componentes de la tienda referencian estas propiedades personalizadas CSS (definidas en `BaseLayout` o estilos globales):
 
----
-
-## Future Enhancements (Not Yet Implemented)
-
-| Feature                  | Current State                       |
-|--------------------------|-------------------------------------|
-| Pagination               | All products loaded at once         |
-| Sorting (price, name, newest) | Only `order("name")` hardcoded |
-| "Añadir al carrito" button | Placeholder — no cart logic       |
-| Product detail page      | Not linked from cards               |
-| Mobile filter drawer     | Sidebar stacks vertically on mobile |
-| Debounced search         | Requires Enter/form submit          |
-| SEO metadata per filter  | Static title "Tienda"               |
-| minPrice slider/input    | Only `maxPrice` slider in sidebar   |
+| Variable                | Valor típico    | Uso                                  |
+|-------------------------|-----------------|--------------------------------------|
+| `--bg-base`             | `#020617`       | Fondo oscuro principal               |
+| `--bg-surface`          | `#0f172a`       | Fondo de tarjetas / sidebar          |
+| `--bg-surface-2`        | `#1e293b`       | Fondo de estado hover                |
+| `--text-primary`        | `#f8fafc`       | Encabezados, nombres de productos    |
+| `--text-secondary`      | `#cbd5e1`       | Items del sidebar                    |
+| `--text-muted`          | `#94a3b8`       | Etiquetas, subtítulos                |
+| `--color-primary`       | `#10b981`       | Acento verde (bordes, precios, hover)|
+| `--color-primary-glow`  | Brillo esmeralda| Gradiente de estado activo           |
+| `--border-color`        | `#1e293b`       | Bordes de tarjetas                   |
+| `--font-primary`        | Fuente sistema  | Texto general                        |
 
 ---
 
-## File Index
+## Entorno y Despliegue
+
+- **Framework**: Astro v6 (modo SSR)
+- **Adaptador**: `@astrojs/vercel`
+- **Base de datos**: Supabase (PostgreSQL en la nube)
+- **Almacenamiento**: Supabase Storage para imágenes de productos
+- **Runtime**: Funciones serverless de Node.js en Vercel
+- **Salida de build**: `.vercel/output/` → función serverless + assets estáticos
+
+---
+
+## Mejoras Futuras (No Implementadas Aún)
+
+| Funcionalidad                  | Estado Actual                                  |
+|--------------------------------|------------------------------------------------|
+| Paginación                     | Todos los productos se cargan de una vez       |
+| Ordenamiento (precio, nombre)  | Solo `order("name")` hardcodeado               |
+| Botón "Añadir al carrito"      | Placeholder — sin lógica de carrito            |
+| Página de detalle de producto  | No enlazada desde las tarjetas                 |
+| Drawer de filtros en móvil     | Sidebar se apila verticalmente en móvil        |
+| Búsqueda con debounce          | Requiere presionar Enter/enviar formulario     |
+| SEO por filtro                 | Título estático "Tienda"                       |
+| Slider/input de minPrice       | Solo slider de `maxPrice` en el sidebar        |
+| Búsqueda en páginas no-shop    | El formulario solo aparece en `/shop`          |
+
+---
+
+## Índice de Archivos
 
 ```
 src/
 ├── pages/
-│   └── shop.astro                       # Page entry — SSR + Supabase queries
+│   └── shop.astro                       # Entrada de página — SSR + queries Supabase
 ├── components/
 │   ├── shop/
-│   │   ├── ProductSection.astro         # Layout: sidebar + product grid
-│   │   └── SibarCategory.astro          # Sidebar: categories + price slider
+│   │   ├── ProductSection.astro         # Layout: sidebar + cuadrícula de productos
+│   │   └── SibarCategory.astro          # Sidebar: categorías + slider de precio
 │   ├── ui/
-│   │   └── ProductCard.astro            # Individual product card
+│   │   └── ProductCard.astro            # Tarjeta individual de producto
 │   └── layout/
-│       └── Navbar.astro                 # Global navbar + conditional search form
+│       └── Navbar.astro                 # Navbar global + formulario de búsqueda condicional
 ├── lib/
-│   ├── supabase.ts                      # Supabase client + helpers
-│   └── supabase.types.ts                # Database type definitions
-└── layouts/
-    └── MainLayout.astro                 # Page shell (Navbar + slot + Footer)
+│   ├── supabase.ts                      # Cliente Supabase + helpers
+│   └── supabase.types.ts                # Definiciones de tipos de base de datos
+├── layouts/
+│   └── MainLayout.astro                 # Envoltorio de página (Navbar + slot + Footer)
+supabase/
+└── migrations/
+    └── 20260511000000_add_name_search_column.sql  # Migración: columna name_search + trigger
 ```
