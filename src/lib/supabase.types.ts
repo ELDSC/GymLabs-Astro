@@ -78,6 +78,7 @@ export type Database = {
           is_active: boolean
           is_top_seller: boolean
           name: string
+          name_search: string | null
           price: number
           sku: string
           slug: string
@@ -94,6 +95,7 @@ export type Database = {
           is_active?: boolean
           is_top_seller?: boolean
           name: string
+          name_search?: string | null
           price: number
           sku: string
           slug: string
@@ -110,6 +112,7 @@ export type Database = {
           is_active?: boolean
           is_top_seller?: boolean
           name?: string
+          name_search?: string | null
           price?: number
           sku?: string
           slug?: string

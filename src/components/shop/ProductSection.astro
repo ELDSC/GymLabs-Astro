@@ -1,5 +1,6 @@
 ---
 import ProductCard from "../ui/ProductCard.astro";
+import SibarCategory from "./SibarCategory.astro";
 
 interface ProductItem {
   id: string;
@@ -11,67 +12,209 @@ interface ProductItem {
   badge?: string;
 }
 
-interface Props {
-  title?: string;
-  products: ProductItem[];
+interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
 }
 
-const { title = "Ofertas destacadas", products } = Astro.props;
+interface Filters {
+  search: string;
+  categorySlug: string;
+  activeCategoryName: string;
+  minPrice: string;
+  maxPrice: string;
+}
+
+interface Props {
+  products: ProductItem[];
+  categories: CategoryItem[];
+  filters: Filters;
+}
+
+const { products, categories, filters } = Astro.props;
+const hasActiveFilters = filters.search || filters.categorySlug || filters.maxPrice;
 ---
 
-<section class="section" id="products-section" aria-labelledby="products-title">
-  <div class="section__inner">
-    <div class="section__heading">
-      <h2 id="products-title">{title}</h2>
-    </div>
+<div class="container">
+  <button class="filter-toggle" id="filter-toggle" type="button" aria-label="Abrir filtros">
+    <span class="filter-toggle-icon">☰</span>
+    Filtros
+    {hasActiveFilters ? <span class="filter-badge"></span> : null}
+  </button>
 
-    <div class="products-grid">
-      {products.map((product) => <ProductCard {...product} />)}
-    </div>
+  <div class="sidebar-drawer" id="sidebar-drawer">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <SibarCategory categories={categories} filters={filters} />
   </div>
-</section>
+
+  <section class="section" id="products-section">
+    {products.length === 0 ? (
+      <div class="empty-state">
+        <p>No se encontraron productos con los filtros seleccionados.</p>
+        <a href="/shop" class="btn-clear-filters">Limpiar filtros</a>
+      </div>
+    ) : (
+      <div class="products-grid">
+        {products.map((product) => <ProductCard {...product} />)}
+      </div>
+    )}
+  </section>
+</div>
+
+<script>
+  const drawer = document.getElementById("sidebar-drawer");
+  const toggle = document.getElementById("filter-toggle");
+  const overlay = document.getElementById("sidebar-overlay");
+  const closeBtn = document.getElementById("sidebar-close");
+
+  function openDrawer() {
+    drawer?.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDrawer() {
+    drawer?.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  toggle?.addEventListener("click", openDrawer);
+  overlay?.addEventListener("click", closeDrawer);
+  closeBtn?.addEventListener("click", closeDrawer);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawer?.classList.contains("open")) {
+      closeDrawer();
+    }
+  });
+</script>
 
 <style>
+  .container {
+    display: flex;
+    gap: 2rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
   .section {
-    padding-block: clamp(3rem, 5vw, 4rem);
-    margin-inline: auto;
+    flex: 1;
+    padding-block: 1.5rem;
   }
-
-  .section__inner {
-    max-width: 1200px;
-    margin-inline: auto;
-    padding-inline: 1rem;
-  }
-
-  .section__heading {
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .section__heading h2 {
-    font-size: 2.25rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-
   .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
   }
+  .empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+  }
+  .empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  .btn-clear-filters {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-clear-filters:hover {
+    background: var(--color-primary);
+    color: var(--bg-base);
+  }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .products-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+  .sidebar-drawer {
+    display: contents;
+  }
+
+  .filter-toggle {
+    display: none;
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+    }
+    .sidebar-drawer {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      pointer-events: none;
+    }
+    .sidebar-drawer.open {
+      pointer-events: auto;
+    }
+    .sidebar-overlay {
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-drawer.open .sidebar-overlay {
+      opacity: 1;
+    }
+    .sidebar-drawer :global(.sidebar) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      border-radius: 0;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+    .sidebar-drawer.open :global(.sidebar) {
+      transform: translateX(0);
+    }
+    .filter-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color, #1e293b);
+      background: var(--bg-surface, #0f172a);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      font-family: var(--font-primary);
+    }
+    .filter-toggle-icon {
+      font-size: 1.1rem;
+    }
+    .filter-badge {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      position: absolute;
+      top: 6px;
+      right: 6px;
     }
   }
 
+  @media (max-width: 768px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  }
   @media (max-width: 480px) {
-    .products-grid {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
+    .products-grid { grid-template-columns: 1fr; }
   }
 </style>

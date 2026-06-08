@@ -1,0 +1,542 @@
+---
+interface CategoryItem {
+  id: string;
+  name: string;
+}
+
+interface Props {
+  categories: CategoryItem[];
+}
+
+const { categories } = Astro.props;
+---
+
+<dialog class="product-dialog" data-add-product-dialog>
+  <div class="dialog-panel">
+    <div class="dialog-header">
+      <div>
+        <p class="dialog-kicker" data-dialog-kicker>Nuevo producto</p>
+        <h2 data-dialog-title>Agregar producto</h2>
+      </div>
+      <button class="close-button" type="button" data-close-add-product aria-label="Cerrar">
+        x
+      </button>
+    </div>
+
+    <form class="dialog-body" method="POST" enctype="multipart/form-data" data-product-form>
+      <input type="hidden" name="productId" value="" data-product-id />
+      <input type="hidden" name="removeImage" value="false" data-remove-image-input />
+
+      <div class="preview-card" data-image-preview-card hidden>
+        <button
+          class="preview-remove-button"
+          type="button"
+          aria-label="Borrar imagen"
+          data-clear-image
+        >
+          x
+        </button>
+        <img class="preview-image" src="" alt="Vista previa del producto" data-image-preview />
+      </div>
+
+      <label class="dropzone" data-dropzone>
+        <input class="file-input" type="file" name="image" accept="image/*" data-file-input />
+        <span class="dropzone-title">Arrastra una imagen aquí</span>
+        <span class="dropzone-copy">o haz clic para seleccionarla</span>
+        <span class="dropzone-file" data-file-name>Ningún archivo seleccionado</span>
+      </label>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>Categoría</span>
+          <select class="text-input" name="categoryId" required data-category-input>
+            {categories.map((category) => (
+              <option value={category.id}>{category.name}</option>
+            ))}
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Nombre</span>
+          <input class="text-input" type="text" name="name" required data-name-input />
+        </label>
+
+        <label class="field">
+          <span>Slug</span>
+          <input class="text-input" type="text" name="slug" required data-slug-input />
+        </label>
+
+        <label class="field">
+          <span>SKU</span>
+          <input class="text-input" type="text" name="sku" required data-sku-input />
+        </label>
+
+        <label class="field">
+          <span>Precio descuento</span>
+          <input class="text-input" type="number" name="price" min="0" step="0.01" required data-price-input />
+        </label>
+
+        <label class="field">
+          <span>Precio original</span>
+          <input class="text-input" type="number" name="compareAtPrice" min="0" step="0.01" data-compare-input />
+        </label>
+
+        <label class="field">
+          <span>Stock</span>
+          <input class="text-input" type="number" name="stock" min="0" step="1" required data-stock-input />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Descripción</span>
+        <textarea class="text-input textarea-input" name="description" rows="4" data-description-input></textarea>
+      </label>
+
+      <div class="toggles">
+        <label class="toggle">
+          <input type="checkbox" name="isActive" data-active-input checked />
+          <span>Activo</span>
+        </label>
+
+        <label class="toggle">
+          <input type="checkbox" name="isTopSeller" data-top-seller-input />
+          <span>Top seller</span>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="danger-button" type="submit" name="action" value="delete" data-delete-button hidden>
+          Eliminar
+        </button>
+        <button class="secondary-button" type="button" data-close-add-product>
+          Cancelar
+        </button>
+        <button class="primary-button" type="submit" name="action" value="save" data-save-button>
+          Agregar
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  type ProductDialogItem = {
+    id: string;
+    categoryId: string;
+    name: string;
+    slug: string;
+    sku: string;
+    description: string;
+    price: number;
+    compareAtPrice: number | null;
+    stock: number;
+    isActive: boolean;
+    isTopSeller: boolean;
+    imageStorageKey: string | null;
+    imageUrl: string | null;
+  };
+
+  const dialog = document.querySelector<HTMLDialogElement>("[data-add-product-dialog]");
+  const form = dialog?.querySelector<HTMLFormElement>("[data-product-form]");
+  const openButton = document.querySelector<HTMLButtonElement>("[data-open-add-product]");
+  const editButtons = document.querySelectorAll<HTMLButtonElement>("[data-edit-product]");
+  const closeButtons = document.querySelectorAll<HTMLButtonElement>("[data-close-add-product]");
+  const productIdInput = dialog?.querySelector<HTMLInputElement>("[data-product-id]");
+  const categoryInput = dialog?.querySelector<HTMLSelectElement>("[data-category-input]");
+  const nameInput = dialog?.querySelector<HTMLInputElement>("[data-name-input]");
+  const slugInput = dialog?.querySelector<HTMLInputElement>("[data-slug-input]");
+  const skuInput = dialog?.querySelector<HTMLInputElement>("[data-sku-input]");
+  const priceInput = dialog?.querySelector<HTMLInputElement>("[data-price-input]");
+  const compareInput = dialog?.querySelector<HTMLInputElement>("[data-compare-input]");
+  const stockInput = dialog?.querySelector<HTMLInputElement>("[data-stock-input]");
+  const descriptionInput = dialog?.querySelector<HTMLTextAreaElement>("[data-description-input]");
+  const activeInput = dialog?.querySelector<HTMLInputElement>("[data-active-input]");
+  const topSellerInput = dialog?.querySelector<HTMLInputElement>("[data-top-seller-input]");
+  const fileInput = dialog?.querySelector<HTMLInputElement>("[data-file-input]");
+  const fileName = dialog?.querySelector<HTMLElement>("[data-file-name]");
+  const dropzone = dialog?.querySelector<HTMLElement>("[data-dropzone]");
+  const removeImageInput = dialog?.querySelector<HTMLInputElement>("[data-remove-image-input]");
+  const title = dialog?.querySelector<HTMLElement>("[data-dialog-title]");
+  const kicker = dialog?.querySelector<HTMLElement>("[data-dialog-kicker]");
+  const saveButton = dialog?.querySelector<HTMLButtonElement>("[data-save-button]");
+  const deleteButton = dialog?.querySelector<HTMLButtonElement>("[data-delete-button]");
+  const previewCard = dialog?.querySelector<HTMLElement>("[data-image-preview-card]");
+  const previewImage = dialog?.querySelector<HTMLImageElement>("[data-image-preview]");
+  const clearImageButton = dialog?.querySelector<HTMLButtonElement>("[data-clear-image]");
+
+  const slugify = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const updateFileName = (file: File | null) => {
+    if (!fileName) return;
+    fileName.textContent = file ? file.name : "Ningún archivo seleccionado";
+  };
+
+  const updatePreview = (src: string | null) => {
+    if (!previewCard || !previewImage || !dropzone) return;
+
+    if (src) {
+      previewImage.src = src;
+      previewCard.hidden = false;
+      previewCard.style.display = "block";
+      dropzone.hidden = true;
+      dropzone.style.display = "none";
+    } else {
+      previewImage.removeAttribute("src");
+      previewCard.hidden = true;
+      previewCard.style.display = "none";
+      dropzone.hidden = false;
+      dropzone.style.display = "grid";
+    }
+  };
+
+  const clearImageSelection = () => {
+    if (fileInput) fileInput.value = "";
+    if (removeImageInput) removeImageInput.value = "true";
+    updateFileName(null);
+    updatePreview(null);
+  };
+
+  const resetFormForAdd = () => {
+    form?.reset();
+    if (productIdInput) productIdInput.value = "";
+    if (title) title.textContent = "Agregar producto";
+    if (kicker) kicker.textContent = "Nuevo producto";
+    if (saveButton) saveButton.textContent = "Agregar";
+    if (deleteButton) deleteButton.hidden = true;
+    if (activeInput) activeInput.checked = true;
+    if (stockInput) stockInput.value = "0";
+    if (priceInput) priceInput.value = "0";
+    if (compareInput) compareInput.value = "";
+    if (removeImageInput) removeImageInput.value = "false";
+    updateFileName(null);
+    updatePreview(null);
+  };
+
+  const fillFormForEdit = (product: ProductDialogItem) => {
+    if (productIdInput) productIdInput.value = product.id ?? "";
+    if (categoryInput) categoryInput.value = product.categoryId ?? "";
+    if (nameInput) nameInput.value = product.name ?? "";
+    if (slugInput) slugInput.value = product.slug ?? "";
+    if (skuInput) skuInput.value = product.sku ?? "";
+    if (priceInput) priceInput.value = String(product.price ?? 0);
+    if (compareInput) compareInput.value = product.compareAtPrice == null ? "" : String(product.compareAtPrice);
+    if (stockInput) stockInput.value = String(product.stock ?? 0);
+    if (descriptionInput) descriptionInput.value = product.description ?? "";
+    if (activeInput) activeInput.checked = Boolean(product.isActive);
+    if (topSellerInput) topSellerInput.checked = Boolean(product.isTopSeller);
+    if (title) title.textContent = "Editar producto";
+    if (kicker) kicker.textContent = "Producto existente";
+    if (kicker) kicker.textContent = "Producto existente";
+    if (saveButton) saveButton.textContent = "Guardar";
+    if (deleteButton) deleteButton.hidden = false;
+    if (fileInput) fileInput.value = "";
+    if (removeImageInput) removeImageInput.value = "false";
+    updateFileName(null);
+    updatePreview(product.imageUrl ?? null);
+  };
+
+  openButton?.addEventListener("click", () => {
+    resetFormForAdd();
+    dialog?.showModal();
+  });
+
+  editButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const raw = button.getAttribute("data-product");
+      if (!raw) return;
+
+      const product = JSON.parse(raw) as ProductDialogItem;
+      fillFormForEdit(product);
+      dialog?.showModal();
+    });
+  });
+
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      dialog?.close();
+    });
+  });
+
+  nameInput?.addEventListener("input", () => {
+    if (!slugInput || !nameInput) return;
+    if (!slugInput.value || slugInput.dataset.userEdited !== "true") {
+      slugInput.value = slugify(nameInput.value);
+      slugInput.dataset.userEdited = "false";
+    }
+  });
+
+  slugInput?.addEventListener("input", () => {
+    slugInput.dataset.userEdited = slugInput.value ? "true" : "false";
+  });
+
+  fileInput?.addEventListener("change", () => {
+    const file = fileInput.files?.[0];
+    updateFileName(file ?? null);
+
+    if (file) {
+      if (removeImageInput) removeImageInput.value = "false";
+      updatePreview(URL.createObjectURL(file));
+    }
+  });
+
+  clearImageButton?.addEventListener("click", () => {
+    clearImageSelection();
+  });
+
+  dropzone?.addEventListener("dragover", (event: DragEvent) => {
+    event.preventDefault();
+    dropzone.dataset.dragging = "true";
+  });
+
+  dropzone?.addEventListener("dragleave", () => {
+    delete dropzone.dataset.dragging;
+  });
+
+  dropzone?.addEventListener("drop", (event: DragEvent) => {
+    event.preventDefault();
+    delete dropzone.dataset.dragging;
+
+    const file = event.dataTransfer?.files?.[0];
+    if (!file || !fileInput) return;
+
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    fileInput.files = transfer.files;
+    if (removeImageInput) removeImageInput.value = "false";
+    updateFileName(file);
+    updatePreview(URL.createObjectURL(file));
+  });
+</script>
+
+<style>
+  .product-dialog {
+    width: min(760px, calc(100vw - 2rem));
+    border: 0;
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22);
+  }
+
+  .product-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+  }
+
+  .dialog-panel {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .dialog-kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #0f172a;
+  }
+
+  .close-button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d0d7e2;
+    border-radius: 10px;
+    background: #fff;
+    color: #475569;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .dialog-body {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .preview-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid #dbe3ec;
+    background: #f8fafc;
+  }
+
+  .preview-card[hidden],
+  .dropzone[hidden] {
+    display: none !important;
+  }
+
+  .preview-remove-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.82);
+    color: #fff;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .preview-image {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+  }
+
+  .dropzone {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.5rem;
+    border: 2px dashed #a8b5c7;
+    border-radius: 16px;
+    background: #f8fafc;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .dropzone[data-dragging="true"] {
+    border-color: #0f172a;
+    background: #eef4ff;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .dropzone-title {
+    color: #0f172a;
+    font-weight: 700;
+  }
+
+  .dropzone-copy,
+  .dropzone-file {
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .field span {
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .text-input {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font: inherit;
+    background: #fff;
+  }
+
+  .textarea-input {
+    resize: vertical;
+  }
+
+  .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .danger-button,
+  .secondary-button,
+  .primary-button {
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .danger-button {
+    border: 0;
+    background: #b42318;
+    color: #fff;
+    margin-right: auto;
+  }
+
+  .secondary-button {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+  }
+
+  .primary-button {
+    border: 0;
+    background: #0f172a;
+    color: #fff;
+  }
+
+  @media (max-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dialog-actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
+    .danger-button,
+    .secondary-button,
+    .primary-button {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+</style>
