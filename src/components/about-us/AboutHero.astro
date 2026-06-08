@@ -1,87 +1,251 @@
 ---
-const image =
-"https://i.ibb.co/R4bZrNnh/Gemini-Generated-Image-j5c6qpj5c6qpj5c6.png";
+// AboutHero.astro
 ---
 
 <section class="hero">
+  <div class="hero__bg">
+    <div class="hero__orb hero__orb--1"></div>
+    <div class="hero__orb hero__orb--2"></div>
+    <div class="hero__grid"></div>
+  </div>
 
-    <div class="hero-image">
-        <img src={image} alt="Hero Gym" />
+  <div class="hero__content">
+    <div class="hero__badge">
+      <span class="badge__dot"></span>
+      <span>Quiénes somos</span>
     </div>
 
-    <div class="container">
-        <div class="hero-text">
-            <span class="badge">About GymLabs</span>
+    <h1 class="hero__title">
+      Más que una marca,<br />
+      <em>una comunidad</em>
+    </h1>
 
-            <h1>
-                Elevate Your <span>Performance</span>
-            </h1>
+    <p class="hero__subtitle">
+      En GymLabs fusionamos ciencia, nutrición y tecnología para llevar tu rendimiento
+      al siguiente nivel. Nacimos de la pasión y crecemos contigo.
+    </p>
 
-            <p>
-                At GymLabs we create premium nutrition and performance apparel
-                designed for athletes who want to push their limits and achieve
-                real results.
-            </p>
-        </div>
+    <div class="hero__stats">
+      <div class="stat">
+        <span class="stat__num">5+</span>
+        <span class="stat__label">Años de experiencia</span>
+      </div>
+      <div class="stat__divider"></div>
+      <div class="stat">
+        <span class="stat__num">10k+</span>
+        <span class="stat__label">Atletas satisfechos</span>
+      </div>
+      <div class="stat__divider"></div>
+      <div class="stat">
+        <span class="stat__num">50+</span>
+        <span class="stat__label">Productos premium</span>
+      </div>
     </div>
+  </div>
 
+  <div class="hero__scroll">
+    <span>Scroll</span>
+    <div class="scroll__line"></div>
+  </div>
 </section>
 
 <style>
-    .hero {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        background: radial-gradient(circle at top right, #0f172a, #020617);
-    }
-    
-    /*portada*/
-    .hero-image {
-        width: 100%;
-        height: 700px;
-        object-fit: cover;
-    }
-    
-    .hero-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    /*contenedor-texto*/
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 60px 5%;
-    }
-    
-    .hero-text {
-        max-width: 700px;
-    }
-    
-    .badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 20px;
-        background: var(--bg-surface-2);
-        font-size: 0.8rem;
-        margin-bottom: 20px;
-    }
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 120px 24px 80px;
+  }
 
-    .hero-text h1 {
-        font-size: 3.5rem;
-        line-height: 1.2;
-        margin-bottom: 20px;
-        color: var(--text-primary);
-    }
+  /* ── Background ── */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
 
-    .hero-text h1 span {
-        color: var(--color-primary);
-    }
+  .hero__orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+  }
 
-    .hero-text p {
-        color: var(--text-muted);
-        margin-bottom: 30px;
-    }
+  .hero__orb--1 {
+    width: 600px;
+    height: 600px;
+    background: var(--color-primary);
+    top: -200px;
+    left: -100px;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
 
+  .hero__orb--2 {
+    width: 400px;
+    height: 400px;
+    background: #06b6d4;
+    bottom: -100px;
+    right: -100px;
+    animation: orbFloat 10s ease-in-out infinite reverse;
+  }
 
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── Content ── */
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 780px;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: var(--color-primary);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge__dot {
+    width: 7px;
+    height: 7px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .hero__title {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin: 0 0 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0 auto 56px;
+    max-width: 580px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* ── Stats ── */
+  .hero__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat__num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .stat__label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .stat__divider {
+    width: 1px;
+    height: 48px;
+    background: var(--border-color);
+  }
+
+  /* ── Scroll indicator ── */
+  .hero__scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+
+  .scroll__line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--color-primary), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(-30px) scale(1.05); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%       { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  @media (max-width: 640px) {
+    .hero__stats { gap: 20px; }
+    .stat__num   { font-size: 1.8rem; }
+    .stat__divider { height: 36px; }
+  }
 </style>

@@ -1,222 +1,243 @@
 ---
 import Button from "../ui/Button.astro";
 ---
+<section class="cta">
+  <div class="cta__bg">
+    <div class="cta__orb cta__orb--1"></div>
+    <div class="cta__orb cta__orb--2"></div>
+  </div>
 
-<section class="cta-section">
-    <div class="cta-container">
-        <div class="cta-content">
-            <h2 class="cta-title">Transforma tu Entrenamiento</h2>
-            <p class="cta-description">
-                En GymLabs creemos que el fitness es más que ejercicio. Es un
-                estilo de vida. Únete a nuestra comunidad y alcanza tus
-                objetivos con tecnología de punta y entrenadores expertos.
-            </p>
+  <div class="cta__container">
+    <div class="cta__content">
+      <div class="cta__badge">
+        <span class="badge__dot"></span>
+        <span>Únete hoy</span>
+      </div>
 
-            <div class="cta-buttons">
+      <h2 class="cta__title">
+        ¿Listo para llevar tu<br />
+        <em>rendimiento al límite?</em>
+      </h2>
+
+      <p class="cta__text">
+        Más de 10,000 atletas ya transformaron su entrenamiento con GymLabs.
+        Empieza hoy con una asesoría gratuita y descubre cuál es tu stack ideal.
+      </p>
+
+      <div class="cta-buttons">
                 <Button
                     text="Comienza Ahora"
-                    href="#ofertas"
+                    href="/shop"
                     variant="primary"
                 />
                 <Button
-                    text="Más Información"
-                    href="#categorias"
+                    text="Conócenos"
+                    href="/contacto"
                     variant="secondary"
                 />
             </div>
-        </div>
 
-        <div class="cta-image">
-            <div class="image-placeholder">
-                <img src="/gym-cta.jpg" alt="GymLabs CTA" />
-            </div>
+
+      <div class="cta__trust">
+        <div class="trust__item">
+          <span class="trust__icon">✓</span>
+          <span>Envío gratis +S/.100</span>
         </div>
+        <div class="trust__item">
+          <span class="trust__icon">✓</span>
+          <span>Garantía 30 días</span>
+        </div>
+        <div class="trust__item">
+          <span class="trust__icon">✓</span>
+          <span>Asesoría gratuita</span>
+        </div>
+      </div>
     </div>
+
+    <div class="cta__deco">
+      <div class="deco__ring deco__ring--1"></div>
+      <div class="deco__ring deco__ring--2"></div>
+      <div class="deco__ring deco__ring--3"></div>
+      <div class="deco__center">
+        <span>GL</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <style>
-    .cta-section {
-        background: var(--bg-base);
-        padding: 3rem 1rem;
-        margin: 2rem 0;
-    }
+  .cta {
+    padding: 120px 24px;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .cta-container {
-        padding: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: center;
-        transition: all 0.4s ease;
-    }
+  /* ── Background ── */
+  .cta__bg { position: absolute; inset: 0; pointer-events: none; }
 
-    .cta-content {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        transition: all 0.4s ease;
-    }
+  .cta__orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+  }
 
-    .cta-title {
-        font-family: var(--font-primary);
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 700;
-        color: var(--text-primary);
-        line-height: 1.2;
-        transition: font-size 0.4s ease;
-    }
+  .cta__orb--1 {
+    width: 500px;
+    height: 500px;
+    background: var(--color-primary);
+    top: -200px;
+    left: -200px;
+  }
 
-    .cta-description {
-        font-family: var(--font-primary);
-        font-size: 1.1rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        transition: font-size 0.4s ease;
-    }
+  .cta__orb--2 {
+    width: 400px;
+    height: 400px;
+    background: #06b6d4;
+    bottom: -150px;
+    right: -100px;
+  }
 
-    .cta-buttons {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        transition: all 0.4s ease;
-    }
+  /* ── Container ── */
+  .cta__container {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 80px;
+    align-items: center;
+    background: var(--bg-surface);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 32px;
+    padding: 72px 80px;
+    overflow: hidden;
+  }
 
-    .cta-image {
-        position: relative;
-        overflow: hidden;
-        border-radius: 1rem;
-        border: 2px solid var(--border-color);
-        transition: all 0.4s ease;
-    }
+  /* ── Content ── */
+  .cta__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: var(--color-primary);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
 
-    .image-placeholder {
-        width: 100%;
-        aspect-ratio: 1;
-        background: var(--bg-surface);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        transition: all 0.4s ease;
-    }
+  .badge__dot {
+    width: 7px;
+    height: 7px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
 
-    .image-placeholder img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
+  .cta__title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin: 0 0 20px;
+  }
 
-    .cta-image:hover img {
-        transform: scale(1.05);
-    }
+  .cta__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .cta-container {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .cta-image {
-            width: 80%;
-            height: auto;
-            margin: 0 auto;
-        }
-        .cta-buttons {
-            flex-direction: column;
-            width: 100%;
-            height: 100px;
-        }
-        .image-placeholder {
-            aspect-ratio: 1.2/1;
-        }
+  .cta__text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin: 0 0 36px;
+    max-width: 500px;
+  }
+  /* ── Trust ── */
+  .cta__trust {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .trust__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .trust__icon {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  /* ── Deco ── */
+  .cta__deco {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .deco__ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    animation: spin 20s linear infinite;
+  }
+
+  .deco__ring--1 { width: 100%; height: 100%; animation-duration: 20s; }
+  .deco__ring--2 { width: 75%;  height: 75%;  animation-duration: 15s; animation-direction: reverse; }
+  .deco__ring--3 { width: 50%;  height: 50%;  animation-duration: 10s; }
+
+  .deco__center {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #020617;
+    z-index: 2;
+    position: relative;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  @media (max-width: 900px) {
+    .cta__container {
+      grid-template-columns: 1fr;
+      padding: 48px 36px;
+      gap: 48px;
     }
-    @media (max-width: 768px) {
-        .cta-container {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            padding: 15px;
-        }
-        .cta-title {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-        }
-        .cta-description {
-            font-size: 0.95rem;
-        }
-        .cta-buttons {
-            flex-direction: column;
-            width: 100%;
-            height: 100px;
-        }
-        .cta-image {
-            width: 70%;
-            height: auto;
-            margin: 0 auto;
-        }
-        .image-placeholder {
-            aspect-ratio: 1.3/1;
-        }
-        .cta-section {
-            padding: 2rem 1rem;
-        }
-    }
-    @media (max-width: 425px) {
-        .cta-container {
-            gap: 1rem;
-            padding: 10px;
-        }
-        .cta-title {
-            font-size: clamp(1.25rem, 3vw, 2rem);
-        }
-        .cta-description {
-            font-size: 0.9rem;
-        }
-        .cta-image {
-            width: 60%;
-            height: auto;
-        }
-        .image-placeholder {
-            aspect-ratio: 1.4/1;
-        }
-    }
-    @media (max-width: 375px) {
-        .cta-container {
-            gap: 0.8rem;
-            padding: 8px;
-        }
-        .cta-title {
-            font-size: clamp(1.1rem, 2.5vw, 1.75rem);
-        }
-        .cta-description {
-            font-size: 0.85rem;
-        }
-        .cta-image {
-            width: 50%;
-            height: auto;
-        }
-        .image-placeholder {
-            aspect-ratio: 1.5/1;
-        }
-    }
-    @media (max-width: 320px) {
-        .cta-container {
-            gap: 0.6rem;
-            padding: 5px;
-        }
-        .cta-title {
-            font-size: clamp(1rem, 2vw, 1.5rem);
-        }
-        .cta-description {
-            font-size: 0.8rem;
-        }
-        .cta-image {
-            width: 45%;
-            height: auto;
-        }
-        .image-placeholder {
-            aspect-ratio: 1.6/1;
-        }
-    }
+    .cta__deco { display: none; }
+  }
 </style>

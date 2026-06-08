@@ -1,57 +1,258 @@
-<section class="mission">
-  <div class="container">
-    <div class="card">
-      <h2>Misión</h2>
-      <p>
-        Impulsar el rendimiento físico de nuestros clientes ofreciendo productos
-        de alta calidad, innovación constante y una experiencia que inspire
-        disciplina y bienestar.
-      </p>
+---
+// MissionVision.astro
+
+const values = [
+  { icon: "🔬", title: "Ciencia primero", desc: "Cada producto nace de investigación real, no de tendencias vacías." },
+  { icon: "🤝", title: "Comunidad", desc: "Somos tan fuertes como el atleta más comprometido de nuestra red." },
+  { icon: "💎", title: "Calidad sin concesiones", desc: "Ingredientes puros, dosis efectivas, sin atajos." },
+  { icon: "🚀", title: "Innovación constante", desc: "Nunca dejamos de mejorar. El ayer es el piso, no el techo." },
+];
+---
+
+<section class="mv">
+  <div class="mv__container">
+
+    <!-- Header -->
+    <div class="mv__header">
+      <div class="section-tag">Nuestra esencia</div>
+      <h2 class="mv__title">Misión, Visión<br /><em>y Valores</em></h2>
     </div>
 
-    <div class="card">
-      <h2>Visión</h2>
-      <p>
-        Ser la marca líder en nutrición y equipamiento fitness en Latinoamérica,
-        destacando por nuestra comunidad, confianza y resultados reales.
-      </p>
+    <!-- Mission + Vision -->
+    <div class="mv__cards">
+      <div class="mv__card mv__card--mission">
+        <div class="card__icon-wrap">
+          <span class="card__icon">🎯</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__label">Misión</h3>
+          <p class="card__text">
+            Potenciar el rendimiento de cada atleta con productos de calidad científica,
+            accesibles y diseñados para quienes no aceptan excusas. Somos el aliado de
+            tu entrenamiento, no solo un suplemento más.
+          </p>
+        </div>
+        <div class="card__accent"></div>
+      </div>
+
+      <div class="mv__card mv__card--vision">
+        <div class="card__icon-wrap">
+          <span class="card__icon">🌎</span>
+        </div>
+        <div class="card__body">
+          <h3 class="card__label">Visión</h3>
+          <p class="card__text">
+            Ser la marca de nutrición deportiva de referencia en Latinoamérica,
+            reconocida por su integridad científica, su comunidad activa y por
+            haber transformado la forma en que los atletas entienden su cuerpo.
+          </p>
+        </div>
+        <div class="card__accent card__accent--right"></div>
+      </div>
     </div>
+
+    <!-- Values -->
+    <div class="mv__values">
+      <h3 class="values__title">Nuestros valores</h3>
+      <div class="values__grid">
+        {values.map((v, i) => (
+          <div class="value" style={`animation-delay: ${i * 0.08}s`}>
+            <span class="value__icon">{v.icon}</span>
+            <h4 class="value__title">{v.title}</h4>
+            <p class="value__desc">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
   </div>
 </section>
 
 <style>
-  .mission {
-    padding: 80px 20px;
+  .mv {
+    padding: 120px 24px;
+    position: relative;
   }
 
-  .container {
+  .mv__container {
     max-width: 1100px;
-    margin: auto;
-    display: grid;
-    gap: 30px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
   }
 
-  .card {
-    background: var(--bg-surface);
-    padding: 30px;
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    transition: 0.3s;
-  }
+  /* ── Header ── */
+  .mv__header { text-align: center; }
 
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px var(--color-primary-glow);
-  }
-
-  h2 {
+  .section-tag {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
     color: var(--color-primary);
-    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
   }
 
-  p {
+  .mv__title {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .mv__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Mission / Vision Cards ── */
+  .mv__cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .mv__card {
+    position: relative;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 48px 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .mv__card:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+    transform: translateY(-4px);
+  }
+
+  .card__icon-wrap {
+    width: 56px;
+    height: 56px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card__icon { font-size: 1.6rem; }
+
+  .card__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin: 0 0 10px;
+  }
+
+  .card__text {
+    font-size: 1rem;
     color: var(--text-secondary);
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .card__accent {
+    position: absolute;
+    bottom: -40px;
+    left: -40px;
+    width: 160px;
+    height: 160px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    opacity: 0.05;
+    filter: blur(30px);
+  }
+
+  .card__accent--right {
+    left: auto;
+    right: -40px;
+  }
+
+  /* ── Values ── */
+  .mv__values {}
+
+  .values__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 32px;
+    text-align: center;
+  }
+
+  .values__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .value {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .value:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateY(-4px);
+  }
+
+  .value__icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .value__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+  }
+
+  .value__desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
     line-height: 1.6;
+    margin: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .mv__cards { grid-template-columns: 1fr; }
+    .values__grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 540px) {
+    .values__grid { grid-template-columns: 1fr; }
+    .mv__card { padding: 32px 24px; }
   }
 </style>

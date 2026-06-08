@@ -1,47 +1,516 @@
 ---
+
 import TeamCard from "../ui/TeamCard.astro";
 
-const members = [
-    {
-        name: "Alex Morgan",
-        role: "CEO",
-        description: "Visionario con más de 10 años de experiencia.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+const MATRIX_IMAGE_URL = "https://tu-imagen-matriz-aqui.png";
+
+const TEAM_DATA = [
+  // ── INTEGRANTE 1 — LÍDER ──────────────────
+  {
+    id: "member-1",
+    is_leader: true,
+    name: "Nombre Apellido 1",                      
+    role: "Coordinador / Líder",                     
+    photo_url: "https://tu-foto-1.jpg",             
+    description: "Descripción breve del integrante 1. Máximo 2 líneas para que no desborde la card.", 
+    linkedin: "https://linkedin.com/in/usuario1",    
+    github:   "https://github.com/usuario1",        
+    email:    "usuario1@email.com",                  
+    cv: {
+      objective: "Escribe aquí el objetivo profesional del integrante 1. Máximo 3 líneas.", 
+      technical_skills: [
+        { category: "Lenguajes",      items: ["Python", "JavaScript", "SQL"] },   
+        { category: "Bases de Datos", items: ["PostgreSQL", "Supabase"] },        
+        { category: "Redes",          items: ["TCP/IP", "HTTP/REST"] },          
+      ],
+      soft_skills: ["Liderazgo", "Comunicación", "Gestión del tiempo"],           
+      certifications: [
+        { name: "Nombre del Certificado 1", url: "https://link-certificado-1.com" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],                            
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 2 ──────────────────────────
+  {
+    id: "member-2",
+    is_leader: false,
+    name: "Nombre Apellido 2",
+    role: "Rol del Integrante 2",
+    photo_url: "https://tu-foto-2.jpg",
+    description: "Descripción breve del integrante 2.",
+    linkedin: "https://linkedin.com/in/usuario2",
+    github:   "https://github.com/usuario2",
+    email:    "usuario2@email.com",
+    cv: {
+      objective: "Objetivo profesional del integrante 2.",
+      technical_skills: [
+        { category: "Lenguajes",    items: ["HTML", "CSS", "TypeScript"] },
+        { category: "Frameworks",   items: ["Astro", "React", "Tailwind"] },
+        { category: "Herramientas", items: ["Figma", "Git"] },
+      ],
+      soft_skills: ["Creatividad", "Atención al detalle", "Trabajo en equipo"],
+      certifications: [
+        { name: "Certificado del Integrante 2", url: "https://link-certificado.com" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B1)"],
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 3 ──────────────────────────
+  {
+    id: "member-3",
+    is_leader: false,
+    name: "Nombre Apellido 3",
+    role: "Rol del Integrante 3",
+    photo_url: "https://tu-foto-3.jpg",
+    description: "Descripción breve del integrante 3.",
+    linkedin: "https://linkedin.com/in/usuario3",
+    github:   "https://github.com/usuario3",
+    email:    "usuario3@email.com",
+    cv: {
+      objective: "Objetivo profesional del integrante 3.",
+      technical_skills: [
+        { category: "Lenguajes",      items: ["Python", "Node.js", "SQL"] },
+        { category: "Bases de Datos", items: ["PostgreSQL", "Redis"] },
+        { category: "Redes",          items: ["REST APIs", "WebSockets"] },
+      ],
+      soft_skills: ["Análisis", "Documentación", "Adaptabilidad"],
+      certifications: [
+        { name: "Certificado del Integrante 3", url: "https://link-certificado.com" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 4 ──────────────────────────
+  {
+    id: "member-4",
+    is_leader: false,
+    name: "Nombre Apellido 4",
+    role: "Rol del Integrante 4",
+    photo_url: "https://tu-foto-4.jpg",
+    description: "Descripción breve del integrante 4.",
+    linkedin: "https://linkedin.com/in/usuario4",
+    github:   "https://github.com/usuario4",
+    email:    "usuario4@email.com",
+    cv: {
+      objective: "Objetivo profesional del integrante 4.",
+      technical_skills: [
+        { category: "Diseño",     items: ["Figma", "Adobe XD"] },
+        { category: "Prototipado", items: ["Wireframing", "User Testing"] },
+        { category: "Código",     items: ["HTML", "CSS"] },
+      ],
+      soft_skills: ["Empatía", "Creatividad", "Feedback constructivo"],
+      certifications: [
+        { name: "Certificado del Integrante 4", url: "https://link-certificado.com" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],
     },
+  },
+
+  // ── INTEGRANTE 5 ──────────────────────────
+  {
+    id: "member-5",
+    is_leader: false,
+    name: "Nombre Apellido 5",
+    role: "Rol del Integrante 5",
+    photo_url: "https://tu-foto-5.jpg",
+    description: "Descripción breve del integrante 5.",
+    linkedin: "https://linkedin.com/in/usuario5",
+    github:   "https://github.com/usuario5",
+    email:    "usuario5@email.com",
+    cv: {
+      objective: "Objetivo profesional del integrante 5.",
+      technical_skills: [
+        { category: "Testing",  items: ["Jest", "Playwright", "Postman"] },
+        { category: "Datos",    items: ["Python", "Pandas", "SQL"] },
+        { category: "DevOps",   items: ["Git", "GitHub Actions"] },
+      ],
+      soft_skills: ["Pensamiento crítico", "Meticulosidad", "Comunicación técnica"],
+      certifications: [
+        { name: "Certificado del Integrante 5", url: "https://link-certificado.com" },
+      ],
+      languages: ["Español (nativo)", "Inglés (C1)"],
+    },
+  },
 ];
+
+// Separar líder del resto
+const leader = TEAM_DATA.find(m => m.is_leader);
+const rest   = TEAM_DATA.filter(m => !m.is_leader);
 ---
 
-<section class="team">
-    {
-        members.map((member, index) => (
-            <TeamCard {...member} align={index % 2 === 0 ? "right" : "left"} />
-        ))
-    }
+<section class="team" id="team">
+  <div class="team__container">
+
+    <!-- Header -->
+    <div class="team__header">
+      <div class="section-tag">Nuestro equipo</div>
+      <h2 class="team__title">Mapa <em>Organizacional</em></h2>
+      <p class="team__lead">
+        Conoce a las personas detrás de GymLabs. Haz clic en cada integrante
+        para ver su CV completo con habilidades y certificaciones.
+      </p>
+    </div>
+
+    <!-- Mapa organizacional -->
+    <div class="org-map">
+
+      <!-- Tier 1: Líder/Coordinador -->
+      {leader && (
+        <div class="org-leader-tier">
+          <div class="leader-label">
+            <span class="leader-label__dot"></span>
+            Coordinador / Líder
+          </div>
+          <div class="org-leader-card">
+            <TeamCard member={leader} />
+          </div>
+          <div class="org-line-down"></div>
+        </div>
+      )}
+
+      <!-- Conector -->
+      {leader && rest.length > 0 && (
+        <div class="org-bridge">
+          <div class="org-bridge__h"></div>
+        </div>
+      )}
+
+      <!-- Tier 2: Resto -->
+      {rest.length > 0 && (
+        <div class="org-members-tier">
+          {rest.map(m => (
+            <div class="org-member-col">
+              <div class="org-line-up"></div>
+              <TeamCard member={m} />
+            </div>
+          ))}
+        </div>
+      )}
+
+    </div>
+
+    <!-- Botón Matriz de Responsabilidad -->
+    <div class="matrix-trigger">
+      <button class="matrix-btn" id="open-matrix">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+        </svg>
+        <span>Ver Matriz de Responsabilidad</span>
+      </button>
+      <p class="matrix-hint">Distribución de roles y tareas del equipo</p>
+    </div>
+
+  </div>
 </section>
 
+<div class="matrix-modal" id="matrix-modal" role="dialog" aria-modal="true" aria-label="Matriz de Responsabilidad">
+  <div class="matrix-modal__backdrop" id="matrix-close"></div>
+  <div class="matrix-modal__panel">
+    <button class="matrix-modal__close" id="matrix-close-btn" aria-label="Cerrar">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="matrix-modal__header">
+      <h3>Matriz de Responsabilidad</h3>
+      <p>Distribución de tareas por integrante</p>
+    </div>
+    <div class="matrix-modal__img-wrap">
+      <img
+        src={MATRIX_IMAGE_URL}
+        alt="Matriz de responsabilidad del equipo GymLabs"
+        class="matrix-img"
+      />
+      
+      <div class="matrix-placeholder" id="matrix-placeholder">
+        <span>📊</span>
+        <p>Coloca la URL de tu imagen en<br/><code>MATRIX_IMAGE_URL</code> en <code>TeamPanel.astro</code></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-    .team {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 50px;
-    }
+/* ═══════════════════════════
+   SECTION
+═══════════════════════════ */
+.team {
+  padding: 120px 24px;
+  position: relative;
+}
+.team__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+}
+
+/* header */
+.team__header { text-align: center; max-width: 580px; }
+
+.section-tag {
+  display: inline-block;
+  background: rgba(16,185,129,.08);
+  border: 1px solid rgba(16,185,129,.2);
+  color: var(--color-primary);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.team__title {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -.03em;
+  color: var(--text-primary); margin: 0 0 14px;
+}
+.team__title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.team__lead {
+  font-size: 1rem; color: var(--text-secondary);
+  line-height: 1.7; margin: 0;
+}
+
+/* ═══════════════════════════
+   ORG MAP
+═══════════════════════════ */
+.org-map {
+  width: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0;
+}
+
+/* líder */
+.org-leader-tier {
+  display: flex; flex-direction: column;
+  align-items: center;
+  width: min(300px, 100%);
+}
+.leader-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(16,185,129,.08);
+  border: 1px solid rgba(16,185,129,.2);
+  color: var(--color-primary);
+  font-size: .72rem; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 999px;
+  margin-bottom: 14px;
+}
+.leader-label__dot {
+  width: 6px; height: 6px;
+  background: var(--color-primary); border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+.org-leader-card { width: 100%; }
+
+/* líneas verticales */
+.org-line-down, .org-line-up {
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(16,185,129,.4), rgba(16,185,129,.08));
+}
+.org-line-down { height: 28px; }
+.org-line-up   { height: 28px; margin: 0 auto; }
+
+/* puente horizontal */
+.org-bridge { width: 100%; display: flex; justify-content: center; }
+.org-bridge__h {
+  width: 75%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(16,185,129,.35) 12%,
+    rgba(16,185,129,.35) 88%,
+    transparent 100%
+  );
+}
+
+/* miembros */
+.org-members-tier {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+.org-member-col {
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ═══════════════════════════
+   MATRIX TRIGGER
+═══════════════════════════ */
+.matrix-trigger {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.matrix-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(16,185,129,.25);
+  border-radius: 14px;
+  color: var(--color-primary);
+  font-size: .95rem; font-weight: 700;
+  font-family: var(--font-primary);
+  cursor: pointer;
+  transition: all .25s;
+}
+.matrix-btn:hover {
+  background: rgba(16,185,129,.08);
+  border-color: rgba(16,185,129,.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16,185,129,.15);
+}
+.matrix-hint {
+  font-size: .78rem; color: var(--text-muted); margin: 0;
+}
+
+/* ═══════════════════════════
+   MATRIX MODAL
+═══════════════════════════ */
+.matrix-modal {
+  display: none;
+  position: fixed; inset: 0; z-index: 1000;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.matrix-modal.is-open { display: flex; animation: fadeIn .25s ease; }
+
+.matrix-modal__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(2,6,23,.92);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.matrix-modal__panel {
+  position: relative; z-index: 2;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  width: 100%; max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.matrix-modal__close {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  width: 34px; height: 34px;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-muted);
+  transition: all .2s;
+}
+.matrix-modal__close:hover {
+  background: rgba(16,185,129,.1);
+  color: var(--color-primary);
+  border-color: rgba(16,185,129,.3);
+}
+
+.matrix-modal__header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+.matrix-modal__header h3 {
+  font-size: 1.1rem; font-weight: 800;
+  color: var(--text-primary); margin: 0 0 4px;
+}
+.matrix-modal__header p {
+  font-size: .8rem; color: var(--text-muted); margin: 0;
+}
+
+.matrix-modal__img-wrap {
+  flex: 1; overflow-y: auto;
+  padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 200px;
+  position: relative;
+}
+
+.matrix-img {
+  width: 100%; height: auto;
+  border-radius: 12px;
+  display: block;
+}
+
+/* placeholder cuando no hay imagen */
+.matrix-placeholder {
+  display: none;
+  flex-direction: column; align-items: center;
+  gap: 12px; text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+.matrix-placeholder span { font-size: 2.5rem; }
+.matrix-placeholder p { font-size: .88rem; line-height: 1.6; margin: 0; }
+.matrix-placeholder code {
+  background: var(--bg-surface-2); padding: 2px 6px;
+  border-radius: 4px; font-size: .82rem; color: var(--color-primary);
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .5; transform: scale(.8); }
+}
+
+/* responsive */
+@media (max-width: 1024px) {
+  .org-members-tier { grid-template-columns: repeat(2, 1fr); }
+  .org-bridge__h    { width: 60%; }
+}
+@media (max-width: 580px) {
+  .org-members-tier { grid-template-columns: 1fr; }
+  .org-leader-tier  { width: 100%; }
+  .org-bridge__h    { width: 2px; height: 28px; }
+}
 </style>
+
+<script>
+  const modal     = document.getElementById('matrix-modal');
+  const openBtn   = document.getElementById('open-matrix');
+  const closeBtn  = document.getElementById('matrix-close-btn');
+  const backdrop  = document.getElementById('matrix-close');
+  const img       = modal?.querySelector('.matrix-img') as HTMLImageElement;
+  const placeholder = document.getElementById('matrix-placeholder');
+
+  // Mostrar placeholder si la imagen no carga
+  if (img) {
+    img.addEventListener('error', () => {
+      img.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'flex';
+    });
+    img.addEventListener('load', () => {
+      img.style.display = 'block';
+      if (placeholder) placeholder.style.display = 'none';
+    });
+  }
+
+  function openModal()  {
+    modal?.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal?.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  openBtn?.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>

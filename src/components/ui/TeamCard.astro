@@ -1,139 +1,552 @@
 ---
-const { name, role, description, align = "right" } = Astro.props;
+// TeamCard.astro  — recibe un objeto member completo desde Supabase
+const { member } = Astro.props;
+// member shape:
+// { id, name, role, photo_url, description, linkedin, github, email,
+//   cv: { objective, technical_skills: [{category, items}],
+//          soft_skills: [str], certifications: [str],
+//          languages: [str] } }
 ---
 
-<div class={`card ${align}`}>
-    <div class="content">
-        <h3>{name}</h3> 
-        <span>{role}</span>
+<div class="card" data-id={member.id}>
+  <!-- Foto + overlay -->
+  <div class="card__visual">
+    {member.photo_url
+      ? <img src={member.photo_url} alt={member.name} class="card__photo" />
+      : <div class="card__photo-placeholder"><span>{member.name?.[0]}</span></div>
+    }
+    <div class="card__overlay"></div>
+  </div>
 
-        <p class="extra">{description}</p>
+  <!-- Info base -->
+  <div class="card__info">
+    <h3 class="card__name">{member.name}</h3>
+    <span class="card__role">{member.role}</span>
+    <p class="card__desc">{member.description}</p>
 
-        <div class="links">
-            <a href="#">in</a>
-            <a href="#">tw</a>
-            <a href="#">mail</a>
-        </div>
+    <div class="card__links">
+      {member.linkedin && <a href={member.linkedin} target="_blank" aria-label="LinkedIn">in</a>}
+      {member.github   && <a href={member.github}   target="_blank" aria-label="GitHub">gh</a>}
+      {member.email    && <a href={`mailto:${member.email}`}         aria-label="Email">@</a>}
     </div>
+
+    <button class="card__cv-btn" data-member-id={member.id}>
+      <span>Ver CV completo</span>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- CV Modal (uno por card, oculto) -->
+<div class="cv-modal" id={`cv-${member.id}`} role="dialog" aria-modal="true" aria-label={`CV de ${member.name}`}>
+  <div class="cv-modal__backdrop"></div>
+  <div class="cv-modal__panel">
+    <button class="cv-modal__close" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Header del CV -->
+    <div class="cv-header">
+      <div class="cv-header__photo">
+        {member.photo_url
+          ? <img src={member.photo_url} alt={member.name} />
+          : <span>{member.name?.[0]}</span>
+        }
+      </div>
+      <div class="cv-header__info">
+        <h2>{member.name}</h2>
+        <span class="cv-role">{member.role}</span>
+        <div class="cv-links">
+          {member.linkedin && <a href={member.linkedin} target="_blank">LinkedIn</a>}
+          {member.github   && <a href={member.github}   target="_blank">GitHub</a>}
+          {member.email    && <a href={`mailto:${member.email}`}>Email</a>}
+        </div>
+      </div>
+    </div>
+
+    <!-- Objetivo -->
+    {member.cv?.objective && (
+      <div class="cv-section">
+        <h4 class="cv-section__title">Objetivo profesional</h4>
+        <p class="cv-section__text">{member.cv.objective}</p>
+      </div>
+    )}
+
+    <!-- Skills técnicos -->
+    {member.cv?.technical_skills?.length > 0 && (
+      <div class="cv-section">
+        <h4 class="cv-section__title">Habilidades técnicas</h4>
+        <div class="cv-skills-grid">
+          {member.cv.technical_skills.map((group: any) => (
+            <div class="skill-group">
+              <span class="skill-group__label">{group.category}</span>
+              <div class="skill-group__tags">
+                {group.items.map((item: string) => (
+                  <span class="skill-tag">{item}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Habilidades blandas -->
+    {member.cv?.soft_skills?.length > 0 && (
+      <div class="cv-section">
+        <h4 class="cv-section__title">Habilidades blandas</h4>
+        <div class="cv-soft-skills">
+          {member.cv.soft_skills.map((s: string) => (
+            <span class="soft-tag">{s}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Certificaciones -->
+    {member.cv?.certifications?.length > 0 && (
+      <div class="cv-section">
+        <h4 class="cv-section__title">Certificaciones</h4>
+        <ul class="cv-certs">
+          {member.cv.certifications.map((c: string) => (
+            <li class="cv-cert">
+              <span class="cv-cert__dot"></span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Idiomas -->
+    {member.cv?.languages?.length > 0 && (
+      <div class="cv-section">
+        <h4 class="cv-section__title">Idiomas</h4>
+        <div class="cv-soft-skills">
+          {member.cv.languages.map((l: string) => (
+            <span class="soft-tag">{l}</span>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
 </div>
 
 <style>
-    .card {
-        position: relative;
-        height: 220px;
-        border-radius: 16px;
-        overflow: hidden;
-        display: grid;
-        align-items: center;
-        padding: 30px;
-        color: white;
-        transition: transform 0.4s ease;
-        width: 100%;
+  /* ══════════════════════════════
+     CARD
+  ══════════════════════════════ */
+  .card {
+    position: relative;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
 
-    }
+  .card:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
 
-    @media (max-width: 1024px) {
-        .card {
-            height: 200px;
-        }
-    }
+  /* ── Visual ── */
+  .card__visual {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
 
-    @media (max-width: 640px) {
-        .card {
-            height: 180px;
-        }
-    }
+  .card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease;
+  }
 
-    .card::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: url('https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd');
-        background-size: cover;
-        background-repeat: no-repeat;
-        transform: scale(1.2);
-        transition:
-            transform 0.6s ease,
-            filter 0.4s;
-        z-index: 0;
-    }
+  .card:hover .card__photo { transform: scale(1.06); }
 
-    .card.right::after {
-        background-position: right center;
-    }
+  .card__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
 
-    .card.left::after {
-        background-position: left center;
-    }
+  .card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--bg-surface) 0%, transparent 60%);
+  }
 
-    /* overlay */
-    .card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        transition: 0.4s;
-    }
+  /* ── Info ── */
+  .card__info {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
 
-    .card.right::before {
-        background: linear-gradient(to left, rgba(0, 0, 0, 0.8), transparent);
-    }
+  .card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
 
-    .card.left::before {
-        background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
-    }
+  .card__role {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
 
-    /* contenido */
-    .content {
-        position: relative;
-        z-index: 2;
-        border: 1px red solid;
+  .card__desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 4px 0 8px;
+  }
 
-        max-width: 320px;
-    }
+  .card__links {
+    display: flex;
+    gap: 8px;
+  }
 
-    .extra {
-        opacity: 0;
-        transform: translateY(10px);
-        transition: 0.4s;
-    }
+  .card__links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
 
-    .links {
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: 0.4s;
-    }
+  .card__links a:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--color-primary);
+  }
 
-    .links a {
-        text-decoration: none;
-        color: white;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 12px;
-    }
+  .card__cv-btn {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 0;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 10px;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-primary);
+  }
 
-    /* hover */
-    .card:hover {
-        transform: scale(1.05);
-    }
+  .card__cv-btn:hover {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+  }
 
-    .card:hover::after {
-        transform: scale(1.4);
-        filter: brightness(1.1);
-    }
+  /* ══════════════════════════════
+     CV MODAL
+  ══════════════════════════════ */
+  .cv-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
 
-    .card:hover::before {
-        background: rgba(0, 0, 0, 0.85);
-    }
+  .cv-modal.is-open {
+    display: flex;
+    animation: modalIn 0.3s ease;
+  }
 
-    .card:hover .extra,
-    .card:hover .links {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  .cv-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(6px);
+  }
 
+  .cv-modal__panel {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+  }
+
+  .cv-modal__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .cv-modal__close:hover {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-primary);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  /* ── CV Header ── */
+  .cv-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .cv-header__photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    flex-shrink: 0;
+    background: var(--bg-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+
+  .cv-header__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .cv-header__info h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+  }
+
+  .cv-role {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .cv-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .cv-links a {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .cv-links a:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* ── CV Section ── */
+  .cv-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+  }
+
+  .cv-section__title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin: 0 0 14px;
+  }
+
+  .cv-section__text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ── Skills ── */
+  .cv-skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .skill-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .skill-group__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+    min-width: 100px;
+    padding-top: 4px;
+  }
+
+  .skill-group__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .skill-tag {
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* ── Soft skills ── */
+  .cv-soft-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .soft-tag {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-primary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+
+  /* ── Certs ── */
+  .cv-certs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cv-cert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+
+  .cv-cert__dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @media (max-width: 540px) {
+    .cv-modal__panel { padding: 28px 20px; }
+    .cv-header { flex-direction: column; align-items: flex-start; }
+  }
 </style>
+
+<script>
+  // Abrir/cerrar modal
+  document.querySelectorAll('.card__cv-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = (btn as HTMLElement).dataset.memberId;
+      const modal = document.getElementById(`cv-${id}`);
+      modal?.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  document.querySelectorAll('.cv-modal__close, .cv-modal__backdrop').forEach((el) => {
+    el.addEventListener('click', () => {
+      (el.closest('.cv-modal') as HTMLElement)?.classList.remove('is-open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.cv-modal.is-open').forEach((m) => {
+        m.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+</script>
