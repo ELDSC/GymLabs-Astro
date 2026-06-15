@@ -1,47 +1,702 @@
 ---
 import TeamCard from "../ui/TeamCard.astro";
 
-const members = [
-    {
-        name: "Alex Morgan",
-        role: "CEO",
-        description: "Visionario con más de 10 años de experiencia.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+const MATRIX_IMAGE_URL = "https://i.ibb.co/1JnKNZTP/e5846d13-a4ea-4ee1-adef-450ace4a3d69.png";
+
+const TEAM_DATA = [
+  // ── INTEGRANTE 1 — LÍDER ──────────────────
+  {
+    id: "member-1",
+    is_leader: true,
+    name: "Alvaro Ramirez",
+    role: "Coordinador / Backend Developer",
+    photo_url: "https://i.ibb.co/356nSgKQ/a6320d19-a6b6-48ba-b778-e8de807f9065.png",
+    description:
+      "Coordina el equipo y desarrolla la arquitectura backend de GymLabs, garantizando la integración y estabilidad del sistema.",
+    linkedin: "https://www.linkedin.com/mynetwork/grow/",
+    github: "#",
+    email: "mockup@email.com",
+    cv_pdf: "https://example.com/cv-alvaro.pdf",
+    cv: {
+      objective:
+        "Backend Developer especializado en el desarrollo de APIs, gestión de bases de datos y despliegue de servicios con Docker y TypeScript, contribuyendo a la escalabilidad y rendimiento del sistema.",
+      technical_skills: [
+        { category: "Lenguajes", items: ["TypeScript", "JavaScript", "SQL"] },
+        { category: "Backend", items: ["Node.js", "Express", "REST APIs"] },
+        { category: "DevOps", items: ["Docker", "Git", "PostgreSQL"] },
+      ],
+      soft_skills: ["Liderazgo", "Comunicación", "Resolución de problemas"],
+      certifications: [
+        { name: "Backend Development Fundamentals", url: "#" },
+        { name: "Docker Essentials", url: "#" },
+        { name: "API Design and Integration", url: "#" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 2 ──────────────────────────
+  {
+    id: "member-2",
+    is_leader: false,
+    name: "Josue Sarango",
+    role: "Data Analyst",
+    photo_url:
+      "https://i.ibb.co/dJ1Dd6Q6/watermarked-img-2755029918573824458.jpg",
+    description:
+      "Analiza datos(DATA ANALITYCS) y genera reportes que apoyan la toma de decisiones estratégicas dentro de GymLabs.",
+    linkedin: "https://www.linkedin.com/mynetwork/grow/",
+    github: "https://github.com/ELDSC",
+    email: "sarangojosue6@gmail.com",
+    cv_pdf: "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/viewer.html?sessionId=51X4sgbfzLrqVW16suKzc35%2BeNEyIcsx6Sm8%2FZrxyOU%3D&uid=1abd74bc-ef4f-4902-a166-947f88845044",
+    cv: {
+      objective:
+        "Especialista  en análisis de datos orientado a transformar información en indicadores y dashboards que faciliten la toma de decisiones empresariales.",
+      technical_skills: [
+        { category: "Lenguajes", items: ["SQL", "Python", "DAX"] },
+        {
+          category: "Herramientas BI",
+          items: ["Power BI", "Excel", "Jupyter"],
+        },
+        {
+          category: "Bases de Datos",
+          items: ["PostgreSQL", "MySQL", "Supabase"],
+        },
+      ],
+      soft_skills: [
+        "Pensamiento analítico",
+        "Atención al detalle",
+        "Trabajo en equipo",
+      ],
+      certifications: [
+        { name: "Data Analytics Fundamentals", url: "#" },
+        { name: "Power BI for Business Intelligence", url: "#" },
+        { name: "SQL Data Analysis", url: "#" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B1)"],
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 3 ──────────────────────────
+  {
+    id: "member-3",
+    is_leader: false,
+    name: "Jesus Chu",
+    role: "DevOps Engineer",
+    photo_url: "https://i.ibb.co/JLnYsRY/7eeedaee-d51b-4b15-936a-6234b10f8e22.jpg",
+    description:
+      "Gestiona la infraestructura y despliegue continuo para garantizar la disponibilidad y rendimiento del proyecto.",
+    linkedin: "https://www.linkedin.com/mynetwork/grow/",
+    github: "https://github.com/yissus12",
+    email: " jessus13chu@gmail.com",
+    cv_pdf: "https://acrobat.adobe.com/id/urn:aaid:sc:US:f7e19d91-a2eb-48d0-a57a-1975c50d9d6e?view=1&tl=0%2C3%2C850&br=0%2C281%2C426",
+    cv: {
+      objective:
+        "Profesional DevOps enfocado en automatización de despliegues, integración continua y optimización de infraestructura cloud para aplicaciones modernas.",
+      technical_skills: [
+        { category: "Cloud", items: ["Vercel", "AWS", "Railway"] },
+        { category: "DevOps", items: ["Docker", "GitHub Actions", "CI/CD"] },
+        {
+          category: "Infraestructura",
+          items: ["Linux", "Nginx", "Monitoring"],
+        },
+      ],
+      soft_skills: [
+        "Adaptabilidad",
+        "Organización",
+        "Resolución de incidencias",
+      ],
+      certifications: [
+        { name: "DevOps Foundations", url: "#" },
+        { name: "CI/CD Pipelines", url: "#" },
+        { name: "Cloud Deployment Essentials", url: "#" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],
     },
-    {
-        name: "Jordan Lee",
-        role: "CTO",
-        description: "Experto en desarrollo y tecnología.",
-        image: "https://preview.redd.it/tried-making-giga-chad-on-fallout-4-v0-s11p7hwxjtw91.jpg?width=628&format=pjpg&auto=webp&s=b9419c4dd221ce64eb738ae4d38add5600674cdd",
+  },
+
+  // ── INTEGRANTE 4 ──────────────────────────
+  {
+    id: "member-4",
+    is_leader: false,
+    name: "Andres Pisfil",
+    role: "Diseñador UX/UI",
+    photo_url: "https://i.ibb.co/JhSXmq2/watermarked-img-2416977348691427731.jpg",
+    description:
+      "Diseña experiencias intuitivas y atractivas enfocadas en mejorar la interacción de los usuarios con GymLabs.",
+    linkedin: "https://www.linkedin.com/mynetwork/grow/",
+    github: "https://github.com/pisfilromero223-hu",
+    email: "pisfilromero223@gmail.com",
+    cv: {
+      objective:
+        "Diseñador UX/UI enfocado en crear interfaces modernas, accesibles y centradas en el usuario para mejorar la experiencia digital.",
+      technical_skills: [
+        { category: "Diseño", items: ["Figma", "Adobe XD", "Photoshop"] },
+        {
+          category: "UX",
+          items: ["Wireframing", "User Research", "Prototyping"],
+        },
+        { category: "Frontend", items: ["HTML", "CSS", "Responsive Design"] },
+      ],
+      soft_skills: ["Creatividad", "Empatía", "Comunicación visual"],
+      certifications: [
+        { name: "UX Design Fundamentals", url: "#" },
+        { name: "Figma Professional", url: "#" },
+        { name: "User Experience Research", url: "#" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B2)"],
     },
+  },
+
+  // ── INTEGRANTE 5 ──────────────────────────
+  {
+    id: "member-5",
+    is_leader: false,
+    name: "Rafael Palomino",
+    role: "Frontend Developer",
+    photo_url: "https://i.ibb.co/vxH6c2qD/1ecd0020-bee1-41ab-9e4a-c6aa970eb82a.jpg",
+    description:
+      "Desarrolla interfaces modernas y responsivas, asegurando una experiencia fluida para los usuarios de GymLabs.",
+    linkedin: "https://www.linkedin.com/in/rafael-palomino-ramirez-2669831b0/?skipRedirect=true",
+    github: "https://github.com/Palomon12",
+    email: "kpalomino295@gmail.com",
+    cv_pdf:"file:///C:/Users/Milagros/Documents/no%20borrar/ARCHIVOS/CV%20PALOMINO%20RAMIREZ%20KEVN%20RAFAEL.pdf",
+    cv: {
+      objective:
+        "Frontend Developer especializado en el desarrollo de interfaces web modernas utilizando tecnologías actuales, priorizando rendimiento, accesibilidad y experiencia de usuario.",
+      technical_skills: [
+        {
+          category: "Frontend",
+          items: ["Angular", "TypeScript", "JavaScript"],
+        },
+        { category: "Diseño Web", items: ["HTML", "CSS", "Tailwind CSS"] },
+        { category: "Herramientas", items: ["Git", "GitHub", "Vercel"] },
+      ],
+      soft_skills: [
+        "Trabajo en equipo",
+        "Comunicación",
+        "Resolución de problemas",
+      ],
+      certifications: [
+        { name: "Frontend Development Fundamentals", url: "#" },
+        { name: "Angular Professional", url: "#" },
+        { name: "Responsive Web Design", url: "#" },
+      ],
+      languages: ["Español (nativo)", "Inglés (B1)"],
+    },
+  },
 ];
+
+// Separar líder del resto
+const leader = TEAM_DATA.find((m) => m.is_leader);
+const rest = TEAM_DATA.filter((m) => !m.is_leader);
 ---
 
-<section class="team">
-    {
-        members.map((member, index) => (
-            <TeamCard {...member} align={index % 2 === 0 ? "right" : "left"} />
-        ))
-    }
+<section class="team" id="team">
+  <div class="team__container">
+    <!-- Header -->
+    <div class="team__header">
+      <div class="section-tag">Nuestro equipo</div>
+      <h2 class="team__title">Mapa <em>Organizacional</em></h2>
+      <p class="team__lead">
+        Conoce a las personas detrás de GymLabs. Haz clic en cada integrante
+        para ver su CV completo con habilidades y certificaciones.
+      </p>
+    </div>
+
+    <!-- Mapa organizacional -->
+    <div class="org-map">
+      <!-- Tier 1: Líder/Coordinador -->
+      {
+        leader && (
+          <div class="org-leader-tier">
+            <div class="leader-label">
+              <span class="leader-label__dot" />
+              Coordinador / Líder
+            </div>
+            <div class="org-leader-card">
+              <TeamCard member={leader} />
+            </div>
+            <div class="org-line-down" />
+          </div>
+        )
+      }
+
+      <!-- Conector -->
+      {
+        leader && rest.length > 0 && (
+          <div class="org-bridge">
+            <div class="org-bridge__h" />
+          </div>
+        )
+      }
+
+      <!-- Tier 2: Resto -->
+      {
+        rest.length > 0 && (
+          <div class="org-members-tier">
+            {rest.map((m) => (
+              <div class="org-member-col">
+                <div class="org-line-up" />
+                <TeamCard member={m} />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Botón Matriz de Responsabilidad -->
+    <div class="matrix-trigger">
+      <button class="matrix-btn" id="open-matrix">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2"></rect><path
+            d="M3 9h18M3 15h18M9 3v18"></path>
+        </svg>
+        <span>Ver Matriz de Responsabilidad</span>
+      </button>
+      <p class="matrix-hint">Distribución de roles y tareas del equipo</p>
+    </div>
+  </div>
 </section>
 
+<div
+  class="matrix-modal"
+  id="matrix-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Matriz de Responsabilidad"
+>
+  <div class="matrix-modal__backdrop" id="matrix-close"></div>
+  <div class="matrix-modal__panel">
+    <button
+      class="matrix-modal__close"
+      id="matrix-close-btn"
+      aria-label="Cerrar"
+    >
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path
+          d="M4 4l10 10M14 4L4 14"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <div class="matrix-modal__header">
+      <h3>Matriz de Responsabilidad</h3>
+      <p>Distribución de tareas por integrante</p>
+    </div>
+    <div class="matrix-modal__img-wrap">
+      <img
+        src={MATRIX_IMAGE_URL}
+        alt="Matriz de responsabilidad del equipo GymLabs"
+        class="matrix-img"
+      />
+
+      <div class="matrix-placeholder" id="matrix-placeholder">
+        <span>📊</span>
+        <p>
+          Coloca la URL de tu imagen en<br /><code>MATRIX_IMAGE_URL</code> en <code
+            >TeamPanel.astro</code>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-    .team {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 50px;
+  /* ═══════════════════════════
+   SECTION
+═══════════════════════════ */
+  .team {
+    padding: 90px 24px;
+    position: relative;
+  }
+  .team__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+  }
+
+  /* header */
+  .team__header {
+    text-align: center;
+    max-width: 580px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+
+  .team__title {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin: 0 0 14px;
+  }
+  .team__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .team__lead {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ═══════════════════════════
+   ORG MAP
+═══════════════════════════ */
+  .org-map {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* líder */
+  .org-leader-tier {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(300px, 100%);
+  }
+  .leader-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .leader-label__dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .org-leader-card {
+    width: 100%;
+  }
+
+  /* líneas verticales */
+  .org-line-down,
+  .org-line-up {
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 185, 129, 0.4),
+      rgba(16, 185, 129, 0.08)
+    );
+  }
+  .org-line-down {
+    height: 28px;
+  }
+  .org-line-up {
+    height: 28px;
+    margin: 0 auto;
+  }
+
+  /* puente horizontal */
+  .org-bridge {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .org-bridge__h {
+    width: 75%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(16, 185, 129, 0.35) 12%,
+      rgba(16, 185, 129, 0.35) 88%,
+      transparent 100%
+    );
+  }
+
+  /* miembros */
+  .org-members-tier {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+  }
+  .org-member-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ═══════════════════════════
+   MATRIX TRIGGER
+═══════════════════════════ */
+  .matrix-trigger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .matrix-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: var(--bg-surface);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 14px;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .matrix-btn:hover {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+  }
+  .matrix-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ═══════════════════════════
+   MATRIX MODAL
+═══════════════════════════ */
+  .matrix-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .matrix-modal.is-open {
+    display: flex;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .matrix-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.92);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+  }
+
+  .matrix-modal__panel {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .matrix-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .matrix-modal__close:hover {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-primary);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .matrix-modal__header {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .matrix-modal__header h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+  }
+  .matrix-modal__header p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .matrix-modal__img-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    position: relative;
+  }
+
+  .matrix-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+  }
+
+  /* placeholder cuando no hay imagen */
+  .matrix-placeholder {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    padding: 48px;
+    color: var(--text-muted);
+  }
+  .matrix-placeholder span {
+    font-size: 2.5rem;
+  }
+  .matrix-placeholder p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .matrix-placeholder code {
+    background: var(--bg-surface-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    color: var(--color-primary);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
     }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
+  }
+
+  /* responsive */
+  @media (max-width: 1024px) {
+    .org-members-tier {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .org-bridge__h {
+      width: 60%;
+    }
+  }
+  @media (max-width: 580px) {
+    .org-members-tier {
+      grid-template-columns: 1fr;
+    }
+    .org-leader-tier {
+      width: 100%;
+    }
+    .org-bridge__h {
+      width: 2px;
+      height: 28px;
+    }
+  }
 </style>
+
+<script>
+  const modal = document.getElementById("matrix-modal");
+  const openBtn = document.getElementById("open-matrix");
+  const closeBtn = document.getElementById("matrix-close-btn");
+  const backdrop = document.getElementById("matrix-close");
+  const img = modal?.querySelector(".matrix-img") as HTMLImageElement;
+  const placeholder = document.getElementById("matrix-placeholder");
+
+  // Mostrar placeholder si la imagen no carga
+  if (img) {
+    img.addEventListener("error", () => {
+      img.style.display = "none";
+      if (placeholder) placeholder.style.display = "flex";
+    });
+    img.addEventListener("load", () => {
+      img.style.display = "block";
+      if (placeholder) placeholder.style.display = "none";
+    });
+  }
+
+  function openModal() {
+    modal?.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal() {
+    modal?.classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+
+  openBtn?.addEventListener("click", openModal);
+  closeBtn?.addEventListener("click", closeModal);
+  backdrop?.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+</script>

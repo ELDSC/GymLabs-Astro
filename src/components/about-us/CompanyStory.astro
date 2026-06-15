@@ -1,45 +1,238 @@
-<section class="company-story">
-    <div class="container">
-        <h2>Nuestra Historia</h2>
-        <p>
-            GymLabs nació con una misión clara: transformar la forma en que las personas se entrenan y alcanzan sus objetivos de fitness. Desde nuestros inicios, nos hemos comprometido a ofrecer un ambiente inclusivo, moderno y motivador donde cada miembro pueda desarrollar su mejor versión.
-        </p>
-        <p>
-            Con equipamiento de última generación, entrenadores certificados y una comunidad apasionada, GymLabs se ha convertido en más que un gimnasio: es un movimiento hacia un estilo de vida más saludable.
-        </p>
+---
+// CompanyStory.astro
+
+const milestones = [
+  {
+    year: "2019",
+    title: "El origen",
+    desc: "Todo comenzó en un pequeño taller donde la pasión por el fitness se fusionó con la búsqueda de suplementos de calidad real.",
+  },
+  {
+    year: "2021",
+    title: "Expansión digital",
+    desc: "Lanzamos nuestra plataforma online y alcanzamos los primeros 2,000 atletas comprometidos con su rendimiento.",
+  },
+  {
+    year: "2023",
+    title: "Línea propia",
+    desc: "Desarrollamos nuestra primera línea de suplementos formulados con base científica, sin rellenos ni compromisos.",
+  },
+  {
+    year: "2024",
+    title: "Comunidad global",
+    desc: "Hoy somos más de 10,000 atletas en toda Latinoamérica unidos por un mismo objetivo: superar sus límites.",
+  },
+];
+---
+
+<section class="story">
+  <div class="story__container">
+
+    <div class="story__header">
+      <div class="section-tag">Nuestra historia</div>
+      <h2 class="story__title">De la pasión<br /><em>a la excelencia</em></h2>
+      <p class="story__lead">
+        GymLabs no nació de una oficina. Nació de madrugadas entrenando, de buscar fórmulas
+        que realmente funcionaran y de creer que el rendimiento humano no tiene techo.
+      </p>
     </div>
+
+    <div class="story__body">
+      <div class="story__visual">
+        <div class="visual__card">
+          <div class="visual__inner">
+            <div class="visual__icon">⚡</div>
+            <p class="visual__quote">
+              "No vendemos suplementos. Vendemos el resultado del trabajo duro de cada atleta."
+            </p>
+            <span class="visual__author">— Fundadores de GymLabs</span>
+          </div>
+          <div class="visual__glow"></div>
+        </div>
+      </div>
+
+      <div class="story__timeline">
+        {milestones.map((m, i) => (
+          <div class="milestone" style={`animation-delay: ${i * 0.1}s`}>
+            <div class="milestone__year">{m.year}</div>
+            <div class="milestone__content">
+              <h3 class="milestone__title">{m.title}</h3>
+              <p class="milestone__desc">{m.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
 </section>
 
 <style>
+  .story {
+    padding: 90px 24px;
+    position: relative;
+  }
 
-    .company-story {
-        background-color: var(--bg-surface);
-        padding: 4rem 2rem;
-        border-top: 1px solid var(--border-color);
-    }
+  .story__container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
 
-    .company-story .container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
+  /* ── Header ── */
+  .story__header {
+    text-align: center;
+  }
 
-    .company-story h2 {
-        color: var(--color-primary);
-        font-family: var(--font-primary);
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
+  .section-tag {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
 
-    .company-story p {
-        color: var(--text-secondary);
-        font-family: var(--font-primary);
-        line-height: 1.8;
-        margin-bottom: 1.5rem;
-        font-size: 1.1rem;
-    }
+  .story__title {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin: 0 0 20px;
+  }
 
-    .company-story p:last-child {
-        margin-bottom: 0;
-    }
+  .story__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .story__lead {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* ── Body ── */
+  .story__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* ── Visual card ── */
+  .visual__card {
+    position: relative;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 48px 40px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .visual__inner {
+    position: relative;
+    z-index: 2;
+  }
+
+  .visual__icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .visual__quote {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0 0 20px;
+    font-style: italic;
+  }
+
+  .visual__author {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .visual__glow {
+    position: absolute;
+    bottom: -60px;
+    right: -60px;
+    width: 220px;
+    height: 220px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    opacity: 0.06;
+    filter: blur(40px);
+  }
+
+  /* ── Timeline ── */
+  .story__timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .milestone {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border-color);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .milestone:last-child {
+    border-bottom: none;
+  }
+
+  .milestone__year {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    padding-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .milestone__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+  }
+
+  .milestone__desc {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .story__body { grid-template-columns: 1fr; }
+    .visual__card { min-height: 220px; }
+  }
 </style>

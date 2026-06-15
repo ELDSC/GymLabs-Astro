@@ -1,0 +1,83 @@
+---
+interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+---
+
+<header class="toolbar">
+  <div>
+    <p class="eyebrow">Dashboard</p>
+    <h1>Productos</h1>
+    <p class="meta">{count} producto{count === 1 ? "" : "s"} registrados</p>
+  </div>
+
+  <button class="add-button" type="button" data-open-add-product>
+    Agregar
+  </button>
+</header>
+
+<style>
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    color: #0f172a;
+  }
+
+  .meta {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+  }
+
+  .add-button {
+    border: 0;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    padding: 0.9rem 1.35rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 140ms ease, opacity 140ms ease;
+  }
+
+  .add-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .add-button:active {
+    transform: translateY(0);
+    opacity: 0.92;
+  }
+
+  @media (max-width: 640px) {
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .add-button {
+      width: 100%;
+    }
+  }
+</style>
