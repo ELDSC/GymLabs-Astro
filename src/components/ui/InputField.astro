@@ -1,0 +1,61 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  type?: "text" | "email" | "password" | "number";
+  placeholder?: string;
+  isTextArea?: boolean;
+}
+const {
+  label,
+  name,
+  type = "text",
+  placeholder,
+  isTextArea = false,
+} = Astro.props;
+---
+
+<div class="input-group">
+  <label for={name}>{label}</label>
+
+  {
+    isTextArea ? (
+      <textarea id={name} name={name} placeholder={placeholder} rows="4" />
+    ) : (
+      <input type={type} id={name} name={name} placeholder={placeholder} />
+    )
+  }
+</div>
+
+<style>
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  label {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    background: var(--bg-surface-2, #1e293b);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    font-family: inherit;
+    transition: border-color 0.3s;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-primary, #10b981);
+  }
+</style>

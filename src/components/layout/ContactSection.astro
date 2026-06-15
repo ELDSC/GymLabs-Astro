@@ -1,0 +1,83 @@
+---
+import InputField from "../ui/InputField.astro";
+import Button from "../ui/Button.astro";
+---
+
+<section class="contact" id="contacto">
+  <div class="contact-card">
+    <div class="header">
+      <h2>¿Tienes alguna duda?</h2>
+      <p>Escríbenos si necesitas asesoramiento sobre qué suplemento elegir.</p>
+    </div>
+
+    <form>
+      <div class="form-grid">
+        <InputField label="Nombre" name="nombre" placeholder="Josue Sarango" />
+        <InputField
+          label="Correo"
+          name="email"
+          type="email"
+          placeholder="sarangojosue6@gmail.com"
+        />
+      </div>
+
+      <InputField
+        label="Teléfono"
+        name="tel"
+        type="number"
+        placeholder="+51 947 102 850"
+      />
+      <InputField
+        label="Tu mensaje"
+        name="mensaje"
+        isTextArea={true}
+        placeholder="¿En qué podemos ayudarte?"
+      />
+
+      <div class="submit-container">
+        <Button text="Enviar Consulta" href="#" variant="primary" />
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .contact-card {
+    background: var(--bg-surface, #0f172a);
+    max-width: 800px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid #1e293b;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 10px;
+  }
+  p {
+    color: var(--text-muted);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .submit-container {
+    margin-top: 10px;
+  }
+</style>
