@@ -1,24 +1,24 @@
 ---
-// MissionVision.astro
+import { Icon } from 'astro-icon/components';
 
 const values = [
   {
-    icon: "🔬",
+    icon: "lucide:flask-conical",
     title: "Ciencia primero",
     desc: "Cada producto nace de investigación real, no de tendencias vacías.",
   },
   {
-    icon: "🤝",
+    icon: "lucide:handshake",
     title: "Comunidad",
     desc: "Somos tan fuertes como el atleta más comprometido de nuestra red.",
   },
   {
-    icon: "💎",
+    icon: "lucide:award",
     title: "Calidad sin concesiones",
     desc: "Ingredientes puros, dosis efectivas, sin atajos.",
   },
   {
-    icon: "🚀",
+    icon: "lucide:rocket",
     title: "Innovación constante",
     desc: "Nunca dejamos de mejorar. El ayer es el piso, no el techo.",
   },
@@ -37,7 +37,7 @@ const values = [
     <div class="mv__cards">
       <div class="mv__card mv__card--mission">
         <div class="card__icon-wrap">
-          <span class="card__icon">🎯</span>
+          <Icon name="lucide:target" class="card__icon-svg" />
         </div>
         <div class="card__body">
           <h3 class="card__label">Misión</h3>
@@ -52,7 +52,7 @@ const values = [
 
       <div class="mv__card mv__card--vision">
         <div class="card__icon-wrap">
-          <span class="card__icon">🌎</span>
+          <Icon name="lucide:globe" class="card__icon-svg" />
         </div>
         <div class="card__body">
           <h3 class="card__label">Visión</h3>
@@ -73,7 +73,7 @@ const values = [
         {
           values.map((v, i) => (
             <div class="value" style={`animation-delay: ${i * 0.08}s`}>
-              <span class="value__icon">{v.icon}</span>
+              <Icon name={v.icon} class="value__icon-svg" />
               <h4 class="value__title">{v.title}</h4>
               <p class="value__desc">{v.desc}</p>
             </div>
@@ -86,7 +86,7 @@ const values = [
 
 <style>
   .mv {
-    padding: 90px 24px;
+    padding: 60px 24px;
     position: relative;
   }
 
@@ -164,6 +164,7 @@ const values = [
   .card__icon-wrap {
     width: 56px;
     height: 56px;
+    padding: 14px;
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 14px;
@@ -174,6 +175,13 @@ const values = [
 
   .card__icon {
     font-size: 1.6rem;
+  }
+
+  .card__icon-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    color: var(--color-primary);
   }
 
   .card__label {
@@ -250,6 +258,13 @@ const values = [
     font-size: 2rem;
     display: block;
     margin-bottom: 14px;
+  }
+
+  .value__icon-svg {
+    width: 2.8rem;
+    height: 2.8rem;
+    color: var(--color-primary);
+    margin: 0 auto 16px auto;
   }
 
   .value__title {

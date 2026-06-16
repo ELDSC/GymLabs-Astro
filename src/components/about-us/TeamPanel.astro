@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import TeamCard from "../ui/TeamCard.astro";
 
 const MATRIX_IMAGE_URL =
@@ -322,7 +323,7 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
       />
 
       <div class="matrix-placeholder" id="matrix-placeholder">
-        <span>📊</span>
+        <Icon name="lucide:info" class="placeholder-icon-svg" />
         <p>
           Coloca la URL de tu imagen en<br /><code>MATRIX_IMAGE_URL</code> en <code
             >TeamPanel.astro</code
@@ -338,7 +339,7 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
    SECTION
 ═══════════════════════════ */
   .team {
-    padding: 90px 24px;
+    padding: 60px 24px;
     position: relative;
   }
   .team__container {
@@ -627,8 +628,11 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
     padding: 48px;
     color: var(--text-muted);
   }
-  .matrix-placeholder span {
-    font-size: 2.5rem;
+  .placeholder-icon-svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    color: var(--text-muted);
+    opacity: 0.8;
   }
   .matrix-placeholder p {
     font-size: 0.88rem;

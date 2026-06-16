@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 // CompanyStory.astro
 
 const milestones = [
@@ -41,7 +43,7 @@ const milestones = [
       <div class="story__visual">
         <div class="visual__card">
           <div class="visual__inner">
-            <div class="visual__icon">⚡</div>
+            <Icon name="lucide:quote" class="visual__icon-svg" />
             <p class="visual__quote">
               "No vendemos suplementos. Vendemos el resultado del trabajo duro de cada atleta."
             </p>
@@ -69,7 +71,7 @@ const milestones = [
 
 <style>
   .story {
-    padding: 90px 24px;
+    padding: 60px 24px;
     position: relative;
   }
 
@@ -155,6 +157,14 @@ const milestones = [
     font-size: 2.5rem;
     margin-bottom: 20px;
     display: block;
+  }
+
+  .visual__icon-svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+    opacity: 0.8;
   }
 
   .visual__quote {
