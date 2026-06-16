@@ -2,16 +2,31 @@
 // MissionVision.astro
 
 const values = [
-  { icon: "🔬", title: "Ciencia primero", desc: "Cada producto nace de investigación real, no de tendencias vacías." },
-  { icon: "🤝", title: "Comunidad", desc: "Somos tan fuertes como el atleta más comprometido de nuestra red." },
-  { icon: "💎", title: "Calidad sin concesiones", desc: "Ingredientes puros, dosis efectivas, sin atajos." },
-  { icon: "🚀", title: "Innovación constante", desc: "Nunca dejamos de mejorar. El ayer es el piso, no el techo." },
+  {
+    icon: "🔬",
+    title: "Ciencia primero",
+    desc: "Cada producto nace de investigación real, no de tendencias vacías.",
+  },
+  {
+    icon: "🤝",
+    title: "Comunidad",
+    desc: "Somos tan fuertes como el atleta más comprometido de nuestra red.",
+  },
+  {
+    icon: "💎",
+    title: "Calidad sin concesiones",
+    desc: "Ingredientes puros, dosis efectivas, sin atajos.",
+  },
+  {
+    icon: "🚀",
+    title: "Innovación constante",
+    desc: "Nunca dejamos de mejorar. El ayer es el piso, no el techo.",
+  },
 ];
 ---
 
 <section class="mv">
   <div class="mv__container">
-
     <!-- Header -->
     <div class="mv__header">
       <div class="section-tag">Nuestra esencia</div>
@@ -27,9 +42,9 @@ const values = [
         <div class="card__body">
           <h3 class="card__label">Misión</h3>
           <p class="card__text">
-            Potenciar el rendimiento de cada atleta con productos de calidad científica,
-            accesibles y diseñados para quienes no aceptan excusas. Somos el aliado de
-            tu entrenamiento, no solo un suplemento más.
+            Potenciar el rendimiento de cada atleta con productos de calidad
+            científica, accesibles y diseñados para quienes no aceptan excusas.
+            Somos el aliado de tu entrenamiento, no solo un suplemento más.
           </p>
         </div>
         <div class="card__accent"></div>
@@ -55,16 +70,17 @@ const values = [
     <div class="mv__values">
       <h3 class="values__title">Nuestros valores</h3>
       <div class="values__grid">
-        {values.map((v, i) => (
-          <div class="value" style={`animation-delay: ${i * 0.08}s`}>
-            <span class="value__icon">{v.icon}</span>
-            <h4 class="value__title">{v.title}</h4>
-            <p class="value__desc">{v.desc}</p>
-          </div>
-        ))}
+        {
+          values.map((v, i) => (
+            <div class="value" style={`animation-delay: ${i * 0.08}s`}>
+              <span class="value__icon">{v.icon}</span>
+              <h4 class="value__title">{v.title}</h4>
+              <p class="value__desc">{v.desc}</p>
+            </div>
+          ))
+        }
       </div>
     </div>
-
   </div>
 </section>
 
@@ -83,7 +99,9 @@ const values = [
   }
 
   /* ── Header ── */
-  .mv__header { text-align: center; }
+  .mv__header {
+    text-align: center;
+  }
 
   .section-tag {
     display: inline-block;
@@ -133,7 +151,9 @@ const values = [
     display: flex;
     flex-direction: column;
     gap: 24px;
-    transition: border-color 0.3s, transform 0.3s;
+    transition:
+      border-color 0.3s,
+      transform 0.3s;
   }
 
   .mv__card:hover {
@@ -152,7 +172,9 @@ const values = [
     justify-content: center;
   }
 
-  .card__icon { font-size: 1.6rem; }
+  .card__icon {
+    font-size: 1.6rem;
+  }
 
   .card__label {
     font-size: 0.75rem;
@@ -188,7 +210,8 @@ const values = [
   }
 
   /* ── Values ── */
-  .mv__values {}
+  .mv__values {
+  }
 
   .values__title {
     font-size: 1.1rem;
@@ -212,7 +235,9 @@ const values = [
     border-radius: 18px;
     padding: 32px 24px;
     text-align: center;
-    transition: border-color 0.3s, transform 0.3s;
+    transition:
+      border-color 0.3s,
+      transform 0.3s;
     animation: fadeUp 0.5s ease both;
   }
 
@@ -242,17 +267,31 @@ const values = [
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 900px) {
-    .mv__cards { grid-template-columns: 1fr; }
-    .values__grid { grid-template-columns: 1fr 1fr; }
+    .mv__cards {
+      grid-template-columns: 1fr;
+    }
+    .values__grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   @media (max-width: 540px) {
-    .values__grid { grid-template-columns: 1fr; }
-    .mv__card { padding: 32px 24px; }
+    .values__grid {
+      grid-template-columns: 1fr;
+    }
+    .mv__card {
+      padding: 32px 24px;
+    }
   }
 </style>

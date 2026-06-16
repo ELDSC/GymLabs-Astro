@@ -1,7 +1,8 @@
 ---
 import TeamCard from "../ui/TeamCard.astro";
 
-const MATRIX_IMAGE_URL = "https://i.ibb.co/1JnKNZTP/e5846d13-a4ea-4ee1-adef-450ace4a3d69.png";
+const MATRIX_IMAGE_URL =
+  "https://i.ibb.co/1JnKNZTP/e5846d13-a4ea-4ee1-adef-450ace4a3d69.png";
 
 const TEAM_DATA = [
   // ── INTEGRANTE 1 — LÍDER ──────────────────
@@ -10,7 +11,8 @@ const TEAM_DATA = [
     is_leader: true,
     name: "Alvaro Ramirez",
     role: "Coordinador / Backend Developer",
-    photo_url: "https://i.ibb.co/356nSgKQ/a6320d19-a6b6-48ba-b778-e8de807f9065.png",
+    photo_url:
+      "https://i.ibb.co/356nSgKQ/a6320d19-a6b6-48ba-b778-e8de807f9065.png",
     description:
       "Coordina el equipo y desarrolla la arquitectura backend de GymLabs, garantizando la integración y estabilidad del sistema.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
@@ -40,27 +42,31 @@ const TEAM_DATA = [
     id: "member-2",
     is_leader: false,
     name: "Josue Sarango",
-    role: "Data Analyst",
+    role: " Programador Full Stack",
     photo_url:
       "https://i.ibb.co/dJ1Dd6Q6/watermarked-img-2755029918573824458.jpg",
     description:
-      "Analiza datos(DATA ANALITYCS) y genera reportes que apoyan la toma de decisiones estratégicas dentro de GymLabs.",
-    linkedin: "https://www.linkedin.com/mynetwork/grow/",
+      "Programador Full Stack encargado del desarrollo del sistema, integrando frontend y backend para una experiencia completa.",
+    linkedin: "https://www.linkedin.com/in/josue-sarango-data/",
     github: "https://github.com/ELDSC",
     email: "sarangojosue6@gmail.com",
-    cv_pdf: "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/viewer.html?sessionId=51X4sgbfzLrqVW16suKzc35%2BeNEyIcsx6Sm8%2FZrxyOU%3D&uid=1abd74bc-ef4f-4902-a166-947f88845044",
+    cv_pdf:
+      "https://drive.google.com/file/d/16h4Tut579jAJUGU6-VK8h2Ok7BbUSU7r/view?usp=sharing",
     cv: {
       objective:
-        "Especialista  en análisis de datos orientado a transformar información en indicadores y dashboards que faciliten la toma de decisiones empresariales.",
+        "Estudiante de 6° ciclo de Ingeniería de Sistemas enfocado en la transición hacia el rol de Data Engineer, con interés en iniciar como Programador Jr o Data Analyst. Posee sólidos conocimientos en Python, Java, SQL intermedio y Excel, respaldados por un dominio intermedio del inglés. Destaca por su capacidad analítica, aprendizaje autodidacta y facilidad para el trabajo en equipo.",
       technical_skills: [
-        { category: "Lenguajes", items: ["SQL", "Python", "DAX"] },
         {
-          category: "Herramientas BI",
-          items: ["Power BI", "Excel", "Jupyter"],
+          category: "Lenguajes",
+          items: ["Python", "Java", "HTML", "CSS", "JS"],
         },
         {
           category: "Bases de Datos",
-          items: ["PostgreSQL", "MySQL", "Supabase"],
+          items: ["PostgreSQL", "MySQL", "Supabase", "SQLServer"],
+        },
+        {
+          category: "Frameworks",
+          items: ["React", "Next", "Astro"],
         },
       ],
       soft_skills: [
@@ -69,9 +75,18 @@ const TEAM_DATA = [
         "Trabajo en equipo",
       ],
       certifications: [
-        { name: "Data Analytics Fundamentals", url: "#" },
-        { name: "Power BI for Business Intelligence", url: "#" },
-        { name: "SQL Data Analysis", url: "#" },
+        {
+          name: "Ciencia de Datos",
+          url: "https://drive.google.com/file/d/1v5hUEcveHkir2CuOnpyTxK2ejxPd-UPO/view?usp=sharing",
+        },
+        {
+          name: "Excel Intermedio",
+          url: "https://drive.google.com/file/d/1ZQI2CbwkcLtektbKvlh5bZedPEykDexW/view?usp=sharing",
+        },
+        {
+          name: "Ingles Intermedio",
+          url: "https://drive.google.com/file/d/1DAqIlzLivcP_RuOVVedLNOqUtVEgZGqt/view?usp=sharing",
+        },
       ],
       languages: ["Español (nativo)", "Inglés (B1)"],
     },
@@ -83,13 +98,15 @@ const TEAM_DATA = [
     is_leader: false,
     name: "Jesus Chu",
     role: "DevOps Engineer",
-    photo_url: "https://i.ibb.co/JLnYsRY/7eeedaee-d51b-4b15-936a-6234b10f8e22.jpg",
+    photo_url:
+      "https://i.ibb.co/JLnYsRY/7eeedaee-d51b-4b15-936a-6234b10f8e22.jpg",
     description:
       "Gestiona la infraestructura y despliegue continuo para garantizar la disponibilidad y rendimiento del proyecto.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
     github: "https://github.com/yissus12",
     email: " jessus13chu@gmail.com",
-    cv_pdf: "https://acrobat.adobe.com/id/urn:aaid:sc:US:f7e19d91-a2eb-48d0-a57a-1975c50d9d6e?view=1&tl=0%2C3%2C850&br=0%2C281%2C426",
+    cv_pdf:
+      "https://acrobat.adobe.com/id/urn:aaid:sc:US:f7e19d91-a2eb-48d0-a57a-1975c50d9d6e?view=1&tl=0%2C3%2C850&br=0%2C281%2C426",
     cv: {
       objective:
         "Profesional DevOps enfocado en automatización de despliegues, integración continua y optimización de infraestructura cloud para aplicaciones modernas.",
@@ -121,7 +138,8 @@ const TEAM_DATA = [
     is_leader: false,
     name: "Andres Pisfil",
     role: "Diseñador UX/UI",
-    photo_url: "https://i.ibb.co/JhSXmq2/watermarked-img-2416977348691427731.jpg",
+    photo_url:
+      "https://i.ibb.co/JhSXmq2/watermarked-img-2416977348691427731.jpg",
     description:
       "Diseña experiencias intuitivas y atractivas enfocadas en mejorar la interacción de los usuarios con GymLabs.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
@@ -154,13 +172,16 @@ const TEAM_DATA = [
     is_leader: false,
     name: "Rafael Palomino",
     role: "Frontend Developer",
-    photo_url: "https://i.ibb.co/vxH6c2qD/1ecd0020-bee1-41ab-9e4a-c6aa970eb82a.jpg",
+    photo_url:
+      "https://i.ibb.co/vxH6c2qD/1ecd0020-bee1-41ab-9e4a-c6aa970eb82a.jpg",
     description:
       "Desarrolla interfaces modernas y responsivas, asegurando una experiencia fluida para los usuarios de GymLabs.",
-    linkedin: "https://www.linkedin.com/in/rafael-palomino-ramirez-2669831b0/?skipRedirect=true",
+    linkedin:
+      "https://www.linkedin.com/in/rafael-palomino-ramirez-2669831b0/?skipRedirect=true",
     github: "https://github.com/Palomon12",
     email: "kpalomino295@gmail.com",
-    cv_pdf:"file:///C:/Users/Milagros/Documents/no%20borrar/ARCHIVOS/CV%20PALOMINO%20RAMIREZ%20KEVN%20RAFAEL.pdf",
+    cv_pdf:
+      "file:///C:/Users/Milagros/Documents/no%20borrar/ARCHIVOS/CV%20PALOMINO%20RAMIREZ%20KEVN%20RAFAEL.pdf",
     cv: {
       objective:
         "Frontend Developer especializado en el desarrollo de interfaces web modernas utilizando tecnologías actuales, priorizando rendimiento, accesibilidad y experiencia de usuario.",
@@ -304,7 +325,8 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
         <span>📊</span>
         <p>
           Coloca la URL de tu imagen en<br /><code>MATRIX_IMAGE_URL</code> en <code
-            >TeamPanel.astro</code>
+            >TeamPanel.astro</code
+          >
         </p>
       </div>
     </div>
