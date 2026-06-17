@@ -1,5 +1,4 @@
 ---
-import { Icon } from 'astro-icon/components';
 import TeamCard from "../ui/TeamCard.astro";
 
 const MATRIX_IMAGE_URL =
@@ -13,13 +12,13 @@ const TEAM_DATA = [
     name: "Alvaro Ramirez",
     role: "Coordinador / Android Senior Developer ",
     photo_url:
-      "https://i.ibb.co/356nSgKQ/a6320d19-a6b6-48ba-b778-e8de807f9065.png",
+      "https://i.ibb.co/zhjz7Mq9/1681239727634.jpg",
     description:
       "Coordina el equipo garantizando la integración y estabilidad del sistema.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
     github: "https://github.com/ralvaroDev",
     email: "mockup@email.com",
-    cv_pdf: "https://example.com/cv-alvaro.pdf",
+    cv_pdf: "https://drive.google.com/file/d/1DY0-0BBBGDCjxKmNOUO8kX1AyvTItMye/view?usp=drive_link",
     cv: {
       objective:
         "Desarrollador de Aplicaciones Móviles (Android – iOS) con más de 5 años de experiencia aplicando patrones de diseño y buenas prácticas de arquitectura. ",
@@ -45,7 +44,7 @@ const TEAM_DATA = [
     name: "Josue Sarango",
     role: " Programador Full Stack",
     photo_url:
-      "https://i.ibb.co/dJ1Dd6Q6/watermarked-img-2755029918573824458.jpg",
+      "https://i.ibb.co/3m9Ks3cV/9728ba59-b738-4386-bbb5-8e0b53c4f2fc.jpg",
     description:
       "Programador Full Stack encargado del desarrollo del sistema, integrando frontend y backend para una experiencia completa.",
     linkedin: "https://www.linkedin.com/in/josue-sarango-data/",
@@ -100,7 +99,7 @@ const TEAM_DATA = [
     name: "Jesus Chu",
     role: "DevOps Engineer",
     photo_url:
-      "https://i.ibb.co/JLnYsRY/7eeedaee-d51b-4b15-936a-6234b10f8e22.jpg",
+      "https://i.ibb.co/FqjbJPZC/0c0a66d4-1402-4844-9b45-bf2f38b3dccd.jpg",
     description:
       "Gestiona la infraestructura y despliegue continuo para garantizar la disponibilidad y rendimiento del proyecto.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
@@ -140,12 +139,13 @@ const TEAM_DATA = [
     name: "Andres Pisfil",
     role: "Diseñador UX/UI",
     photo_url:
-      "https://i.ibb.co/JhSXmq2/watermarked-img-2416977348691427731.jpg",
+      "https://i.ibb.co/CpwNF8WL/3ee78b50-095f-496c-83b8-571052e9b4ab.jpg",
     description:
       "Diseña experiencias intuitivas y atractivas enfocadas en mejorar la interacción de los usuarios con GymLabs.",
     linkedin: "https://www.linkedin.com/mynetwork/grow/",
     github: "https://github.com/pisfilromero223-hu",
     email: "pisfilromero223@gmail.com",
+    cv_pdf:"https://drive.google.com/file/d/1ZRcEFDnm6RGUupKVEWzCIz2zeOCz9bf1/view?usp=drive_link" ,
     cv: {
       objective:
         "Diseñador UX/UI enfocado en crear interfaces modernas, accesibles y centradas en el usuario para mejorar la experiencia digital.",
@@ -174,7 +174,7 @@ const TEAM_DATA = [
     name: "Rafael Palomino",
     role: "Frontend Developer",
     photo_url:
-      "https://i.ibb.co/vxH6c2qD/1ecd0020-bee1-41ab-9e4a-c6aa970eb82a.jpg",
+      "https://i.ibb.co/5gnS4j9m/foto-propia2.jpg",
     description:
       "Desarrolla interfaces modernas y responsivas, asegurando una experiencia fluida para los usuarios de GymLabs.",
     linkedin:
@@ -182,14 +182,14 @@ const TEAM_DATA = [
     github: "https://github.com/Palomon12",
     email: "kpalomino295@gmail.com",
     cv_pdf:
-      "file:///C:/Users/Milagros/Documents/no%20borrar/ARCHIVOS/CV%20PALOMINO%20RAMIREZ%20KEVN%20RAFAEL.pdf",
+      "https://drive.google.com/file/d/1LUtmm0-FJNCvMpXAgul5RnHFmT4RJcVI/view?usp=drive_link",
     cv: {
       objective:
         "Frontend Developer especializado en el desarrollo de interfaces web modernas utilizando tecnologías actuales, priorizando rendimiento, accesibilidad y experiencia de usuario.",
       technical_skills: [
         {
           category: "Frontend",
-          items: ["Angular", "TypeScript", "JavaScript"],
+          items: ["Astro", "CSS", "JavaScript"],
         },
         { category: "Diseño Web", items: ["HTML", "CSS", "Tailwind CSS"] },
         { category: "Herramientas", items: ["Git", "GitHub", "Vercel"] },
@@ -201,7 +201,7 @@ const TEAM_DATA = [
       ],
       certifications: [
         { name: "Frontend Development Fundamentals", url: "#" },
-        { name: "Angular Professional", url: "#" },
+        { name: "Astro Professional", url: "#" },
         { name: "Responsive Web Design", url: "#" },
       ],
       languages: ["Español (nativo)", "Inglés (B1)"],
@@ -323,7 +323,7 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
       />
 
       <div class="matrix-placeholder" id="matrix-placeholder">
-        <Icon name="lucide:info" class="placeholder-icon-svg" />
+        <span>📊</span>
         <p>
           Coloca la URL de tu imagen en<br /><code>MATRIX_IMAGE_URL</code> en <code
             >TeamPanel.astro</code
@@ -339,7 +339,7 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
    SECTION
 ═══════════════════════════ */
   .team {
-    padding: 60px 24px;
+    padding: 90px 24px;
     position: relative;
   }
   .team__container {
@@ -628,11 +628,8 @@ const rest = TEAM_DATA.filter((m) => !m.is_leader);
     padding: 48px;
     color: var(--text-muted);
   }
-  .placeholder-icon-svg {
-    width: 3.5rem;
-    height: 3.5rem;
-    color: var(--text-muted);
-    opacity: 0.8;
+  .matrix-placeholder span {
+    font-size: 2.5rem;
   }
   .matrix-placeholder p {
     font-size: 0.88rem;
