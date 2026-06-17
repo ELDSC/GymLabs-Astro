@@ -1,40 +1,40 @@
 ---
-// WhyChooseUs.astro
+import { Icon } from 'astro-icon/components';
 
 const reasons = [
   {
     num: "01",
-    icon: "🧪",
+    icon: "lucide:flask-conical",
     title: "Fórmulas con respaldo científico",
     desc: "Cada dosis está diseñada en base a estudios clínicos. No seguimos modas, seguimos la evidencia.",
   },
   {
     num: "02",
-    icon: "🏷️",
+    icon: "lucide:shield-check",
     title: "Transparencia total",
     desc: "Sin propietario blends, sin ingredientes ocultos. Sabes exactamente qué consumes y por qué.",
   },
   {
     num: "03",
-    icon: "⚡",
+    icon: "lucide:zap",
     title: "Resultados reales",
     desc: "Miles de atletas han mejorado su rendimiento, recuperación y composición corporal con GymLabs.",
   },
   {
     num: "04",
-    icon: "🔒",
+    icon: "lucide:lock",
     title: "Certificaciones de calidad",
     desc: "Nuestras instalaciones y productos cumplen con estándares internacionales de manufactura.",
   },
   {
     num: "05",
-    icon: "📦",
+    icon: "lucide:package",
     title: "Envío rápido y seguro",
     desc: "Tu pedido llega en perfectas condiciones. Entrega express disponible en toda la región.",
   },
   {
     num: "06",
-    icon: "💬",
+    icon: "lucide:headset",
     title: "Soporte especializado",
     desc: "Nuestro equipo incluye nutricionistas y entrenadores que te asesoran sin costo adicional.",
   },
@@ -58,7 +58,7 @@ const reasons = [
         <div class="reason" style={`animation-delay: ${i * 0.07}s`}>
           <div class="reason__top">
             <span class="reason__num">{r.num}</span>
-            <span class="reason__icon">{r.icon}</span>
+            <Icon name={r.icon} class="reason__icon-svg" />
           </div>
           <h3 class="reason__title">{r.title}</h3>
           <p class="reason__desc">{r.desc}</p>
@@ -78,7 +78,7 @@ const reasons = [
 
 <style>
   .why {
-    padding: 120px 24px;
+    padding: 60px 24px;
     position: relative;
   }
 
@@ -171,6 +171,12 @@ const reasons = [
   }
 
   .reason__icon { font-size: 1.6rem; }
+
+  .reason__icon-svg {
+    width: 2.2rem;
+    height: 2.2rem;
+    color: var(--color-primary);
+  }
 
   .reason__title {
     font-size: 1rem;
