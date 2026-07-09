@@ -1,0 +1,41 @@
+<dialog class="admin-dialog" data-discount-dialog>
+  <form class="dialog-panel" method="POST" data-discount-form>
+    <input type="hidden" name="action" value="saveDiscount" />
+    <input type="hidden" name="section" value="discounts" />
+    <input type="hidden" name="discountId" value="" data-discount-id />
+
+    <header class="dialog-header">
+      <h2 data-discount-title>Crear código</h2>
+      <button class="icon-button" type="button" aria-label="Cerrar" data-close-discount-dialog>×</button>
+    </header>
+
+    <div class="dialog-body">
+      <div class="form-grid discount-grid">
+        <label class="field">
+          <span>Código</span>
+          <input class="text-input" type="text" name="code" placeholder="FIESTASPATRIAS20" required data-discount-code />
+        </label>
+        <label class="field">
+          <span>Porcentaje</span>
+          <input class="text-input" type="number" name="percentage" min="1" max="100" step="1" required data-discount-percentage />
+        </label>
+      </div>
+
+      <div class="form-footer">
+        <label class="switch-field">
+          <input type="checkbox" name="isActive" checked data-discount-active />
+          <span class="switch-control" aria-hidden="true"></span>
+          <span>Activo</span>
+        </label>
+      </div>
+    </div>
+
+    <footer class="dialog-actions">
+      <button class="danger-button" type="submit" data-delete-discount-button hidden>
+        Eliminar código
+      </button>
+      <button class="ghost-button" type="button" data-close-discount-dialog>Cancelar</button>
+      <button class="primary-button" type="submit" data-save-discount-button>Crear código</button>
+    </footer>
+  </form>
+</dialog>

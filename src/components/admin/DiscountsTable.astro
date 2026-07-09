@@ -1,0 +1,40 @@
+---
+import type { DiscountItem } from "./types";
+
+interface Props {
+  discounts: DiscountItem[];
+}
+
+const { discounts } = Astro.props;
+---
+
+<div class="table-shell">
+  <div class="table-head discounts-head" aria-hidden="true">
+    <span>Código</span>
+    <span>Valor</span>
+    <span>Estado</span>
+    <span>Acción</span>
+  </div>
+
+  {discounts.length === 0 ? (
+    <p class="empty-state">Sin códigos por ahora.</p>
+  ) : (
+    discounts.map((discount) => (
+      <div class="table-row discounts-row">
+        <span class="code">{discount.code}</span>
+        <span>{discount.percentage}%</span>
+        <span class:list={["status", discount.isActive ? "is-live" : "is-muted"]}>
+          {discount.isActive ? "Activo" : "Inactivo"}
+        </span>
+        <button
+          class="edit-chip"
+          type="button"
+          data-edit-discount
+          data-discount={JSON.stringify(discount)}
+        >
+          Editar
+        </button>
+      </div>
+    ))
+  )}
+</div>

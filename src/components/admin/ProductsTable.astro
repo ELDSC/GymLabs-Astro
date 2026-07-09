@@ -1,0 +1,51 @@
+---
+import type { ProductItem } from "./types";
+
+interface Props {
+  products: ProductItem[];
+}
+
+const { products } = Astro.props;
+
+const soles = new Intl.NumberFormat("es-PE", {
+  style: "currency",
+  currency: "PEN",
+});
+---
+
+<div class="table-shell">
+  <div class="table-head products-head" aria-hidden="true">
+    <span>Producto</span>
+    <span>Precio</span>
+    <span>Estado</span>
+    <span>Acción</span>
+  </div>
+
+  {products.length === 0 ? (
+    <p class="empty-state">Sin productos por ahora.</p>
+  ) : (
+    products.map((product) => (
+      <div class="table-row products-row">
+        <span class="item-title">
+          {product.imageUrl && <img src={product.imageUrl} alt="" loading="lazy" />}
+          <span>
+            <strong>{product.name}</strong>
+            <small>{product.categoryName || "Sin colección"} · {product.sku}</small>
+          </span>
+        </span>
+        <span>{soles.format(product.price)}</span>
+        <span class:list={["status", product.isActive ? "is-live" : "is-muted"]}>
+          {product.isActive ? "Activo" : "Inactivo"}
+        </span>
+        <button
+          class="edit-chip"
+          type="button"
+          data-edit-product
+          data-product={JSON.stringify(product)}
+        >
+          Editar
+        </button>
+      </div>
+    ))
+  )}
+</div>

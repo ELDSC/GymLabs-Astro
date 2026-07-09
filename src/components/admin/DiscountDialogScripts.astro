@@ -1,0 +1,65 @@
+<script>
+  type DiscountDialogItem = {
+    id: string;
+    code: string;
+    percentage: number;
+    isActive: boolean;
+  };
+
+  const discountDialog = document.querySelector<HTMLDialogElement>("[data-discount-dialog]");
+  const discountForm = discountDialog?.querySelector<HTMLFormElement>("[data-discount-form]");
+  const discountActionInput = discountDialog?.querySelector<HTMLInputElement>('input[name="action"]');
+  const discountIdInput = discountDialog?.querySelector<HTMLInputElement>("[data-discount-id]");
+  const discountCodeInput = discountDialog?.querySelector<HTMLInputElement>("[data-discount-code]");
+  const discountPercentageInput = discountDialog?.querySelector<HTMLInputElement>("[data-discount-percentage]");
+  const discountActiveInput = discountDialog?.querySelector<HTMLInputElement>("[data-discount-active]");
+  const discountTitle = discountDialog?.querySelector<HTMLElement>("[data-discount-title]");
+  const saveDiscountButton = discountDialog?.querySelector<HTMLButtonElement>("[data-save-discount-button]");
+  const deleteDiscountButton = discountDialog?.querySelector<HTMLButtonElement>("[data-delete-discount-button]");
+
+  const resetDiscountDialog = () => {
+    discountForm?.reset();
+    if (discountIdInput) discountIdInput.value = "";
+    if (discountActiveInput) discountActiveInput.checked = true;
+    if (discountTitle) discountTitle.textContent = "Crear código";
+    if (saveDiscountButton) saveDiscountButton.textContent = "Crear código";
+    if (deleteDiscountButton) deleteDiscountButton.hidden = true;
+  };
+
+  const fillDiscountDialog = (discount: DiscountDialogItem) => {
+    discountForm?.reset();
+    if (discountIdInput) discountIdInput.value = discount.id;
+    if (discountCodeInput) discountCodeInput.value = discount.code;
+    if (discountPercentageInput) discountPercentageInput.value = String(discount.percentage);
+    if (discountActiveInput) discountActiveInput.checked = discount.isActive;
+    if (discountTitle) discountTitle.textContent = "Editar código";
+    if (saveDiscountButton) saveDiscountButton.textContent = "Guardar";
+    if (deleteDiscountButton) deleteDiscountButton.hidden = false;
+  };
+
+  document.querySelector<HTMLButtonElement>("[data-open-discount-dialog]")?.addEventListener("click", () => {
+    resetDiscountDialog();
+    discountDialog?.showModal();
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-edit-discount]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const raw = button.getAttribute("data-discount");
+      if (!raw) return;
+      fillDiscountDialog(JSON.parse(raw) as DiscountDialogItem);
+      discountDialog?.showModal();
+    });
+  });
+
+  discountDialog?.querySelectorAll<HTMLButtonElement>("[data-close-discount-dialog]").forEach((button) => {
+    button.addEventListener("click", () => discountDialog.close());
+  });
+
+  saveDiscountButton?.addEventListener("click", () => {
+    if (discountActionInput) discountActionInput.value = "saveDiscount";
+  });
+
+  deleteDiscountButton?.addEventListener("click", () => {
+    if (discountActionInput) discountActionInput.value = "deleteDiscount";
+  });
+</script>

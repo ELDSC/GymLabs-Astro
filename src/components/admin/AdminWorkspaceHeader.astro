@@ -1,0 +1,62 @@
+---
+import type { AdminSection } from "./types";
+
+interface Props {
+  activeSection: AdminSection;
+  adminEmail: string;
+  counts: Record<AdminSection, number>;
+}
+
+const { activeSection, adminEmail, counts } = Astro.props;
+
+const sectionTabs: { id: AdminSection; label: string; count: number; href: string }[] = [
+  { id: "products", label: "Productos", count: counts.products, href: "/admin/products" },
+  { id: "categories", label: "Colecciones", count: counts.categories, href: "/admin/categories" },
+  { id: "discounts", label: "Códigos", count: counts.discounts, href: "/admin/discount-codes" },
+];
+---
+
+<header class="admin-header">
+  <div>
+    <p class="eyebrow">GymLabs HQ</p>
+    <h1>Operaciones</h1>
+    <p class="meta">{adminEmail}</p>
+  </div>
+
+  <form method="POST">
+    <input type="hidden" name="action" value="logout" />
+    <button class="ghost-button" type="submit">Salir</button>
+  </form>
+</header>
+
+<div class="workspace-bar">
+  <nav class="section-tabs" aria-label="Secciones">
+    {sectionTabs.map((tab) => (
+      <a
+        class:list={["section-tab", activeSection === tab.id && "is-active"]}
+        href={tab.href}
+      >
+        <span>{tab.label}</span>
+        <strong>{tab.count}</strong>
+      </a>
+    ))}
+  </nav>
+
+  <div class="workspace-actions">
+    {activeSection === "products" && (
+      <button class="primary-button" type="button" data-open-product-dialog>
+        Crear producto
+      </button>
+    )}
+    {activeSection === "categories" && (
+      <button class="primary-button" type="button" data-open-category-dialog>
+        Crear colección
+      </button>
+    )}
+    {activeSection === "discounts" && (
+      <button class="primary-button" type="button" data-open-discount-dialog>
+        Crear código
+      </button>
+    )}
+  </div>
+</div>

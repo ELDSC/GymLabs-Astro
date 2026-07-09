@@ -1,0 +1,97 @@
+<script>
+  type CategoryDialogItem = {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    isActive: boolean;
+    sortOrder: number;
+  };
+
+  const slugify = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const categoryDialog = document.querySelector<HTMLDialogElement>("[data-category-dialog]");
+  const categoryForm = categoryDialog?.querySelector<HTMLFormElement>("[data-category-form]");
+  const categoryActionInput = categoryDialog?.querySelector<HTMLInputElement>('input[name="action"]');
+  const categoryIdInput = categoryDialog?.querySelector<HTMLInputElement>("[data-category-id]");
+  const categoryNameInput = categoryDialog?.querySelector<HTMLInputElement>("[data-category-name]");
+  const categorySlugInput = categoryDialog?.querySelector<HTMLInputElement>("[data-category-slug]");
+  const categorySortInput = categoryDialog?.querySelector<HTMLInputElement>("[data-category-sort]");
+  const categoryDescriptionInput = categoryDialog?.querySelector<HTMLTextAreaElement>("[data-category-description]");
+  const categoryActiveInput = categoryDialog?.querySelector<HTMLInputElement>("[data-category-active]");
+  const categoryTitle = categoryDialog?.querySelector<HTMLElement>("[data-category-title]");
+  const saveCategoryButton = categoryDialog?.querySelector<HTMLButtonElement>("[data-save-category-button]");
+  const deleteCategoryButton = categoryDialog?.querySelector<HTMLButtonElement>("[data-delete-category-button]");
+
+  const resetCategoryDialog = () => {
+    categoryForm?.reset();
+    if (categoryIdInput) categoryIdInput.value = "";
+    if (categorySortInput) categorySortInput.value = "0";
+    if (categoryActiveInput) categoryActiveInput.checked = true;
+    if (categorySlugInput) categorySlugInput.dataset.userEdited = "false";
+    if (categoryTitle) categoryTitle.textContent = "Crear colección";
+    if (saveCategoryButton) saveCategoryButton.textContent = "Crear colección";
+    if (deleteCategoryButton) deleteCategoryButton.hidden = true;
+  };
+
+  const fillCategoryDialog = (category: CategoryDialogItem) => {
+    categoryForm?.reset();
+    if (categoryIdInput) categoryIdInput.value = category.id;
+    if (categoryNameInput) categoryNameInput.value = category.name;
+    if (categorySlugInput) {
+      categorySlugInput.value = category.slug;
+      categorySlugInput.dataset.userEdited = "true";
+    }
+    if (categorySortInput) categorySortInput.value = String(category.sortOrder);
+    if (categoryDescriptionInput) categoryDescriptionInput.value = category.description;
+    if (categoryActiveInput) categoryActiveInput.checked = category.isActive;
+    if (categoryTitle) categoryTitle.textContent = "Editar colección";
+    if (saveCategoryButton) saveCategoryButton.textContent = "Guardar";
+    if (deleteCategoryButton) deleteCategoryButton.hidden = false;
+  };
+
+  document.querySelector<HTMLButtonElement>("[data-open-category-dialog]")?.addEventListener("click", () => {
+    resetCategoryDialog();
+    categoryDialog?.showModal();
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-edit-category]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const raw = button.getAttribute("data-category");
+      if (!raw) return;
+      fillCategoryDialog(JSON.parse(raw) as CategoryDialogItem);
+      categoryDialog?.showModal();
+    });
+  });
+
+  categoryDialog?.querySelectorAll<HTMLButtonElement>("[data-close-category-dialog]").forEach((button) => {
+    button.addEventListener("click", () => categoryDialog.close());
+  });
+
+  saveCategoryButton?.addEventListener("click", () => {
+    if (categoryActionInput) categoryActionInput.value = "saveCategory";
+  });
+
+  deleteCategoryButton?.addEventListener("click", () => {
+    if (categoryActionInput) categoryActionInput.value = "deleteCategory";
+  });
+
+  categoryNameInput?.addEventListener("input", () => {
+    if (!categorySlugInput || !categoryNameInput) return;
+    if (!categorySlugInput.value || categorySlugInput.dataset.userEdited !== "true") {
+      categorySlugInput.value = slugify(categoryNameInput.value);
+      categorySlugInput.dataset.userEdited = "false";
+    }
+  });
+
+  categorySlugInput?.addEventListener("input", () => {
+    categorySlugInput.dataset.userEdited = categorySlugInput.value ? "true" : "false";
+  });
+</script>

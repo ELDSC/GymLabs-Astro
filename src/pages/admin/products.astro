@@ -1,0 +1,148 @@
+---
+export const prerender = false;
+
+import AdminDialogStyles from "../../components/admin/AdminDialogStyles.astro";
+import AdminShellStyles from "../../components/admin/AdminShellStyles.astro";
+import AdminTableStyles from "../../components/admin/AdminTableStyles.astro";
+import AdminWorkspaceHeader from "../../components/admin/AdminWorkspaceHeader.astro";
+import ProductDialog from "../../components/admin/ProductDialog.astro";
+import ProductDialogScripts from "../../components/admin/ProductDialogScripts.astro";
+import ProductsTable from "../../components/admin/ProductsTable.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { deleteProduct, getAdminCounts, saveProduct, type Feedback } from "../../lib/admin";
+import {
+  createSupabaseServerClient,
+  getAdminUser,
+  getProductImageUrl,
+} from "../../lib/supabase";
+
+const supabase = createSupabaseServerClient({
+  request: Astro.request,
+  cookies: Astro.cookies,
+});
+
+const adminUser = await getAdminUser(supabase);
+
+if (!adminUser) {
+  return Astro.redirect("/admin/login");
+}
+
+let feedback: Feedback | null = null;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const action = String(formData.get("action") ?? "");
+
+  if (action === "logout") {
+    await supabase.auth.signOut();
+    return Astro.redirect("/admin/login");
+  }
+
+  if (action === "saveProduct") {
+    feedback = await saveProduct(supabase, formData);
+  }
+
+  if (action === "deleteProduct") {
+    feedback = await deleteProduct(supabase, formData);
+  }
+}
+
+const [counts, categoriesResult, productsResult] = await Promise.all([
+  getAdminCounts(supabase),
+  supabase
+    .from("categories")
+    .select("id, name, slug, description, is_active, sort_order")
+    .is("deleted_at", null)
+    .order("sort_order", { ascending: true }),
+  supabase
+    .from("products")
+    .select(`
+      id,
+      category_id,
+      name,
+      slug,
+      sku,
+      description,
+      price,
+      compare_at_price,
+      stock,
+      is_active,
+      is_top_seller,
+      image_storage_key,
+      categories(name)
+    `)
+    .is("deleted_at", null)
+    .order("name", { ascending: true }),
+]);
+
+if (categoriesResult.error) {
+  feedback = {
+    type: "error",
+    message: `No se pudieron cargar las colecciones: ${categoriesResult.error.message}`,
+  };
+}
+
+if (productsResult.error) {
+  feedback = {
+    type: "error",
+    message: `No se pudieron cargar los productos: ${productsResult.error.message}`,
+  };
+}
+
+const categories = (categoriesResult.data ?? []).map((category) => ({
+  id: category.id,
+  name: category.name,
+  slug: category.slug,
+  description: category.description ?? "",
+  isActive: category.is_active,
+  sortOrder: category.sort_order,
+}));
+
+const products = (productsResult.data ?? []).map((product) => {
+  const categoryRelation = product.categories as { name: string } | { name: string }[] | null;
+  const categoryName = Array.isArray(categoryRelation)
+    ? categoryRelation[0]?.name
+    : categoryRelation?.name;
+
+  return {
+    id: product.id,
+    categoryId: product.category_id,
+    categoryName: categoryName ?? "",
+    name: product.name,
+    slug: product.slug,
+    sku: product.sku,
+    description: product.description ?? "",
+    price: Number(product.price),
+    compareAtPrice:
+      product.compare_at_price === null ? null : Number(product.compare_at_price),
+    stock: product.stock,
+    isActive: product.is_active,
+    isTopSeller: product.is_top_seller,
+    imageStorageKey: product.image_storage_key,
+    imageUrl: product.image_storage_key ? getProductImageUrl(product.image_storage_key) : null,
+  };
+});
+---
+
+<BaseLayout title="Productos | GymLabs HQ" description="Productos GymLabs">
+  <main class="admin-shell">
+    <AdminWorkspaceHeader activeSection="products" adminEmail={adminUser.email ?? "Admin"} counts={counts} />
+
+    {feedback && (
+      <p class:list={["feedback", feedback.type === "error" ? "is-error" : "is-success"]}>
+        {feedback.message}
+      </p>
+    )}
+
+    <section class="admin-section">
+      <ProductsTable products={products} />
+    </section>
+
+    <ProductDialog categories={categories} />
+  </main>
+
+  <ProductDialogScripts />
+  <AdminShellStyles />
+  <AdminTableStyles />
+  <AdminDialogStyles />
+</BaseLayout>

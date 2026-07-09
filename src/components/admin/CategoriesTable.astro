@@ -1,0 +1,43 @@
+---
+import type { CategoryItem } from "./types";
+
+interface Props {
+  categories: CategoryItem[];
+}
+
+const { categories } = Astro.props;
+---
+
+<div class="table-shell">
+  <div class="table-head categories-head" aria-hidden="true">
+    <span>Colección</span>
+    <span>Orden</span>
+    <span>Estado</span>
+    <span>Acción</span>
+  </div>
+
+  {categories.length === 0 ? (
+    <p class="empty-state">Sin colecciones por ahora.</p>
+  ) : (
+    categories.map((category) => (
+      <div class="table-row categories-row">
+        <span class="item-title">
+          <strong>{category.name}</strong>
+          <small>{category.slug}</small>
+        </span>
+        <span>{category.sortOrder}</span>
+        <span class:list={["status", category.isActive ? "is-live" : "is-muted"]}>
+          {category.isActive ? "Activa" : "Inactiva"}
+        </span>
+        <button
+          class="edit-chip"
+          type="button"
+          data-edit-category
+          data-category={JSON.stringify(category)}
+        >
+          Editar
+        </button>
+      </div>
+    ))
+  )}
+</div>

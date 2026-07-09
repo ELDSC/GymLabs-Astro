@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import Hero from "../components/home/Hero.astro";
 import BrandVideoSection from "../components/home/BrandVideoSection.astro";
 import CategoriesSection from "../components/home/CategoriesSection.astro";
@@ -41,6 +43,7 @@ const [categoriesResult, productsResult, testimonialsResult] = await Promise.all
     .from("categories")
     .select("id, name, slug, description, sort_order")
     .eq("is_active", true)
+    .is("deleted_at", null)
     .order("sort_order"),
   supabase
     .from("products")
@@ -56,6 +59,7 @@ const [categoriesResult, productsResult, testimonialsResult] = await Promise.all
       `,
     )
     .eq("is_active", true)
+    .is("deleted_at", null)
     .eq("is_top_seller", true)
     .limit(3),
   supabase
