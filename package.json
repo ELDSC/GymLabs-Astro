@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@astrojs/vercel": "10.0.7",
-    "@iconify-json/lucide": "^1.2.112",
-    "@supabase/ssr": "^0.12.0",
-    "@supabase/supabase-js": "^2.108.0",
+    "@iconify-json/lucide": "1.2.112",
+    "@supabase/ssr": "0.12.0",
+    "@supabase/supabase-js": "2.108.0",
     "astro": "6.1.10",
-    "astro-icon": "^1.1.5"
+    "astro-icon": "1.1.5"
   },
   "devDependencies": {
-    "supabase": "^2.90.0"
+    "supabase": "2.90.0"
   }
 }
