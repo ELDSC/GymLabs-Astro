@@ -1,4 +1,5 @@
 import { createServerClient, parseCookieHeader } from "@supabase/ssr";
+import type { CookieMethodsServer } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import type { AstroCookies } from "astro";
 import type { Database } from "./supabase.types";
@@ -64,20 +65,31 @@ export function createSupabaseServerClient({
   request: Request;
   cookies: AstroCookies;
 }) {
+  const serverCookieMethods: CookieMethodsServer = {
+    getAll() {
+      return parseCookieHeader(request.headers.get("Cookie") ?? "").reduce<
+        { name: string; value: string }[]
+      >((parsedCookies, { name, value }) => {
+        if (value === undefined) {
+          return parsedCookies;
+        }
+
+        parsedCookies.push({ name, value });
+        return parsedCookies;
+      }, []);
+    },
+    setAll(cookiesToSet) {
+      cookiesToSet.forEach(({ name, value, options }) => {
+        cookies.set(name, value, options);
+      });
+    },
+  };
+
   return createServerClient<Database>(
     selectedConfig.url,
     selectedConfig.publishableKey,
     {
-      cookies: {
-        getAll() {
-          return parseCookieHeader(request.headers.get("Cookie") ?? "");
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookies.set(name, value, options);
-          });
-        },
-      },
+      cookies: serverCookieMethods,
     },
   );
 }
