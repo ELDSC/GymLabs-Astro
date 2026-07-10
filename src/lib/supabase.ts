@@ -1,4 +1,7 @@
+import { createServerClient, parseCookieHeader } from "@supabase/ssr";
+import type { CookieMethodsServer } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
+import type { AstroCookies } from "astro";
 import type { Database } from "./supabase.types";
 
 const env = {
@@ -54,6 +57,67 @@ export const supabase = createClient<Database>(
   selectedConfig.url,
   selectedConfig.publishableKey,
 );
+
+export function createSupabaseServerClient({
+  request,
+  cookies,
+}: {
+  request: Request;
+  cookies: AstroCookies;
+}) {
+  const serverCookieMethods: CookieMethodsServer = {
+    getAll() {
+      return parseCookieHeader(request.headers.get("Cookie") ?? "").reduce<
+        { name: string; value: string }[]
+      >((parsedCookies, { name, value }) => {
+        if (value === undefined) {
+          return parsedCookies;
+        }
+
+        parsedCookies.push({ name, value });
+        return parsedCookies;
+      }, []);
+    },
+    setAll(cookiesToSet) {
+      cookiesToSet.forEach(({ name, value, options }) => {
+        cookies.set(name, value, options);
+      });
+    },
+  };
+
+  return createServerClient<Database>(
+    selectedConfig.url,
+    selectedConfig.publishableKey,
+    {
+      cookies: serverCookieMethods,
+    },
+  );
+}
+
+export async function getAdminUser(
+  client: ReturnType<typeof createSupabaseServerClient>,
+) {
+  const {
+    data: { user },
+    error: userError,
+  } = await client.auth.getUser();
+
+  if (userError || !user) {
+    return null;
+  }
+
+  const { data: adminUser, error: adminError } = await client
+    .from("admin_users")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (adminError || !adminUser) {
+    return null;
+  }
+
+  return user;
+}
 
 export function getSupabasePublicUrl(bucket: string, path: string) {
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);

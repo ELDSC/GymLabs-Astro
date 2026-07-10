@@ -1,0 +1,100 @@
+---
+import type { CategoryItem } from "./types";
+
+interface Props {
+  categories: CategoryItem[];
+}
+
+const { categories } = Astro.props;
+---
+
+<dialog class="admin-dialog" data-product-dialog>
+  <form class="dialog-panel" method="POST" enctype="multipart/form-data" data-product-form>
+    <input type="hidden" name="action" value="saveProduct" />
+    <input type="hidden" name="section" value="products" />
+    <input type="hidden" name="productId" value="" data-product-id />
+    <input type="hidden" name="removeImage" value="false" data-remove-image />
+
+    <header class="dialog-header">
+      <h2 data-product-title>Crear producto</h2>
+      <button class="icon-button" type="button" aria-label="Cerrar" data-close-product-dialog>×</button>
+    </header>
+
+    <div class="dialog-body">
+      <section class="image-editor">
+        <div class="image-preview" data-image-preview hidden>
+          <img src="" alt="Imagen del producto" data-image-preview-img />
+          <button class="secondary-button" type="button" data-remove-image-button>
+            Eliminar imagen
+          </button>
+        </div>
+
+        <label class="field image-picker" data-image-picker>
+          <span>Imagen</span>
+          <input class="text-input file-input" type="file" name="image" accept="image/*" data-image-input />
+        </label>
+      </section>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>Colección</span>
+          <select class="text-input" name="categoryId" required data-product-category>
+            <option value="">Seleccionar</option>
+            {categories.map((category) => (
+              <option value={category.id}>{category.name}{category.isActive ? "" : " (inactiva)"}</option>
+            ))}
+          </select>
+        </label>
+        <label class="field">
+          <span>Nombre</span>
+          <input class="text-input" type="text" name="name" required data-product-name />
+        </label>
+        <label class="field">
+          <span>Slug</span>
+          <input class="text-input" type="text" name="slug" required data-product-slug />
+        </label>
+        <label class="field">
+          <span>SKU</span>
+          <input class="text-input" type="text" name="sku" required data-product-sku />
+        </label>
+        <label class="field">
+          <span>Precio actual</span>
+          <input class="text-input" type="number" name="price" min="0" step="0.01" required data-product-price />
+        </label>
+        <label class="field">
+          <span>Precio lista</span>
+          <input class="text-input" type="number" name="compareAtPrice" min="0" step="0.01" data-product-compare />
+        </label>
+        <label class="field">
+          <span>Stock</span>
+          <input class="text-input" type="number" name="stock" min="0" step="1" value="0" required data-product-stock />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Descripción</span>
+        <textarea class="text-input textarea-input" name="description" rows="3" data-product-description></textarea>
+      </label>
+
+      <div class="form-footer">
+        <label class="switch-field">
+          <input type="checkbox" name="isActive" checked data-product-active />
+          <span class="switch-control" aria-hidden="true"></span>
+          <span>Activo</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" name="isTopSeller" data-product-top-seller />
+          <span>Top seller</span>
+        </label>
+      </div>
+    </div>
+
+    <footer class="dialog-actions">
+      <button class="danger-button" type="submit" data-delete-product-button hidden>
+        Eliminar producto
+      </button>
+      <button class="ghost-button" type="button" data-close-product-dialog>Cancelar</button>
+      <button class="primary-button" type="submit" data-save-product-button>Crear producto</button>
+    </footer>
+  </form>
+</dialog>

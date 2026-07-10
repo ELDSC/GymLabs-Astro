@@ -1,0 +1,180 @@
+<script>
+  type ProductDialogItem = {
+    id: string;
+    categoryId: string;
+    name: string;
+    slug: string;
+    sku: string;
+    description: string;
+    price: number;
+    compareAtPrice: number | null;
+    stock: number;
+    isActive: boolean;
+    isTopSeller: boolean;
+    imageUrl: string | null;
+  };
+
+  const slugify = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const productDialog = document.querySelector<HTMLDialogElement>("[data-product-dialog]");
+  const productForm = productDialog?.querySelector<HTMLFormElement>("[data-product-form]");
+  const productActionInput = productDialog?.querySelector<HTMLInputElement>('input[name="action"]');
+  const productIdInput = productDialog?.querySelector<HTMLInputElement>("[data-product-id]");
+  const productCategoryInput = productDialog?.querySelector<HTMLSelectElement>("[data-product-category]");
+  const productNameInput = productDialog?.querySelector<HTMLInputElement>("[data-product-name]");
+  const productSlugInput = productDialog?.querySelector<HTMLInputElement>("[data-product-slug]");
+  const productSkuInput = productDialog?.querySelector<HTMLInputElement>("[data-product-sku]");
+  const productPriceInput = productDialog?.querySelector<HTMLInputElement>("[data-product-price]");
+  const productCompareInput = productDialog?.querySelector<HTMLInputElement>("[data-product-compare]");
+  const productStockInput = productDialog?.querySelector<HTMLInputElement>("[data-product-stock]");
+  const productDescriptionInput = productDialog?.querySelector<HTMLTextAreaElement>("[data-product-description]");
+  const productActiveInput = productDialog?.querySelector<HTMLInputElement>("[data-product-active]");
+  const productTopSellerInput = productDialog?.querySelector<HTMLInputElement>("[data-product-top-seller]");
+  const productImageInput = productDialog?.querySelector<HTMLInputElement>("[data-image-input]");
+  const removeImageInput = productDialog?.querySelector<HTMLInputElement>("[data-remove-image]");
+  const imagePicker = productDialog?.querySelector<HTMLElement>("[data-image-picker]");
+  const imagePreview = productDialog?.querySelector<HTMLElement>("[data-image-preview]");
+  const imagePreviewImg = productDialog?.querySelector<HTMLImageElement>("[data-image-preview-img]");
+  const productTitle = productDialog?.querySelector<HTMLElement>("[data-product-title]");
+  const saveProductButton = productDialog?.querySelector<HTMLButtonElement>("[data-save-product-button]");
+  const deleteProductButton = productDialog?.querySelector<HTMLButtonElement>("[data-delete-product-button]");
+
+  let originalImageUrl: string | null = null;
+  let transientPreviewUrl: string | null = null;
+
+  const clearTransientPreview = () => {
+    if (transientPreviewUrl) {
+      URL.revokeObjectURL(transientPreviewUrl);
+      transientPreviewUrl = null;
+    }
+  };
+
+  const showImagePreview = (src: string | null) => {
+    if (!imagePreview || !imagePreviewImg || !imagePicker) return;
+
+    if (src) {
+      imagePreviewImg.src = src;
+      imagePreview.hidden = false;
+      imagePicker.hidden = true;
+    } else {
+      imagePreviewImg.removeAttribute("src");
+      imagePreview.hidden = true;
+      imagePicker.hidden = false;
+    }
+  };
+
+  const resetImageControls = (imageUrl: string | null) => {
+    clearTransientPreview();
+    originalImageUrl = imageUrl;
+    if (productImageInput) productImageInput.value = "";
+    if (removeImageInput) removeImageInput.value = "false";
+    showImagePreview(imageUrl);
+  };
+
+  const resetProductDialog = () => {
+    productForm?.reset();
+    if (productIdInput) productIdInput.value = "";
+    if (productCategoryInput) productCategoryInput.value = "";
+    if (productPriceInput) productPriceInput.value = "";
+    if (productCompareInput) productCompareInput.value = "";
+    if (productStockInput) productStockInput.value = "0";
+    if (productActiveInput) productActiveInput.checked = true;
+    if (productTopSellerInput) productTopSellerInput.checked = false;
+    if (productSlugInput) productSlugInput.dataset.userEdited = "false";
+    if (productTitle) productTitle.textContent = "Crear producto";
+    if (saveProductButton) saveProductButton.textContent = "Crear producto";
+    if (deleteProductButton) deleteProductButton.hidden = true;
+    resetImageControls(null);
+  };
+
+  const fillProductDialog = (product: ProductDialogItem) => {
+    productForm?.reset();
+    if (productIdInput) productIdInput.value = product.id;
+    if (productCategoryInput) productCategoryInput.value = product.categoryId;
+    if (productNameInput) productNameInput.value = product.name;
+    if (productSlugInput) {
+      productSlugInput.value = product.slug;
+      productSlugInput.dataset.userEdited = "true";
+    }
+    if (productSkuInput) productSkuInput.value = product.sku;
+    if (productPriceInput) productPriceInput.value = String(product.price);
+    if (productCompareInput) productCompareInput.value = product.compareAtPrice == null ? "" : String(product.compareAtPrice);
+    if (productStockInput) productStockInput.value = String(product.stock);
+    if (productDescriptionInput) productDescriptionInput.value = product.description;
+    if (productActiveInput) productActiveInput.checked = product.isActive;
+    if (productTopSellerInput) productTopSellerInput.checked = product.isTopSeller;
+    if (productTitle) productTitle.textContent = "Editar producto";
+    if (saveProductButton) saveProductButton.textContent = "Guardar";
+    if (deleteProductButton) deleteProductButton.hidden = false;
+    resetImageControls(product.imageUrl);
+  };
+
+  document.querySelector<HTMLButtonElement>("[data-open-product-dialog]")?.addEventListener("click", () => {
+    resetProductDialog();
+    productDialog?.showModal();
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-edit-product]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const raw = button.getAttribute("data-product");
+      if (!raw) return;
+      fillProductDialog(JSON.parse(raw) as ProductDialogItem);
+      productDialog?.showModal();
+    });
+  });
+
+  productDialog?.querySelectorAll<HTMLButtonElement>("[data-close-product-dialog]").forEach((button) => {
+    button.addEventListener("click", () => productDialog.close());
+  });
+
+  saveProductButton?.addEventListener("click", () => {
+    if (productActionInput) productActionInput.value = "saveProduct";
+  });
+
+  deleteProductButton?.addEventListener("click", () => {
+    if (productActionInput) productActionInput.value = "deleteProduct";
+  });
+
+  productNameInput?.addEventListener("input", () => {
+    if (!productSlugInput || !productNameInput) return;
+    if (!productSlugInput.value || productSlugInput.dataset.userEdited !== "true") {
+      productSlugInput.value = slugify(productNameInput.value);
+      productSlugInput.dataset.userEdited = "false";
+    }
+  });
+
+  productSlugInput?.addEventListener("input", () => {
+    productSlugInput.dataset.userEdited = productSlugInput.value ? "true" : "false";
+  });
+
+  productImageInput?.addEventListener("change", () => {
+    const file = productImageInput.files?.[0] ?? null;
+
+    if (!file) {
+      showImagePreview(originalImageUrl);
+      if (removeImageInput) removeImageInput.value = "false";
+      return;
+    }
+
+    clearTransientPreview();
+    transientPreviewUrl = URL.createObjectURL(file);
+    if (removeImageInput) removeImageInput.value = "false";
+    showImagePreview(transientPreviewUrl);
+  });
+
+  productDialog?.querySelector<HTMLButtonElement>("[data-remove-image-button]")?.addEventListener("click", () => {
+    clearTransientPreview();
+    if (productImageInput) productImageInput.value = "";
+    if (removeImageInput) removeImageInput.value = originalImageUrl ? "true" : "false";
+    showImagePreview(null);
+  });
+
+  productDialog?.addEventListener("close", clearTransientPreview);
+</script>

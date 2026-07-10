@@ -14,6 +14,7 @@ const { data: categoriesData } = await supabase
   .from("categories")
   .select("id, name, slug")
   .eq("is_active", true)
+  .is("deleted_at", null)
   .order("sort_order", { ascending: true });
 
 const categories = (categoriesData ?? []).map((c: { id: string; name: string; slug: string }) => ({
@@ -30,6 +31,7 @@ if (categorySlug) {
     .select("id, name")
     .eq("slug", categorySlug)
     .eq("is_active", true)
+    .is("deleted_at", null)
     .single();
   if (categoryMatch) {
     categoryId = categoryMatch.id;
@@ -48,7 +50,8 @@ let query = supabase
     image_storage_key,
     categories(name)
   `)
-  .eq("is_active", true);
+  .eq("is_active", true)
+  .is("deleted_at", null);
 
 const normalizedSearch = search
   ? search.normalize("NFD").replace(/[\u0300-\u036f]/g, "")

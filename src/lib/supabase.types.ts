@@ -34,9 +34,25 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
+          deleted_at: string | null
           description: string | null
           id: string
           is_active: boolean
@@ -47,6 +63,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           is_active?: boolean
@@ -57,6 +74,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           is_active?: boolean
@@ -67,11 +85,42 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_codes: {
+        Row: {
+          code: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_active: boolean
+          percentage: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          percentage: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          percentage?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string
           compare_at_price: number | null
           created_at: string
+          deleted_at: string | null
           description: string | null
           id: string
           image_storage_key: string | null
@@ -89,6 +138,7 @@ export type Database = {
           category_id: string
           compare_at_price?: number | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           image_storage_key?: string | null
@@ -106,6 +156,7 @@ export type Database = {
           category_id?: string
           compare_at_price?: number | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           image_storage_key?: string | null

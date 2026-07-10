@@ -1,0 +1,50 @@
+<dialog class="admin-dialog" data-category-dialog>
+  <form class="dialog-panel" method="POST" data-category-form>
+    <input type="hidden" name="action" value="saveCategory" />
+    <input type="hidden" name="section" value="categories" />
+    <input type="hidden" name="categoryId" value="" data-category-id />
+
+    <header class="dialog-header">
+      <h2 data-category-title>Crear colección</h2>
+      <button class="icon-button" type="button" aria-label="Cerrar" data-close-category-dialog>×</button>
+    </header>
+
+    <div class="dialog-body">
+      <div class="form-grid categories-grid">
+        <label class="field">
+          <span>Nombre</span>
+          <input class="text-input" type="text" name="name" required data-category-name />
+        </label>
+        <label class="field">
+          <span>Slug</span>
+          <input class="text-input" type="text" name="slug" required data-category-slug />
+        </label>
+        <label class="field">
+          <span>Orden</span>
+          <input class="text-input" type="number" name="sortOrder" step="1" value="0" required data-category-sort />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Descripción</span>
+        <textarea class="text-input textarea-input" name="description" rows="3" data-category-description></textarea>
+      </label>
+
+      <div class="form-footer">
+        <label class="switch-field">
+          <input type="checkbox" name="isActive" checked data-category-active />
+          <span class="switch-control" aria-hidden="true"></span>
+          <span>Activa</span>
+        </label>
+      </div>
+    </div>
+
+    <footer class="dialog-actions">
+      <button class="danger-button" type="submit" data-delete-category-button hidden>
+        Eliminar colección
+      </button>
+      <button class="ghost-button" type="button" data-close-category-dialog>Cancelar</button>
+      <button class="primary-button" type="submit" data-save-category-button>Crear colección</button>
+    </footer>
+  </form>
+</dialog>

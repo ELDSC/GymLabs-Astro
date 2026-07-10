@@ -1,0 +1,93 @@
+---
+export const prerender = false;
+
+import AdminDialogStyles from "../../components/admin/AdminDialogStyles.astro";
+import AdminShellStyles from "../../components/admin/AdminShellStyles.astro";
+import AdminTableStyles from "../../components/admin/AdminTableStyles.astro";
+import AdminWorkspaceHeader from "../../components/admin/AdminWorkspaceHeader.astro";
+import CategoriesTable from "../../components/admin/CategoriesTable.astro";
+import CategoryDialog from "../../components/admin/CategoryDialog.astro";
+import CategoryDialogScripts from "../../components/admin/CategoryDialogScripts.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { deleteCategory, getAdminCounts, saveCategory, type Feedback } from "../../lib/admin";
+import { createSupabaseServerClient, getAdminUser } from "../../lib/supabase";
+
+const supabase = createSupabaseServerClient({
+  request: Astro.request,
+  cookies: Astro.cookies,
+});
+
+const adminUser = await getAdminUser(supabase);
+
+if (!adminUser) {
+  return Astro.redirect("/admin/login");
+}
+
+let feedback: Feedback | null = null;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const action = String(formData.get("action") ?? "");
+
+  if (action === "logout") {
+    await supabase.auth.signOut();
+    return Astro.redirect("/admin/login");
+  }
+
+  if (action === "saveCategory") {
+    feedback = await saveCategory(supabase, formData);
+  }
+
+  if (action === "deleteCategory") {
+    feedback = await deleteCategory(supabase, formData);
+  }
+}
+
+const [counts, categoriesResult] = await Promise.all([
+  getAdminCounts(supabase),
+  supabase
+    .from("categories")
+    .select("id, name, slug, description, is_active, sort_order")
+    .is("deleted_at", null)
+    .order("sort_order", { ascending: true }),
+]);
+
+if (categoriesResult.error) {
+  feedback = {
+    type: "error",
+    message: `No se pudieron cargar las colecciones: ${categoriesResult.error.message}`,
+  };
+}
+
+const categories = (categoriesResult.data ?? []).map((category) => ({
+  id: category.id,
+  name: category.name,
+  slug: category.slug,
+  description: category.description ?? "",
+  isActive: category.is_active,
+  sortOrder: category.sort_order,
+}));
+---
+
+<BaseLayout title="Colecciones | GymLabs HQ" description="Colecciones GymLabs">
+  <main class="admin-shell">
+    <AdminWorkspaceHeader activeSection="categories" adminEmail={adminUser.email ?? "Admin"} counts={counts} />
+
+    {feedback && (
+      <p class:list={["feedback", feedback.type === "error" ? "is-error" : "is-success"]}>
+        {feedback.message}
+      </p>
+    )}
+
+    <section class="admin-section">
+      <CategoriesTable categories={categories} />
+    </section>
+
+    <CategoryDialog />
+  </main>
+
+  <CategoryDialogScripts />
+  <AdminShellStyles />
+  <AdminTableStyles />
+  <AdminDialogStyles />
+</BaseLayout>

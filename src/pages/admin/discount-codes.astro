@@ -1,0 +1,91 @@
+---
+export const prerender = false;
+
+import AdminDialogStyles from "../../components/admin/AdminDialogStyles.astro";
+import AdminShellStyles from "../../components/admin/AdminShellStyles.astro";
+import AdminTableStyles from "../../components/admin/AdminTableStyles.astro";
+import AdminWorkspaceHeader from "../../components/admin/AdminWorkspaceHeader.astro";
+import DiscountDialog from "../../components/admin/DiscountDialog.astro";
+import DiscountDialogScripts from "../../components/admin/DiscountDialogScripts.astro";
+import DiscountsTable from "../../components/admin/DiscountsTable.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { deleteDiscount, getAdminCounts, saveDiscount, type Feedback } from "../../lib/admin";
+import { createSupabaseServerClient, getAdminUser } from "../../lib/supabase";
+
+const supabase = createSupabaseServerClient({
+  request: Astro.request,
+  cookies: Astro.cookies,
+});
+
+const adminUser = await getAdminUser(supabase);
+
+if (!adminUser) {
+  return Astro.redirect("/admin/login");
+}
+
+let feedback: Feedback | null = null;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const action = String(formData.get("action") ?? "");
+
+  if (action === "logout") {
+    await supabase.auth.signOut();
+    return Astro.redirect("/admin/login");
+  }
+
+  if (action === "saveDiscount") {
+    feedback = await saveDiscount(supabase, formData);
+  }
+
+  if (action === "deleteDiscount") {
+    feedback = await deleteDiscount(supabase, formData);
+  }
+}
+
+const [counts, discountsResult] = await Promise.all([
+  getAdminCounts(supabase),
+  supabase
+    .from("discount_codes")
+    .select("id, code, percentage, is_active")
+    .is("deleted_at", null)
+    .order("code", { ascending: true }),
+]);
+
+if (discountsResult.error) {
+  feedback = {
+    type: "error",
+    message: `No se pudieron cargar los códigos: ${discountsResult.error.message}`,
+  };
+}
+
+const discounts = (discountsResult.data ?? []).map((discount) => ({
+  id: discount.id,
+  code: discount.code,
+  percentage: discount.percentage,
+  isActive: discount.is_active,
+}));
+---
+
+<BaseLayout title="Códigos | GymLabs HQ" description="Códigos GymLabs">
+  <main class="admin-shell">
+    <AdminWorkspaceHeader activeSection="discounts" adminEmail={adminUser.email ?? "Admin"} counts={counts} />
+
+    {feedback && (
+      <p class:list={["feedback", feedback.type === "error" ? "is-error" : "is-success"]}>
+        {feedback.message}
+      </p>
+    )}
+
+    <section class="admin-section">
+      <DiscountsTable discounts={discounts} />
+    </section>
+
+    <DiscountDialog />
+  </main>
+
+  <DiscountDialogScripts />
+  <AdminShellStyles />
+  <AdminTableStyles />
+  <AdminDialogStyles />
+</BaseLayout>
