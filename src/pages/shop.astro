@@ -3,6 +3,7 @@ export const prerender = false;
 
 import MainLayout from "../layouts/MainLayout.astro";
 import ProductSection from "../components/shop/ProductSection.astro";
+import CartDrawer from "../components/shop/CartDrawer.astro";
 import { getProductImageUrl, supabase } from "../lib/supabase";
 
 const search = Astro.url.searchParams.get("search") || "";
@@ -121,6 +122,7 @@ const filters = {
       categories={categories}
       filters={filters}
     />
+    <CartDrawer />
   </main>
 </MainLayout>
 

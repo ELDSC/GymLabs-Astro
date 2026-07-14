@@ -1,5 +1,6 @@
 ---
 interface Props {
+  id: string;
   name: string;
   imageUrl: string;
   price: number;
@@ -8,7 +9,7 @@ interface Props {
   badge?: string;
 }
 
-const { name, imageUrl, price, compareAtPrice = null, category, badge } = Astro.props;
+const { id, name, imageUrl, price, compareAtPrice = null, category, badge } = Astro.props;
 const formatPrice = (value: number) =>
   new Intl.NumberFormat("es-PE", {
     minimumFractionDigits: 2,
@@ -31,7 +32,16 @@ const formatPrice = (value: number) =>
       <span class="price">S/ {formatPrice(price)}</span>
     </div>
 
-    <button class="btn-buy" type="button">Anadir al carrito</button>
+    <button 
+      class="btn-buy" 
+      type="button"
+      data-product-id={id}
+      data-product-name={name}
+      data-product-price={price}
+      data-product-image={imageUrl}
+    >
+      Anadir al carrito
+    </button>
   </div>
 </article>
 
@@ -151,3 +161,30 @@ const formatPrice = (value: number) =>
     box-shadow: 0 4px 12px var(--color-primary-glow);
   }
 </style>
+
+<script>
+  import { addToCart } from "../../lib/cart";
+
+  const buttons = document.querySelectorAll('.btn-buy');
+  buttons.forEach(btn => {
+    // Evitamos adjuntar múltiples eventos en caso de que haya varios scripts por las cards repetidas
+    if (!btn.hasAttribute('data-cart-listener')) {
+      btn.setAttribute('data-cart-listener', 'true');
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLElement;
+        const id = target.getAttribute('data-product-id');
+        const name = target.getAttribute('data-product-name');
+        const priceStr = target.getAttribute('data-product-price');
+        const image = target.getAttribute('data-product-image');
+
+        if (id && name && priceStr && image) {
+          const price = parseFloat(priceStr);
+          addToCart({ id, name, price, image });
+          
+          // Opcional: mostrar un pequeño toast o notificación aquí en lugar de abrir todo el carrito
+          // window.dispatchEvent(new Event("open-cart"));
+        }
+      });
+    }
+  });
+</script>
