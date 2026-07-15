@@ -1,0 +1,96 @@
+---
+// src/pages/contact.astro
+export const prerender = false;
+
+import MainLayout from "../layouts/MainLayout.astro";
+import TestimonialsSection from "../components/home/TestimonialsSection.astro";
+import ContactForm from "../components/contact/ContactForm.astro";
+import MapSection from "../components/contact/MapSection.astro";
+import { supabase } from "../lib/supabase";
+
+const placeholderImageUrl = "/images/general-img-square.png";
+
+// Fetch testimonials that are published
+const testimonialsResult = await supabase
+  .from("testimonials")
+  .select("id, author_name, author_role, comment, rating, avatar_url, sort_order")
+  .eq("is_published", true)
+  .order("sort_order")
+  .limit(6); // Allowing up to 6 on the dedicated page
+
+if (testimonialsResult.error) {
+  throw new Error(`Error fetching testimonials: ${testimonialsResult.error.message}`);
+}
+
+const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
+  id: testimonial.id,
+  authorName: testimonial.author_name,
+  authorRole: testimonial.author_role ?? "",
+  comment: testimonial.comment,
+  rating: testimonial.rating,
+  avatarUrl: testimonial.avatar_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.author_name)}&background=0f172a&color=10b981&bold=true`,
+}));
+---
+
+<MainLayout title="Contáctanos - GymLabs">
+  <main class="contact-page">
+    <div class="page-header">
+      <h1 class="page-title">Lo que dicen nuestros clientes</h1>
+      <p class="page-subtitle">El verdadero rendimiento no se esconde, se demuestra.</p>
+    </div>
+
+    <!-- Sección de Testimonios Existentes -->
+    {testimonials.length > 0 ? (
+      <TestimonialsSection testimonials={testimonials} />
+    ) : (
+      <div class="empty-testimonials">
+        <p>Aún no hay testimonios publicados. ¡Sé el primero en dejarnos tu opinión!</p>
+      </div>
+    )}
+
+    <!-- Formulario de Contacto / Testimonios -->
+    <ContactForm />
+
+    <!-- Sección de Mapa -->
+    <MapSection />
+  </main>
+</MainLayout>
+
+<style>
+  .contact-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 5rem;
+    padding-top: 3rem;
+  }
+  
+  .page-header {
+    text-align: center;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+  }
+
+  .empty-testimonials {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+  }
+</style>

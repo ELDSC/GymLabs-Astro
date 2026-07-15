@@ -4,7 +4,6 @@ export const prerender = false;
 import Hero from "../components/home/Hero.astro";
 import BrandVideoSection from "../components/home/BrandVideoSection.astro";
 import CategoriesSection from "../components/home/CategoriesSection.astro";
-import TestimonialsSection from "../components/home/TestimonialsSection.astro";
 import {
   getProductImageUrl,
   getRequiredEnv,
@@ -36,7 +35,7 @@ const categoryMeta: Record<string, { iconLabel: string }> = {
   },
 };
 
-const [categoriesResult, productsResult, testimonialsResult] = await Promise.all([
+const [categoriesResult, productsResult] = await Promise.all([
   supabase
     .from("categories")
     .select("id, name, slug, description, sort_order")
@@ -60,12 +59,6 @@ const [categoriesResult, productsResult, testimonialsResult] = await Promise.all
     .is("deleted_at", null)
     .eq("is_top_seller", true)
     .limit(3),
-  supabase
-    .from("testimonials")
-    .select("id, author_name, author_role, comment, rating, avatar_url, sort_order")
-    .eq("is_published", true)
-    .order("sort_order")
-    .limit(3),
 ]);
 
 if (categoriesResult.error) {
@@ -74,10 +67,6 @@ if (categoriesResult.error) {
 
 if (productsResult.error) {
   throw new Error(`Error fetching featured products: ${productsResult.error.message}`);
-}
-
-if (testimonialsResult.error) {
-  throw new Error(`Error fetching testimonials: ${testimonialsResult.error.message}`);
 }
 
 const categories = (categoriesResult.data ?? []).map((category) => {
@@ -110,15 +99,6 @@ const featuredProducts = (productsResult.data ?? []).map((product, index) => {
     badge: index === 0 ? "TOP VENTAS" : undefined,
   };
 });
-
-const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
-  id: testimonial.id,
-  authorName: testimonial.author_name,
-  authorRole: testimonial.author_role ?? "",
-  comment: testimonial.comment,
-  rating: testimonial.rating,
-  avatarUrl: testimonial.avatar_url ?? placeholderImageUrl,
-}));
 ---
 
 <MainLayout
@@ -128,7 +108,6 @@ const testimonials = (testimonialsResult.data ?? []).map((testimonial) => ({
     <Hero heroImageUrl={heroImageUrl} />
     <BrandVideoSection videoUrl={brandVideoUrl} />
     <CategoriesSection categories={categories} />
-    <TestimonialsSection testimonials={testimonials} />
   </main>
 </MainLayout>
 

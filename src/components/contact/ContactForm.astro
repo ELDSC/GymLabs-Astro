@@ -1,0 +1,237 @@
+---
+// src/components/contact/ContactForm.astro
+---
+<section class="contact-section">
+  <div class="form-container">
+    <div class="form-header">
+      <h2>Déjanos tu opinión</h2>
+      <p>Nos importa lo que piensas. Tu testimonio nos ayuda a mejorar y alcanzar nuevos límites.</p>
+    </div>
+    
+    <form id="testimonial-form" class="contact-form">
+      <div class="form-group">
+        <input type="text" id="t-name" name="name" placeholder="Tu nombre completo" required />
+        <label for="t-name">Nombre</label>
+      </div>
+      
+      <div class="form-group">
+        <input type="text" id="t-role" name="role" placeholder="Ocupación / Disciplina deportiva (opcional)" />
+        <label for="t-role">Ocupación</label>
+      </div>
+
+      <div class="form-group">
+        <select id="t-rating" name="rating" required>
+          <option value="" disabled selected>Selecciona una calificación</option>
+          <option value="5">⭐⭐⭐⭐⭐ (5/5) ¡Excelente!</option>
+          <option value="4">⭐⭐⭐⭐ (4/5) Muy bueno</option>
+          <option value="3">⭐⭐⭐ (3/5) Bueno</option>
+          <option value="2">⭐⭐ (2/5) Regular</option>
+          <option value="1">⭐ (1/5) Deficiente</option>
+        </select>
+        <label for="t-rating">Calificación</label>
+      </div>
+
+      <div class="form-group">
+        <textarea id="t-comment" name="comment" rows="4" placeholder="¿Cómo fue tu experiencia con GymLabs?" required></textarea>
+        <label for="t-comment">Tu experiencia</label>
+      </div>
+
+      <button type="submit" id="submit-testimonial" class="btn-submit">
+        <span>Enviar Testimonio</span>
+      </button>
+      <div id="form-message" class="form-message"></div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    padding: 4rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  .form-container {
+    background: transparent;
+  }
+  
+  .form-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .form-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .form-header p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-color, #1e293b);
+    color: var(--text-primary);
+    padding: 0.5rem 0;
+    outline: none;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    resize: vertical;
+  }
+  
+  .form-group select option {
+    background-color: var(--bg-surface, #0f172a);
+    color: white;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transform-origin: left top;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-bottom-color: var(--color-primary, #10b981);
+  }
+
+  .form-group input:focus + label,
+  .form-group select:focus + label,
+  .form-group textarea:focus + label {
+    color: var(--color-primary, #10b981);
+  }
+
+  .btn-submit {
+    background-color: var(--text-primary);
+    color: var(--bg-base);
+    border: none;
+    padding: 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+  
+  .btn-submit:hover:not(:disabled) {
+    background-color: var(--color-primary, #10b981);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  }
+  
+  .btn-submit:hover:not(:disabled)::after {
+    transform: translateX(100%);
+  }
+  
+  .btn-submit:disabled {
+    background-color: var(--bg-surface-2, #1e293b);
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+
+  .form-message {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    min-height: 1.5rem;
+  }
+  .form-message.success {
+    color: var(--color-primary, #10b981);
+  }
+  .form-message.error {
+    color: #ef4444;
+  }
+</style>
+
+<script>
+  const form = document.getElementById("testimonial-form") as HTMLFormElement;
+  const msgDiv = document.getElementById("form-message");
+  const submitBtn = document.getElementById("submit-testimonial") as HTMLButtonElement;
+
+  if (form && msgDiv && submitBtn) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      submitBtn.disabled = true;
+      submitBtn.querySelector("span")!.textContent = "Enviando...";
+      msgDiv.textContent = "";
+      msgDiv.className = "form-message";
+
+      const formData = new FormData(form);
+      const data = {
+        author_name: formData.get("name"),
+        author_role: formData.get("role"),
+        rating: formData.get("rating"),
+        comment: formData.get("comment"),
+      };
+
+      try {
+        const response = await fetch("/api/testimonials", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          msgDiv.textContent = "¡Gracias por compartir tu experiencia! Tu testimonio ya está público.";
+          msgDiv.classList.add("success");
+          form.reset();
+          
+          // Recargar la página para que el nuevo testimonio aparezca en el carrusel
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          msgDiv.textContent = result.error || "Ocurrió un error al enviar tu testimonio.";
+          msgDiv.classList.add("error");
+        }
+      } catch (err) {
+        msgDiv.textContent = "Error de conexión. Inténtalo de nuevo más tarde.";
+        msgDiv.classList.add("error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector("span")!.textContent = "Enviar Testimonio";
+      }
+    });
+  }
+</script>
