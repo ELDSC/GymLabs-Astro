@@ -1,0 +1,94 @@
+---
+import type { ReportsData } from "../../lib/reports";
+
+interface Props {
+  data: ReportsData;
+}
+
+const { data } = Astro.props;
+
+const currencyFormatter = new Intl.NumberFormat("es-PE", {
+  style: "currency",
+  currency: "USD",
+});
+---
+
+<div class="reports-stats">
+  <article class="reports-stat-card">
+    <p class="reports-stat-card__label">Total de pedidos</p>
+    <p class="reports-stat-card__value">{data.stats.totalOrders}</p>
+  </article>
+  <article class="reports-stat-card">
+    <p class="reports-stat-card__label">Ingresos totales</p>
+    <p class="reports-stat-card__value">{currencyFormatter.format(data.stats.totalRevenue)}</p>
+  </article>
+  <article class="reports-stat-card">
+    <p class="reports-stat-card__label">Clientes</p>
+    <p class="reports-stat-card__value">{data.stats.totalCustomers}</p>
+  </article>
+  <article class="reports-stat-card">
+    <p class="reports-stat-card__label">Ticket promedio</p>
+    <p class="reports-stat-card__value">{currencyFormatter.format(data.stats.averageTicket)}</p>
+  </article>
+</div>
+
+<div class="reports-grid">
+  <section class="reports-chart-card">
+    <header>
+      <h3>Productos más vendidos</h3>
+      <p>Unidades vendidas por producto en el período seleccionado.</p>
+    </header>
+    <canvas id="reports-bar-chart" height="260"></canvas>
+  </section>
+
+  <section class="reports-chart-card">
+    <header>
+      <h3>Distribución de ingresos</h3>
+      <p>Participación de los productos top en los ingresos totales.</p>
+    </header>
+    <canvas id="reports-pie-chart" height="260"></canvas>
+  </section>
+
+  <section class="reports-chart-card reports-chart-card--wide">
+    <header>
+      <h3>Ventas en el tiempo</h3>
+      <p>Evolución diaria de los ingresos generados.</p>
+    </header>
+    <canvas id="reports-line-chart" height="220"></canvas>
+  </section>
+</div>
+
+<section class="reports-comparison">
+  <header>
+    <h3>Comparación de productos</h3>
+    <p>Unidades vendidas, ingresos generados y precio promedio por producto.</p>
+  </header>
+
+  <table class="reports-table">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="is-numeric">Unidades vendidas</th>
+        <th class="is-numeric">Ingresos</th>
+        <th class="is-numeric">Precio promedio</th>
+      </tr>
+    </thead>
+    <tbody>
+      {data.productsComparison.map((product) => (
+        <tr>
+          <td>{product.name}</td>
+          <td class="is-numeric">{product.unitsSold}</td>
+          <td class="is-numeric">{currencyFormatter.format(product.revenue)}</td>
+          <td class="is-numeric">{currencyFormatter.format(product.averagePrice)}</td>
+        </tr>
+      ))}
+      {data.productsComparison.length === 0 && (
+        <tr>
+          <td colspan="4" class="reports-table__empty">No hay datos para el período seleccionado.</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</section>
+
+<script type="application/json" id="reports-data" set:html={JSON.stringify(data)} />

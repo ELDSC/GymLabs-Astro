@@ -1,0 +1,41 @@
+---
+import type { ReportsFilters as ReportsFiltersType } from "../../lib/reports";
+
+interface Props {
+  filters: ReportsFiltersType;
+}
+
+const { filters } = Astro.props;
+
+const presets: { key: "7d" | "30d" | "90d" | "all"; label: string }[] = [
+  { key: "7d", label: "Últimos 7 días" },
+  { key: "30d", label: "Últimos 30 días" },
+  { key: "90d", label: "Últimos 90 días" },
+  { key: "all", label: "Todo" },
+];
+---
+
+<div class="reports-filters">
+  <div class="reports-filters__presets">
+    {presets.map((preset) => (
+      <a
+        href={`?range=${preset.key}`}
+        class:list={["reports-filters__preset", filters.range === preset.key && "is-active"]}
+      >
+        {preset.label}
+      </a>
+    ))}
+  </div>
+
+  <form class="reports-filters__custom" method="get">
+    <label>
+      Desde
+      <input type="date" name="from" value={filters.from ?? ""} />
+    </label>
+    <label>
+      Hasta
+      <input type="date" name="to" value={filters.to ?? ""} />
+    </label>
+    <button type="submit" class="reports-filters__apply">Aplicar rango</button>
+  </form>
+</div>

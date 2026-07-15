@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./supabase.types";
 import { getRequiredEnv } from "./supabase";
 
-export type AdminSection = "products" | "categories" | "discounts";
+export type AdminSection = "products" | "categories" | "discounts" | "reports";
 
 export type Feedback = {
   type: "success" | "error";
@@ -45,16 +45,20 @@ function parseInteger(value: FormDataEntryValue | null) {
 }
 
 export async function getAdminCounts(client: AdminClient): Promise<AdminCounts> {
-  const [products, categories, discounts] = await Promise.all([
+  const [products, categories, discounts, reports] = await Promise.all([
     client.from("products").select("id", { count: "exact", head: true }).is("deleted_at", null),
     client.from("categories").select("id", { count: "exact", head: true }).is("deleted_at", null),
     client.from("discount_codes").select("id", { count: "exact", head: true }).is("deleted_at", null),
+    // "reports" no es una tabla propia: mostramos el total de pedidos (purchases)
+    // como indicador rápido en el tab de Reportes.
+    (client as any).from("purchases").select("id", { count: "exact", head: true }),
   ]);
 
   return {
     products: products.count ?? 0,
     categories: categories.count ?? 0,
     discounts: discounts.count ?? 0,
+    reports: reports.count ?? 0,
   };
 }
 

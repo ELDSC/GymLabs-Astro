@@ -1,0 +1,83 @@
+---
+export const prerender = false;
+
+import AdminDialogStyles from "../../components/admin/AdminDialogStyles.astro";
+import AdminShellStyles from "../../components/admin/AdminShellStyles.astro";
+import AdminTableStyles from "../../components/admin/AdminTableStyles.astro";
+import AdminWorkspaceHeader from "../../components/admin/AdminWorkspaceHeader.astro";
+import ReportsCharts from "../../components/admin/ReportsCharts.astro";
+import ReportsChartsScripts from "../../components/admin/ReportsChartsScripts.astro";
+import ReportsFilters from "../../components/admin/ReportsFilters.astro";
+import ReportsStyles from "../../components/admin/ReportsStyles.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAdminCounts, type Feedback } from "../../lib/admin";
+import { getReportsData, parseReportsFilters, type ReportsData } from "../../lib/reports";
+import { createSupabaseServerClient, getAdminUser } from "../../lib/supabase";
+
+const supabase = createSupabaseServerClient({
+  request: Astro.request,
+  cookies: Astro.cookies,
+});
+
+const adminUser = await getAdminUser(supabase);
+
+if (!adminUser) {
+  return Astro.redirect("/admin/login");
+}
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const action = String(formData.get("action") ?? "");
+
+  if (action === "logout") {
+    await supabase.auth.signOut();
+    return Astro.redirect("/admin/login");
+  }
+}
+
+const filters = parseReportsFilters(Astro.url);
+
+let feedback: Feedback | null = null;
+let reportsData: ReportsData | null = null;
+let counts: Awaited<ReturnType<typeof getAdminCounts>>;
+
+try {
+  const [countsResult, data] = await Promise.all([
+    getAdminCounts(supabase),
+    getReportsData(supabase, filters),
+  ]);
+  counts = countsResult;
+  reportsData = data;
+} catch (error) {
+  counts = await getAdminCounts(supabase);
+  feedback = {
+    type: "error",
+    message:
+      error instanceof Error ? error.message : "No se pudo generar el reporte.",
+  };
+}
+---
+
+<BaseLayout title="Reportes | GymLabs HQ" description="Reportes GymLabs">
+  <main class="admin-shell">
+    <AdminWorkspaceHeader activeSection="reports" adminEmail={adminUser.email ?? "Admin"} counts={counts} />
+
+    {feedback && (
+      <p class:list={["feedback", feedback.type === "error" ? "is-error" : "is-success"]}>
+        {feedback.message}
+      </p>
+    )}
+
+    <section class="admin-section">
+      <ReportsFilters filters={filters} />
+
+      {reportsData && <ReportsCharts data={reportsData} />}
+    </section>
+  </main>
+
+  {reportsData && <ReportsChartsScripts />}
+  <AdminShellStyles />
+  <AdminTableStyles />
+  <AdminDialogStyles />
+  <ReportsStyles />
+</BaseLayout>
