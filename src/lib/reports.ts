@@ -30,6 +30,12 @@ export interface DailySales {
   orders: number;
 }
 
+export interface GenderRevenue {
+  gender: "M" | "F" | "O";
+  label: "Masculino" | "Femenino" | "Otro";
+  revenue: number;
+}
+
 export interface ReportsData {
   filters: ReportsFilters;
   from: string | null;
@@ -44,8 +50,19 @@ export interface ReportsData {
   };
   topProductsByUnits: ProductSalesSummary[];
   topProductsByRevenue: ProductSalesSummary[];
+  revenueByGender: GenderRevenue[];
   dailySales: DailySales[];
   productsComparison: ProductSalesSummary[];
+}
+
+const genderLabels = {
+  M: "Masculino",
+  F: "Femenino",
+  O: "Otro",
+} as const;
+
+function normalizeGender(value: unknown): GenderRevenue["gender"] {
+  return value === "M" || value === "F" || value === "O" ? value : "O";
 }
 
 function resolveDateRange(filters: ReportsFilters) {
@@ -98,7 +115,7 @@ export async function getReportsData(
   let query = (supabase as any)
     .from("purchases")
     .select(
-      "id, full_name, cart_items, subtotal, discount_code, discount_amount, total, created_at",
+      "id, full_name, sex, cart_items, subtotal, discount_code, discount_amount, total, created_at",
     )
     .order("created_at", { ascending: true });
 
@@ -120,6 +137,7 @@ export async function getReportsData(
 
   const productMap = new Map<string, ProductSalesSummary>();
   const dailyMap = new Map<string, DailySales>();
+  const genderRevenueMap = new Map<GenderRevenue["gender"], number>();
   const customerSet = new Set<string>();
 
   let totalRevenue = 0;
@@ -129,6 +147,9 @@ export async function getReportsData(
   for (const purchase of purchases) {
     const total = Number(purchase.total ?? 0);
     totalRevenue += total;
+
+    const gender = normalizeGender(purchase.sex);
+    genderRevenueMap.set(gender, (genderRevenueMap.get(gender) ?? 0) + total);
 
     const customerKey = (purchase.full_name ?? "").trim().toLowerCase();
     if (customerKey) {
@@ -191,6 +212,14 @@ export async function getReportsData(
     a.date.localeCompare(b.date),
   );
 
+  const revenueByGender = (Object.keys(genderLabels) as GenderRevenue["gender"][])
+    .filter((gender) => genderRevenueMap.has(gender))
+    .map((gender) => ({
+      gender,
+      label: genderLabels[gender],
+      revenue: genderRevenueMap.get(gender) ?? 0,
+    }));
+
   const totalOrders = purchases.length;
   const totalCustomers = customerSet.size;
   const averageTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0;
@@ -209,6 +238,7 @@ export async function getReportsData(
     },
     topProductsByUnits,
     topProductsByRevenue,
+    revenueByGender,
     dailySales,
     productsComparison: [...products]
       .sort((a, b) => b.revenue - a.revenue)

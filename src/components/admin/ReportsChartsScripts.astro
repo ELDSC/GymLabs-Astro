@@ -1,22 +1,30 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
 <script>
+  interface ReportsChartData {
+    topProductsByUnits?: Array<{ name: string; unitsSold: number }>;
+    revenueByGender?: Array<{ label: string; revenue: number }>;
+    dailySales?: Array<{ date: string; total: number }>;
+  }
+
+  const chartWindow = window as Window & { Chart?: any };
+
   function destroyExistingCharts() {
     const canvases = ["reports-bar-chart", "reports-pie-chart", "reports-line-chart"];
     canvases.forEach((id) => {
       const canvas = document.getElementById(id);
-      if (!canvas || !window.Chart) return;
-      const existing = window.Chart.getChart(canvas);
+      if (!canvas || !chartWindow.Chart) return;
+      const existing = chartWindow.Chart.getChart(canvas);
       if (existing) existing.destroy();
     });
   }
 
   function initReportsCharts() {
     const rawData = document.getElementById("reports-data");
-    if (!rawData || !window.Chart) return;
+    if (!rawData || !chartWindow.Chart) return;
 
-    const data = JSON.parse(rawData.textContent || "{}");
-    const Chart = window.Chart;
+    const data = JSON.parse(rawData.textContent || "{}") as ReportsChartData;
+    const Chart = chartWindow.Chart;
 
     destroyExistingCharts();
 
@@ -48,17 +56,14 @@
       new Chart(pieCanvas, {
         type: "pie",
         data: {
-          labels: (data.topProductsByRevenue || []).map((p) => p.name),
+          labels: (data.revenueByGender || []).map((entry) => entry.label),
           datasets: [
             {
-              data: (data.topProductsByRevenue || []).map((p) => p.revenue),
+              data: (data.revenueByGender || []).map((entry) => entry.revenue),
               backgroundColor: [
                 "#4f46e5",
                 "#6366f1",
                 "#818cf8",
-                "#a5b4fc",
-                "#c7d2fe",
-                "#e0e7ff",
               ],
             },
           ],

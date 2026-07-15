@@ -9,7 +9,7 @@ const { data } = Astro.props;
 
 const currencyFormatter = new Intl.NumberFormat("es-PE", {
   style: "currency",
-  currency: "USD",
+  currency: "PEN",
 });
 ---
 
@@ -44,7 +44,7 @@ const currencyFormatter = new Intl.NumberFormat("es-PE", {
   <section class="reports-chart-card">
     <header>
       <h3>Distribución de ingresos</h3>
-      <p>Participación de los productos top en los ingresos totales.</p>
+      <p>Participación de los ingresos según el género de los compradores.</p>
     </header>
     <canvas id="reports-pie-chart" height="260"></canvas>
   </section>
