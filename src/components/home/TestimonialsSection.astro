@@ -21,32 +21,60 @@ const { testimonials } = Astro.props;
       <h2 id="opiniones-title">Lo que dicen nuestros clientes</h2>
     </div>
 
-    <div class="testimonials-grid">
-      {testimonials.map((testimonial) => (
-        <article class="testimonial-card">
-          <div class="testimonial-card__header">
-            <img src={testimonial.avatarUrl} alt={testimonial.authorName} loading="lazy" />
+    <div class="carousel-wrapper">
+      <button class="carousel-btn prev-btn" aria-label="Anterior" id="btn-prev">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
 
-            <div>
-              <h3>{testimonial.authorName}</h3>
-              <p>{testimonial.authorRole}</p>
+      <div class="testimonials-carousel" id="t-carousel">
+        {testimonials.map((testimonial) => (
+          <article class="testimonial-card">
+            <div class="testimonial-card__header">
+              <img src={testimonial.avatarUrl} alt={testimonial.authorName} loading="lazy" />
+
+              <div>
+                <h3>{testimonial.authorName}</h3>
+                <p>{testimonial.authorRole}</p>
+              </div>
             </div>
-          </div>
 
-          <div class="testimonial-card__rating" aria-label={`Calificacion ${testimonial.rating} de 5`}>
-            {Array.from({ length: 5 }, (_, index) => (
-              <span class:list={["star", { "star--active": index < testimonial.rating }]}>
-                ★
-              </span>
-            ))}
-          </div>
+            <div class="testimonial-card__rating" aria-label={`Calificacion ${testimonial.rating} de 5`}>
+              {Array.from({ length: 5 }, (_, index) => (
+                <span class:list={["star", { "star--active": index < testimonial.rating }]}>
+                  ★
+                </span>
+              ))}
+            </div>
 
-          <p class="testimonial-card__comment">{testimonial.comment}</p>
-        </article>
-      ))}
+            <p class="testimonial-card__comment">{testimonial.comment}</p>
+          </article>
+        ))}
+      </div>
+
+      <button class="carousel-btn next-btn" aria-label="Siguiente" id="btn-next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
     </div>
   </div>
 </section>
+
+<script>
+  const carousel = document.getElementById('t-carousel');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  if (carousel && btnPrev && btnNext) {
+    const scrollAmount = 350; // Aproximadamente el ancho de una tarjeta + gap
+    
+    btnPrev.addEventListener('click', () => {
+      carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+    
+    btnNext.addEventListener('click', () => {
+      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+  }
+</script>
 
 <style>
   .section {
@@ -76,18 +104,69 @@ const { testimonials } = Astro.props;
     line-height: 1.7;
   }
 
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+  .carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .testimonials-carousel {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 1rem 0.5rem;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .testimonials-carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: var(--bg-surface, #0f172a);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color, #1e293b);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .carousel-btn:hover {
+    background: var(--color-primary, #10b981);
+    color: var(--bg-base);
+    border-color: var(--color-primary, #10b981);
+  }
+
+  .prev-btn {
+    left: -22px;
+  }
+
+  .next-btn {
+    right: -22px;
   }
 
   .testimonial-card {
-    padding: 1.4rem;
+    flex: 0 0 calc(33.333% - 1rem); /* 3 tarjetas por vista en desktop */
+    scroll-snap-align: start;
+    padding: 1.8rem;
     border-radius: 22px;
     border: 1px solid rgba(148, 163, 184, 0.12);
-    background:
-      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.72));
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.72));
+    min-width: 300px;
   }
 
   .testimonial-card__header {
@@ -137,8 +216,17 @@ const { testimonials } = Astro.props;
   }
 
   @media (max-width: 980px) {
-    .testimonials-grid {
-      grid-template-columns: 1fr;
+    .testimonial-card {
+      flex: 0 0 calc(50% - 0.75rem); /* 2 tarjetas por vista */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .testimonial-card {
+      flex: 0 0 85%; /* 1 tarjeta + pista de la siguiente */
+    }
+    .prev-btn, .next-btn {
+      display: none; /* Ocultar botones en móvil, usar swipe */
     }
   }
 
